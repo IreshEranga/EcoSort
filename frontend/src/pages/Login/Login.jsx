@@ -4,6 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoginImg from '../../assets/ECOSORT.png';
 import axios from 'axios'; 
 import './login.css'; 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Login() {
   const [email, setEmail] = useState(''); // State for email
@@ -28,9 +31,21 @@ export default function Login() {
 
       // Store user details in localStorage
       localStorage.setItem('user', JSON.stringify(user)); // Store user details as a JSON string
-
+      
+        toast.success("Log In successful!", {
+          position: "top-center",
+          autoClose: 5000, // Auto close after 3 seconds
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      setTimeout(()=>{
+        navigate('/dashboard');
+      },2000)
       // Redirect to the dashboard or another page after successful login
-      navigate('/dashboard'); // Change this to your desired route
+       // Change this to your desired route
     } catch (err) {
       // Handle error if login fails
       setError('Login failed. Please check your credentials and try again.');
@@ -87,6 +102,7 @@ export default function Login() {
           </Form>
         {/* </Col> */}
       </Row>
+      <ToastContainer />
     </Container>
   );
 }
