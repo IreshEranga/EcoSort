@@ -1,10 +1,42 @@
-import React from 'react';
-import { Form, Button, Container, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Form, Button, Container, Row, Alert } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 import LoginImg from '../../assets/ECOSORT.png';
-import './login.css';  // Ensure to include the CSS file for custom styling
+import axios from 'axios'; 
+import './login.css'; 
 
 export default function Login() {
+  const [email, setEmail] = useState(''); // State for email
+  const [password, setPassword] = useState(''); // State for password
+  const [error, setError] = useState(''); // State for error message
+  const navigate = useNavigate(); // Hook to programmatically navigate
+
+  // Handle login form submission
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+    setError(''); // Clear previous error messages
+
+    try {
+      // Make API call to login
+      const response = await axios.post(/*`${process.env.REACT_APP_API_URL}/login`*/'http://localhost:8000/api/login', {
+        email,
+        password,
+      });
+
+      // Assuming the response contains user details
+      const user = response.data.user; // Adjust this based on your API response
+
+      // Store user details in localStorage
+      localStorage.setItem('user', JSON.stringify(user)); // Store user details as a JSON string
+
+      // Redirect to the dashboard or another page after successful login
+      navigate('/dashboard'); // Change this to your desired route
+    } catch (err) {
+      // Handle error if login fails
+      setError('Login failed. Please check your credentials and try again.');
+    }
+  };
+
   return (
     <Container fluid className="login-container">
       <Row className="justify-content-center align-items-center vh-100">
@@ -14,15 +46,30 @@ export default function Login() {
             <h2 className="mt-3">Welcome Back</h2>
             <p className="login-subtext">Log in to your account</p>
           </div>
-          <Form className="login-form w-100">
+          {error && <Alert  variant="danger">{error}</Alert>} {/* Display error message */}
+          <Form className="login-form" onSubmit={handleLogin}> {/* Call handleLogin on form submit */}
             <Form.Group controlId="formBasicEmail" className="mb-4">
               <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" required className="login-input w-100" />
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                value={email} // Controlled component
+                onChange={(e) => setEmail(e.target.value)} // Update state on input change
+                required
+                className="login-input"
+              />
             </Form.Group>
 
             <Form.Group controlId="formBasicPassword" className="mb-4">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" required className="login-input w-100" />
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                value={password} // Controlled component
+                onChange={(e) => setPassword(e.target.value)} // Update state on input change
+                required
+                className="login-input"
+              />
             </Form.Group>
 
             <div className="d-flex justify-content-between align-items-center mb-4">
