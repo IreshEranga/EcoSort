@@ -19,6 +19,11 @@ body {
     color: #fff !important;
 }
 
+.logo{
+    width:100px;
+    margin-left: 50px;
+}
+
 .nav-items {
     text-align: center;
     justify-content: center;
