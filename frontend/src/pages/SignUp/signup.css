@@ -1,0 +1,24 @@
+.signup-container {
+    background-color: #e5f2e5; /* Light background for the form */
+  }
+  
+  .signup-form-container {
+    background-color: #ffffff; /* White background for the form itself */
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    margin-bottom: 30px;
+    
+  }
+  
+  .signup-form {
+    margin-top: 1rem;
+    padding: 20px;
+  }
+  
+  .signup-logo {
+    width: 100px; /* Adjust logo size */
+    margin-bottom: 1rem;
+  }
+  
