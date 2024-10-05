@@ -15,6 +15,8 @@ function SignUp() {
     password: '',
     type: 'individual', // Default to individual
     city: '',
+    latitude: '',   // New latitude field
+    longitude: ''   // New longitude field
   });
 
   // List of Sri Lankan cities
@@ -53,35 +55,31 @@ function SignUp() {
       if (response.ok) {
         // Handle successful signup
         
-          toast.success("Sign up successful!", {
-            position: "top-center",
-            autoClose: 3000, // Auto close after 3 seconds
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+        toast.success("Sign up successful!", {
+          position: "top-center",
+          autoClose: 3000, // Auto close after 3 seconds
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         
-        setTimeout(()=>{
+        setTimeout(() => {
           navigate('/login');
-        },2000);
+        }, 2000);
         
       } else {
         // Handle errors
-
-        
-          toast.error(data.message || 'Sign up failed!', {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        
-        
+        toast.error(data.message || 'Sign up failed!', {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
       console.error('Error during sign up:', error);
@@ -100,7 +98,7 @@ function SignUp() {
   return (
     <Container fluid className="signup-container">
       <Row className="justify-content-center align-items-center vh-200">
-        <Col xs={12} sm={10} md={8} lg={6} className="signup-form-container">
+        <Col xs={12} sm={10} md={8} lg={6} className="signup-form-container" style={{marginTop:'30px'}}>
           <h2 className="text-center">Sign Up</h2>
           <Form onSubmit={handleSubmit} className="signup-form">
             <Form.Group controlId="formFirstName" className="mb-3">
@@ -203,6 +201,31 @@ function SignUp() {
                   <option key={index} value={city}>{city}</option>
                 ))}
               </Form.Control>
+            </Form.Group>
+
+            {/* New Fields for Latitude and Longitude */}
+            <Form.Group controlId="formLatitude" className="mb-3">
+              <Form.Label>Latitude</Form.Label>
+              <Form.Control 
+                type="text" 
+                name="latitude" 
+                value={formData.latitude} 
+                onChange={handleChange} 
+                placeholder="Enter latitude" 
+                required 
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formLongitude" className="mb-3">
+              <Form.Label>Longitude</Form.Label>
+              <Form.Control 
+                type="text" 
+                name="longitude" 
+                value={formData.longitude} 
+                onChange={handleChange} 
+                placeholder="Enter longitude" 
+                required 
+              />
             </Form.Group>
 
             <Button variant="primary" type="submit" className="w-100">
