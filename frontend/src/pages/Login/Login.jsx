@@ -42,7 +42,7 @@ export default function Login() {
           progress: undefined,
         });
       setTimeout(()=>{
-        navigate('/dashboard');
+        navigate('/userHome');
       },2000)
       // Redirect to the dashboard or another page after successful login
        // Change this to your desired route
