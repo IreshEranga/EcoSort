@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const Collection = require('../models/Collection');
+const User = require('../models/user');
 
 // Signup
 router.post('/signup', userController.signup);
@@ -19,5 +21,28 @@ router.put('/users/:id', userController.updateUser);
 
 // Delete user
 router.delete('/users/:id', userController.deleteUser);
+
+
+// Schedule collection
+router.post('/schedule', async (req, res) => {
+    const { userId, wasteType, scheduledDate } = req.body;
+  
+    try {
+      const user = await User.findById(userId);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+  
+      const newCollection = new Collection({
+        user: userId,
+        wasteType,
+        scheduledDate,
+        status: 'pending',
+      });
+  
+      await newCollection.save();
+      res.status(201).json({ message: 'Collection scheduled successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error scheduling collection', error });
+    }
+  });
 
 module.exports = router;
