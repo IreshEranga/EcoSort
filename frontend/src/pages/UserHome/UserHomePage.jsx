@@ -14,7 +14,16 @@ function UserHomePage() {
     const user = JSON.parse(localStorage.getItem('user'));
 
     // Log the user data to the console for debugging
-    console.log(user); // Corrected from console,log to console.log
+    console.log(user);
+
+    // Handle location button click
+    const handleSeeLocation = () => {
+        if (user && user.location) {
+            const { latitude, longitude } = user.location;
+            const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+            window.open(mapUrl, '_blank'); // Open the map in a new tab
+        }
+    };
 
     return (
         <div className="user-home-page">
@@ -26,12 +35,25 @@ function UserHomePage() {
                     <p>Mobile: {user.mobile}</p>
                     <p>Address: {user.address}, {user.city}</p>
                     <p>User Type: {user.type}</p>
+                    <p>User Location: {user.location.latitude}, {user.location.longitude}</p>
+
+                    {/* See Location button */}
+                    <Button 
+                        onClick={handleSeeLocation} 
+                        variant="primary" 
+                        className="mt-3"
+                    >
+                        See Location
+                    </Button>
                 </div>
             ) : (
                 <p>No user data found. Please log in.</p>
             )}
-            {/* Corrected the onClick handler */}
-            <Button onClick={handleLogout} variant="danger">Log Out</Button>
+            
+            {/* Logout button */}
+            <Button onClick={handleLogout} variant="danger" className="mt-3">
+                Log Out
+            </Button>
         </div>
     );
 }
