@@ -10,7 +10,8 @@ const Home = () => {
             <header className="hero-section">
                 <div className="overlay"></div>
                 <Container className="hero-content text-center">
-                    <h1 className="main-title">Eco-Sort: Revolutionizing Waste Management</h1>
+                    <h1 className="main-title" style={{fontFamily:'revert-layer'}}>Eco-Sort</h1>
+                    <p className="subtitle">Revolutionizing Waste Management</p>
                     <p className="subtitle">A smarter, cleaner future for our cities</p>
                     <Button variant="outline-light" className="cta-button">Join the Movement</Button>
                 </Container>
