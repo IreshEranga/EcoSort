@@ -35,6 +35,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['business', 'individual'],
     required: true
+  },
+  wasteGenerated: { type: Number, default: 0 },
+  specialRequests: [{ type: String }],
+  location: {
+    latitude: { type: Number, required: true },  // Latitude field
+    longitude: { type: Number, required: true }  // Longitude field
   }
 }, { timestamps: true });
 
