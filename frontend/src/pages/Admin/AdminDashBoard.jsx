@@ -1,9 +1,17 @@
-import React from 'react'
+import React from 'react';
+import AdminSidebar from '../../components/Admin/AdminSidebar'; // Import the sidebar component
+import './AdminDashBoard.css'; // Optional: Create styles for the main dashboard
 
-function AdminDashBoard() {
+export default function AdminDashBoard() {
   return (
-    <div>AdminDashBoard</div>
-  )
+    <div className="admin-dashboard">
+      <AdminSidebar /> {/* Sidebar component */}
+      
+      {/* Main Content */}
+      <div className="main-content">
+        <h1>Welcome to Admin Dashboard</h1>
+        {/* Add additional content here */}
+      </div>
+    </div>
+  );
 }
-
-export default AdminDashBoard
