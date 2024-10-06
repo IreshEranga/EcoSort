@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home from '../components/Home';
@@ -7,24 +7,44 @@ import UserHomePage from '../pages/UserHome/UserHomePage';
 import SignUp from '../pages/SignUp/SignUp';
 import UserHome from '../pages/UserHome/UserHome';
 import ScheduleCollection from '../pages/SheduleWaste/ScheduleCollection';
-
-
+import ProtectedRoute from './ProtectedRoute';
+import Unauthorized from '../pages/Login/Unauthorized';
+import AdminDashBoard from '../pages/Admin/AdminDashBoard';
 
 const AppRoutes = () => {
-    return (
-      <>
-          <Router>
-              <Routes>
-                  <Route path="/" element={<Home />} />                  
-                  <Route path="/login" element={<Login />} />                  
-                  <Route path="/dashboard" element={<UserHomePage />} />                  
-                  <Route path="/userHome" element={<UserHome />} />                  
-                  <Route path="/signup" element={<SignUp />} />                  
-                  <Route path="/sheduleCollection" element={<ScheduleCollection />} />                  
-              </Routes>
-          </Router>
-      </>
-    )
-  }
-  
-  export default AppRoutes;
+  return (
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
+
+          
+          {/* Protected routes for users */}
+          <Route 
+            path="/dashboard" 
+            element={<ProtectedRoute component={UserHomePage} allowedRoles={['User']} />} 
+          />
+          <Route 
+            path="/userHome" 
+            element={<ProtectedRoute component={UserHome} allowedRoles={['User']} />} 
+          />
+          <Route 
+            path="/sheduleCollection" 
+            element={<ProtectedRoute component={ScheduleCollection} allowedRoles={['User']} />} 
+          />
+
+          {/* Example protected route for admin */}
+          <Route 
+            path="/admindashboard" 
+            element={<ProtectedRoute component={AdminDashBoard} allowedRoles={['admin']} />} 
+          />
+        </Routes>
+      </Router>
+    </>
+  );
+}
+
+export default AppRoutes;

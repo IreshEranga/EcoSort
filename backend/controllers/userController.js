@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 // Signup
 exports.signup = async (req, res) => {
   try {
-    const { firstName, lastName, email, mobile, address, city, type, password, latitude, longitude } = req.body;
+    const { firstName, lastName, email, mobile, address, city, type, password, latitude, longitude, role } = req.body;
 
     // Check if user already exists
     let existingUser = await User.findOne({ email });
@@ -25,7 +25,8 @@ exports.signup = async (req, res) => {
       city,
       type,
       password: hashedPassword,
-      location: { latitude, longitude }
+      location: { latitude, longitude },
+      role
     });
 
     await user.save();

@@ -41,7 +41,8 @@ const userSchema = new mongoose.Schema({
   location: {
     latitude: { type: Number, required: true },  // Latitude field
     longitude: { type: Number, required: true }  // Longitude field
-  }
+  },
+  role:{type : String, default : 'User'}
 }, { timestamps: true });
 
 // Auto-increment user ID

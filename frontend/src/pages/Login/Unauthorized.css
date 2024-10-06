@@ -1,0 +1,67 @@
+/* Unauthorized.css */
+.unauthorized-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #f5a623, #f953c6);
+    color: white;
+    text-align: center;
+  }
+  
+  .unauthorized-heading {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    animation: shake 0.5s;
+  }
+  
+  .cancel-icon {
+    width: 100px;
+    height: 100px;
+    background-color: #ff4b5c;
+    border-radius: 50%;
+    position: relative;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: pop 0.5s ease-in-out;
+  }
+  
+  .cancel-icon:before, .cancel-icon:after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 10px;
+    background-color: white;
+    border-radius: 5px;
+  }
+  
+  .cancel-icon:before {
+    transform: rotate(45deg);
+  }
+  
+  .cancel-icon:after {
+    transform: rotate(-45deg);
+  }
+  
+  .unauthorized-message {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    50% { transform: translateX(10px); }
+    75% { transform: translateX(-10px); }
+    100% { transform: translateX(0); }
+  }
+  
+  @keyframes pop {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+  }
+  

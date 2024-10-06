@@ -42,7 +42,11 @@ export default function Login() {
           progress: undefined,
         });
       setTimeout(()=>{
-        navigate('/userHome');
+        if (user.role === 'admin') {
+          navigate('/admin-dashboard');
+        } else if(user.role === 'User') {
+          navigate('/userHome');
+        }
       },2000)
       // Redirect to the dashboard or another page after successful login
        // Change this to your desired route
