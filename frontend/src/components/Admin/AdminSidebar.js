@@ -24,7 +24,7 @@ export default function AdminSidebar() {
       {/* Navigation Links */}
       <ul className="nav-links">
         <li><Link to="/admindashboard">Dashboard</Link></li>
-        <li><Link to="/admin-users">Users</Link></li>
+        <li><Link to="/users">Users</Link></li>
         <li><Link to="/admin-settings">Settings</Link></li>
         {/* Add more links as needed */}
       </ul>
