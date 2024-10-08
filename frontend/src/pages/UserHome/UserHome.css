@@ -29,6 +29,13 @@
     font-weight: bold;
     transition: background-color 0.3s ease;
   }
+  /* Profile icon styling */
+.profile-icon {
+  margin-left: 15px;
+  color: #ffffff; /* Change the color as needed */
+  cursor: pointer;
+}
+
   
   .login-button:hover {
     background-color: #e0e0e0;

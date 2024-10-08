@@ -10,6 +10,25 @@ import ScheduleCollection from '../pages/SheduleWaste/ScheduleCollection';
 import ProtectedRoute from './ProtectedRoute';
 import Unauthorized from '../pages/Login/Unauthorized';
 import AdminDashBoard from '../pages/Admin/AdminDashBoard';
+import CollectionRouting from '../pages/SheduleWaste/CollectionRouting';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const AppRoutes = () => {
   return (
@@ -34,6 +53,10 @@ const AppRoutes = () => {
           <Route 
             path="/sheduleCollection" 
             element={<ProtectedRoute component={ScheduleCollection} allowedRoles={['User']} />} 
+          />
+          <Route 
+            path="/CollectionRouting" 
+            element={<ProtectedRoute component={CollectionRouting} allowedRoles={['User']} />} 
           />
 
           {/* Example protected route for admin */}
