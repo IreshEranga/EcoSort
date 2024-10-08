@@ -23,6 +23,9 @@ router.put('/users/:id', userController.updateUser);
 router.delete('/users/:id', userController.deleteUser);
 
 
+router.get('/users/count', userController.getUserCount);
+
+
 // Schedule collection
 router.post('/schedule', async (req, res) => {
     const { userId, wasteType, scheduledDate } = req.body;

@@ -86,4 +86,22 @@
   .main-content h1 {
     color: #2f3640;
   }
+
+  .user-count-card {
+    background-color: #f8f9fa; /* Light background */
+    border: 1px solid #ced4da; /* Border color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px;
+    margin: 20px 0; /* Margin for spacing */
+    text-align: center; /* Center the text */
+  }
+  
+  .user-count-card h2 {
+    margin-bottom: 10px; /* Space below title */
+  }
+  
+  .user-count-card p {
+    font-size: 24px; /* Larger font for count */
+    font-weight: bold; /* Bold font for emphasis */
+  }
   
