@@ -11,7 +11,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Unauthorized from '../pages/Login/Unauthorized';
 import AdminDashBoard from '../pages/Admin/AdminDashBoard';
 import CollectionRouting from '../pages/SheduleWaste/CollectionRouting';
-
+import UsersPage from '../pages/Admin/UsersPage/UsersPage';
 
 
 
@@ -59,10 +59,26 @@ const AppRoutes = () => {
             element={<ProtectedRoute component={CollectionRouting} allowedRoles={['User']} />} 
           />
 
+
+
+
+
+
+
+
+
+
+
+
+
           {/* Example protected route for admin */}
           <Route 
             path="/admindashboard" 
             element={<ProtectedRoute component={AdminDashBoard} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="/users" 
+            element={<ProtectedRoute component={UsersPage} allowedRoles={['admin']} />} 
           />
         </Routes>
       </Router>
