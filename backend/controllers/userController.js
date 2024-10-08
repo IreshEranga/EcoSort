@@ -109,3 +109,18 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: 'Error deleting user', error });
   }
 };
+
+
+// Get user count
+// Get user count
+exports.getUserCount = async (req, res) => {
+  try {
+    console.log("Fetching user count..."); // Log for debugging
+    const count = await User.countDocuments();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error('Error fetching user count:', error); // Log error for debugging
+    res.status(500).json({ message: 'Error fetching user count', error });
+  }
+};
+
