@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.2",
+    "@mui/styles": "^6.1.2",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
@@ -25,6 +29,7 @@
     "react-router-dom": "^6.26.2",
     "react-scripts": "^5.0.1",
     "react-toastify": "^10.0.5",
+    "sweetalert2": "^11.14.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

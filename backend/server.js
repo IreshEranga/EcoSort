@@ -6,6 +6,7 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 
 const UserRoutes = require('./routes/userRoutes');
+const supportRoutes = require('./routes/supportRoutes');
 
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(express.json());
 
 
 app.use('/api', UserRoutes);
+app.use('/api/support', supportRoutes);
 
 
 const PORT = process.env.PORT || 5000;
