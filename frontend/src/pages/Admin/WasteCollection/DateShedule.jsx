@@ -114,13 +114,13 @@ function DateShedule() {
             <h2> {city}</h2> <br />
             <table style={{ width: '100%', border: '1px solid #ddd', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{backgroundColor:'darkcyan', color:'white'}}>
-                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>User ID</th>
-                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>Name</th>
-                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>Email</th>
-                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>Location</th>
-                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>Waste Collection Date</th>
-                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>Actions</th>
+                <tr style={{color:'white'}}>
+                  <th style={{ border: '1px solid #ddd', padding: '8px',backgroundColor:'darkcyan' }}>User ID</th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px',backgroundColor:'darkcyan' }}>Name</th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px',backgroundColor:'darkcyan' }}>Email</th>
+                  {/* <th style={{ border: '1px solid #ddd', padding: '8px',backgroundColor:'darkcyan' }}>Location</th> */}
+                  <th style={{ border: '1px solid #ddd', padding: '8px',backgroundColor:'darkcyan' }}>Waste Collection Date</th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px',backgroundColor:'darkcyan' }}>Actions</th>
                 </tr>
               </thead>
               <tbody style={{backgroundColor:'#b3b3b3f8f9f'}}>
@@ -129,7 +129,7 @@ function DateShedule() {
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.userId}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.firstName} {user.lastName}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.email}</td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.city}</td>
+                    {/* <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.city}</td> */}
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.wasteCollectionDate || 'N/A'}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                       <center>
