@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 
 const UserRoutes = require('./routes/userRoutes');
 const supportRoutes = require('./routes/supportRoutes');
-
+const adSupportRoutes = require('./routes/adSupportRoutes');
 
 dotenv.config();
 
@@ -23,6 +23,7 @@ app.use(express.json());
 
 app.use('/api', UserRoutes);
 app.use('/api/support', supportRoutes);
+app.use('/api/admin/', adSupportRoutes);
 
 
 const PORT = process.env.PORT || 5000;
