@@ -1,4 +1,4 @@
-.sidebar {
+/* .sidebar {
     background-color: #1e272e;
     color: white;
     width: 250px;
@@ -7,6 +7,7 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 20px 0;
+    
   }
   
   .sidebar-header {
@@ -46,8 +47,8 @@
   
   .nav-links li a:hover {
     background-color: #3c3c3c;
-    padding-left: 30px;
     transition: padding 0.3s ease;
+    padding: 10px;
   }
   
   .logout-button {
@@ -63,4 +64,80 @@
   .logout-button:hover {
     background-color: #ff5252;
   }
-  
+   */
+
+   .sidebar {
+    background-color: #1e272e;
+    color: white;
+    width: 250px;
+    height: 100vh;
+    position: fixed; /* Fix the sidebar position */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 0;
+    overflow-y: auto; /* Allow scrolling within the sidebar if needed */
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.admin-avatar {
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+}
+
+.admin-name {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.nav-links {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 30px;
+    flex-grow: 1;
+}
+
+.nav-links li {
+    padding: 15px 20px;
+}
+
+.nav-links li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    font-size: 15px;
+}
+
+.nav-links li a:hover {
+    background-color: #3c3c3c;
+    transition: padding 0.3s ease;
+    padding: 10px;
+}
+
+.logout-button {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.logout-button:hover {
+    background-color: #ff5252;
+}
+
+/* Add this to ensure the main content scrolls */
+.main-content {
+    margin-left: 250px; /* Same width as the sidebar */
+    padding: 20px; /* Optional padding for the main content */
+}
