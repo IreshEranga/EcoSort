@@ -101,7 +101,7 @@ function DateShedule() {
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.email}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.wasteCollectionDate ? new Date(user.wasteCollectionDate).toLocaleDateString() : 'N/A'}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                      <button onClick={() => handleUpdateDate(user.userId)} style={{ padding: '5px 10px', cursor: 'pointer' }}>
+                      <button onClick={() => handleUpdateDate(user.userId)} style={{ padding: '5px 10px', cursor: 'pointer', borderRadius:'15px', backgroundColor: 'rgba(60, 247, 122, 0.9)' }}>
                         Update Date
                       </button>
                     </td>
