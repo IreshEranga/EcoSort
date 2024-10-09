@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import UpdateDateModal from './UpdateDateModal';
@@ -10,10 +10,9 @@ function DateShedule() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-  // Fetch the list of cities first (you can adjust this based on your app's needs)
+  // Fetch the list of cities
   const fetchCities = async () => {
     try {
-      // Assuming you have a separate endpoint to get the list of cities
       const response = await axios.get('http://localhost:8000/api/cities');
       setCities(response.data);
     } catch (error) {
@@ -32,14 +31,15 @@ function DateShedule() {
     }
   };
 
-  const fetchAllUsers = async () => {
+  // Memoized version of fetchAllUsers to avoid recreation on each render
+  const fetchAllUsers = useCallback(async () => {
     const usersByCityData = {};
     for (const city of cities) {
       const cityUsers = await fetchUsersByCity(city);
       Object.assign(usersByCityData, cityUsers);
     }
     setUsersByCity(usersByCityData);
-  };
+  }, [cities]); // Only re-create if cities change
 
   useEffect(() => {
     fetchCities();
@@ -47,9 +47,9 @@ function DateShedule() {
 
   useEffect(() => {
     if (cities.length > 0) {
-      fetchAllUsers();
+      fetchAllUsers(); // Calls memoized fetchAllUsers
     }
-  }, [cities]);
+  }, [cities, fetchAllUsers]);
 
   // Handle update date action
   const handleUpdateDate = (_id) => {
@@ -70,6 +70,12 @@ function DateShedule() {
     } catch (error) {
       console.error('Error updating waste collection date:', error);
     }
+  };
+
+  // Function to view location on map
+  const viewLocationOnMap = (latitude, longitude) => {
+    const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+    window.open(mapUrl, '_blank');
   };
 
   // Filter users based on the search term
@@ -104,30 +110,33 @@ function DateShedule() {
 
         {/* Users Table by City */}
         {Object.entries(filteredUsersByCity).map(([city, users]) => (
-          <div key={city} style={{ marginBottom: '20px' }}>
-            <h2>{city}</h2> <br />
+          <div key={city} style={{ marginBottom: '20px', paddingLeft:'20px' }}>
+            <h2> {city}</h2> <br />
             <table style={{ width: '100%', border: '1px solid #ddd', borderCollapse: 'collapse' }}>
               <thead>
-                <tr>
+                <tr style={{backgroundColor:'darkcyan', color:'white'}}>
                   <th style={{ border: '1px solid #ddd', padding: '8px' }}>User ID</th>
-                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>First Name</th>
-                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>Last Name</th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>Name</th>
                   <th style={{ border: '1px solid #ddd', padding: '8px' }}>Email</th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>Location</th>
                   <th style={{ border: '1px solid #ddd', padding: '8px' }}>Waste Collection Date</th>
                   <th style={{ border: '1px solid #ddd', padding: '8px' }}>Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody style={{backgroundColor:'#b3b3b3f8f9f'}}>
                 {users.map(user => (
                   <tr key={user.userId}>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.userId}</td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.firstName}</td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.lastName}</td>
+                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.firstName} {user.lastName}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.email}</td>
+                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.city}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.wasteCollectionDate || 'N/A'}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                       <button onClick={() => handleUpdateDate(user._id)} style={{ padding: '5px 10px', cursor: 'pointer', borderRadius:'15px', backgroundColor: 'rgba(60, 247, 122, 0.9)' }}>
                         Update Date
+                      </button>
+                      <button onClick={() => viewLocationOnMap(user.location.latitude, user.location.longitude)} style={{ padding: '5px 10px', cursor: 'pointer', borderRadius:'15px', backgroundColor: 'rgba(60, 140, 247, 0.9)', marginLeft: '10px' }}>
+                        View Location
                       </button>
                     </td>
                   </tr>
