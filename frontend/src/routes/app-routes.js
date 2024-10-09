@@ -13,7 +13,8 @@ import AdminDashBoard from '../pages/Admin/AdminDashBoard';
 import ReportIssue from '../pages/Support/ReportIssue';
 import CollectionRouting from '../pages/SheduleWaste/CollectionRouting';
 import UsersPage from '../pages/Admin/UsersPage/UsersPage';
-
+import RouteShedule from '../pages/Admin/WasteCollection/RouteShedule';
+import DateShedule from '../pages/Admin/WasteCollection/DateShedule';
 
 
 
@@ -64,6 +65,14 @@ const AppRoutes = () => {
           <Route 
             path="/users" 
             element={<ProtectedRoute component={UsersPage} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="/admindashboard/collection-routine" 
+            element={<ProtectedRoute component={RouteShedule} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="/admindashboard/collection-routine/dateShedule" 
+            element={<ProtectedRoute component={DateShedule} allowedRoles={['admin']} />} 
           />
         </Routes>
       </Router>
