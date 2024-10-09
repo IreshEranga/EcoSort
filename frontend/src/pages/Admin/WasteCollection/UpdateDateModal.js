@@ -34,7 +34,9 @@ const UpdateDateModal = ({ isOpen, onClose, onUpdate }) => {
               ))}
             </select>
           </label>
-          <button type="submit" className="update-button">Update</button>
+          <div className="button-container"> {/* Added a container for better styling */}
+            <button type="submit" className="update-button">Update</button>
+          </div>
         </form>
       </div>
     </div>
