@@ -84,7 +84,7 @@ function DateShedule() {
       {/* Main Content */}
       <div className="main-content">
         <h1 style={{ fontWeight: 'bold' }}>Schedule Date</h1>
-
+            
         {/* Search Bar */}
         <input
           type="text"
@@ -131,10 +131,12 @@ function DateShedule() {
 <br /><br /><br />
         {/* Modal for updating date */}
         <UpdateDateModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onUpdate={updateWasteCollectionDate}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onUpdate={updateWasteCollectionDate}
+            userId={selectedUserId} // Pass the selectedUserId here
         />
+
       </div>
     </div>
   );

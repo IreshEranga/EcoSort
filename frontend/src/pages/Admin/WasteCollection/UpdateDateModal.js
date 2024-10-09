@@ -3,7 +3,7 @@ import './UpdateDateModal.css'; // Add your own styling
 import { FaTimes } from 'react-icons/fa'; // Importing an icon (you can choose any icon)
 import axios from 'axios'; // Make sure to install axios if you haven't
 
-const UpdateDateModal = ({ isOpen, onClose, _id }) => { // Add userId prop
+const UpdateDateModal = ({ isOpen, onClose, onUpdate, userId }) => { // Accept userId prop
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const [loading, setLoading] = useState(false); // State for loading
 
@@ -13,12 +13,8 @@ const UpdateDateModal = ({ isOpen, onClose, _id }) => { // Add userId prop
     setLoading(true); // Set loading state
 
     try {
-      // Update the waste collection date via API call
-      const response = await axios.put(`http://localhost:8000/api/users/${_id}/waste-collection-date`, {
-        wasteCollectionDate: selectedDay,
-      });
-
-      console.log(response.data); // Log response for debugging
+      // Use the onUpdate function passed from DateShedule
+      await onUpdate(selectedDay, userId); // Pass both selectedDay and userId
       onClose(); // Close the modal after successful update
     } catch (error) {
       console.error('Error updating waste collection date:', error); // Log error
@@ -31,7 +27,7 @@ const UpdateDateModal = ({ isOpen, onClose, _id }) => { // Add userId prop
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content" style={{backgroundColor:'#f9f9f9', width:'500px'}}>
+      <div className="modal-content" style={{ backgroundColor: '#f9f9f9', width: '500px' }}>
         <div className="modal-header">
           <h2>Update Waste Collection Date</h2>
           <button className="close-button" onClick={onClose} aria-label="Close modal">
