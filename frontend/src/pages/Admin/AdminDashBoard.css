@@ -1,6 +1,6 @@
 .admin-dashboard {
     display: flex;
-    height: 100vh;
+    height: auto;
     background-color: #f4f4f4;
   }
   
