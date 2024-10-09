@@ -150,8 +150,8 @@ exports.getUsersDoorToDoor = async (req, res) => {
 
     // Find users by city and sort by latitude first, then by longitude
     const users = await User.find({ city }).sort({
-      'location.latitude': 1,  // Sort by latitude
-      'location.longitude': 1  // Then by longitude
+      'location.latitude': -1,  // Sort by latitude
+      'location.longitude': -1  // Then by longitude
     });
 
     if (!users || users.length === 0) {
