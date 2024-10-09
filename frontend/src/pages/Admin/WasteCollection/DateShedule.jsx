@@ -36,17 +36,34 @@ function DateShedule() {
   }, []);
 
   // Handle update date action
-  const handleUpdateDate = (userId) => {
-    setSelectedUserId(userId);
+  const handleUpdateDate = (_id) => {
+    setSelectedUserId(_id);
     setIsModalOpen(true);
   };
 
   // Update the waste collection date (placeholder for actual implementation)
+  /*
   const updateWasteCollectionDate = (selectedDay) => {
     console.log(`Update date for user ID: ${selectedUserId} to ${selectedDay}`);
     // Implement the API call to update the date in the database
   };
+*/
 
+  const updateWasteCollectionDate = async (selectedDay) => {
+    console.log(`Update date for user ID: ${selectedUserId} to ${selectedDay}`);
+    
+    try {
+      // Update the waste collection date via API call
+      const response = await axios.put(`http://localhost:8000/api/users/${selectedUserId}/waste-collection-date`, {
+        wasteCollectionDate: selectedDay,
+      });
+
+      console.log(response.data); // Log response for debugging
+      fetchUsers(); // Refresh the user list after updating
+    } catch (error) {
+      console.error('Error updating waste collection date:', error); // Log error
+    }
+  };
   // Filter users based on the search term
   const filteredUsersByCity = Object.fromEntries(
     Object.entries(usersByCity).map(([city, users]) => [
@@ -80,7 +97,7 @@ function DateShedule() {
         {/* Users Table by City */}
         {Object.entries(filteredUsersByCity).map(([city, users]) => (
           <div key={city} style={{ marginBottom: '20px' }}>
-            <h2>{city}</h2>
+            <h2>{city}</h2> <br />
             <table style={{ width: '100%', border: '1px solid #ddd', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
@@ -99,9 +116,9 @@ function DateShedule() {
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.firstName}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.lastName}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.email}</td>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.wasteCollectionDate ? new Date(user.wasteCollectionDate).toLocaleDateString() : 'N/A'}</td>
+                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.wasteCollectionDate || 'N/A'}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                      <button onClick={() => handleUpdateDate(user.userId)} style={{ padding: '5px 10px', cursor: 'pointer', borderRadius:'15px', backgroundColor: 'rgba(60, 247, 122, 0.9)' }}>
+                      <button onClick={() => handleUpdateDate(user._id)} style={{ padding: '5px 10px', cursor: 'pointer', borderRadius:'15px', backgroundColor: 'rgba(60, 247, 122, 0.9)' }}>
                         Update Date
                       </button>
                     </td>
