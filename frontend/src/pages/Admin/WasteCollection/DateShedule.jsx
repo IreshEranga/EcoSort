@@ -5,35 +5,51 @@ import UpdateDateModal from './UpdateDateModal';
 
 function DateShedule() {
   const [usersByCity, setUsersByCity] = useState({});
+  const [cities, setCities] = useState([]); // List of cities to fetch users for
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-  // Fetch users data
-  const fetchUsers = async () => {
+  // Fetch the list of cities first (you can adjust this based on your app's needs)
+  const fetchCities = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/users');
-      const users = response.data;
-
-      // Organize users by city
-      const groupedUsers = users.reduce((acc, user) => {
-        const city = user.city;
-        if (!acc[city]) {
-          acc[city] = [];
-        }
-        acc[city].push(user);
-        return acc;
-      }, {});
-
-      setUsersByCity(groupedUsers);
+      // Assuming you have a separate endpoint to get the list of cities
+      const response = await axios.get('http://localhost:8000/api/cities');
+      setCities(response.data);
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error fetching cities:', error);
     }
   };
 
+  // Fetch users data for each city
+  const fetchUsersByCity = async (city) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/users/city/${city}/door-to-door`);
+      return { [city]: response.data };
+    } catch (error) {
+      console.error(`Error fetching users for city ${city}:`, error);
+      return { [city]: [] }; // Return empty array in case of error
+    }
+  };
+
+  const fetchAllUsers = async () => {
+    const usersByCityData = {};
+    for (const city of cities) {
+      const cityUsers = await fetchUsersByCity(city);
+      Object.assign(usersByCityData, cityUsers);
+    }
+    setUsersByCity(usersByCityData);
+  };
+
   useEffect(() => {
-    fetchUsers();
+    fetchCities();
   }, []);
+
+  useEffect(() => {
+    if (cities.length > 0) {
+      fetchAllUsers();
+    }
+  }, [cities]);
 
   // Handle update date action
   const handleUpdateDate = (_id) => {
@@ -41,29 +57,21 @@ function DateShedule() {
     setIsModalOpen(true);
   };
 
-  // Update the waste collection date (placeholder for actual implementation)
-  /*
-  const updateWasteCollectionDate = (selectedDay) => {
-    console.log(`Update date for user ID: ${selectedUserId} to ${selectedDay}`);
-    // Implement the API call to update the date in the database
-  };
-*/
-
   const updateWasteCollectionDate = async (selectedDay) => {
     console.log(`Update date for user ID: ${selectedUserId} to ${selectedDay}`);
     
     try {
-      // Update the waste collection date via API call
       const response = await axios.put(`http://localhost:8000/api/users/${selectedUserId}/waste-collection-date`, {
         wasteCollectionDate: selectedDay,
       });
 
-      console.log(response.data); // Log response for debugging
-      fetchUsers(); // Refresh the user list after updating
+      console.log(response.data);
+      fetchAllUsers(); // Refresh the user list after updating
     } catch (error) {
-      console.error('Error updating waste collection date:', error); // Log error
+      console.error('Error updating waste collection date:', error);
     }
   };
+
   // Filter users based on the search term
   const filteredUsersByCity = Object.fromEntries(
     Object.entries(usersByCity).map(([city, users]) => [
@@ -91,7 +99,7 @@ function DateShedule() {
           placeholder="Search by Name or Email or City"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ marginBottom: '20px', padding: '10px', width: '30%', marginLeft:'800px', marginTop:'-100px'  }}
+          style={{ marginBottom: '20px', padding: '10px', width: '30%', marginLeft:'800px', marginTop:'-100px' }}
         />
 
         {/* Users Table by City */}
@@ -128,15 +136,14 @@ function DateShedule() {
             </table>
           </div>
         ))}
-<br /><br /><br />
+        <br /><br /><br />
         {/* Modal for updating date */}
         <UpdateDateModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onUpdate={updateWasteCollectionDate}
-            userId={selectedUserId} // Pass the selectedUserId here
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onUpdate={updateWasteCollectionDate}
+          userId={selectedUserId} // Pass the selectedUserId here
         />
-
       </div>
     </div>
   );
