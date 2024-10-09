@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema({
     latitude: { type: Number, required: true },  // Latitude field
     longitude: { type: Number, required: true }  // Longitude field
   },
+  wasteCollectionDate: { type: String },
   role:{type : String, default : 'User'}
 }, { timestamps: true });
 
