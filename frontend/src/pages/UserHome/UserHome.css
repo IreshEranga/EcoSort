@@ -103,6 +103,7 @@
     padding: 2rem 1rem;
     max-width: 1200px;
     margin: 0 auto; /* Centering the grid */
+    margin-left: -100px;
 }
 
 .service-card {
@@ -183,21 +184,26 @@
     }
 
     .services-grid {
-        grid-template-columns: 1fr; /* Make services grid full width */
+        grid-template-columns: 1fr;
+        margin-left: -250px; /* Make services grid full width */
     }
 
     .intro-section {
         margin-top: 2rem; /* Space between service cards and intro on mobile */
     }
+    .service-image {
+        height: 300px; /* Adjust image height for smaller screens */
+    }
 }
 
-/* Responsive Layout */
+/* Responsive Layout
 @media (max-width: 768px) {
     .services-grid {
         grid-template-columns: 1fr;
         padding: 1rem;
+        margin-right: 350px;
     }
     .service-image {
-        height: 130px; /* Adjust image height for smaller screens */
+        height: 130px; 
     }
-}
+} */
