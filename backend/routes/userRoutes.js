@@ -31,6 +31,7 @@ router.get('/users/city/:city', userController.getUsersByCity);
 // 
 router.get('/users/city/:city/door-to-door', userController.getUsersDoorToDoor);
 
+router.put('/users/:id/waste-collection-date', userController.updateWasteCollectionDate);
 
 
 

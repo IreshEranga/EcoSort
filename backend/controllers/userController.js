@@ -143,6 +143,31 @@ exports.getUsersByCity = async (req, res) => {
 };
 
 
+// Update waste collection date
+exports.updateWasteCollectionDate = async (req, res) => {
+  try {
+    const { id } = req.params; // User ID from the route parameters
+    const { wasteCollectionDate } = req.body; // New date from the request body
+
+    // Find user by ID and update waste collection date
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { wasteCollectionDate },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'Waste collection date updated successfully', updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating waste collection date', error });
+  }
+};
+
+
+
 // Get users by city and sort in a "door-to-door" sequence based on location
 exports.getUsersDoorToDoor = async (req, res) => {
   try {
