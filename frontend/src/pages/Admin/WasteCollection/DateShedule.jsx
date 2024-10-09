@@ -132,12 +132,14 @@ function DateShedule() {
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.city}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.wasteCollectionDate || 'N/A'}</td>
                     <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                      <center>
                       <button onClick={() => handleUpdateDate(user._id)} style={{ padding: '5px 10px', cursor: 'pointer', borderRadius:'15px', backgroundColor: 'rgba(60, 247, 122, 0.9)' }}>
                         Update Date
                       </button>
                       <button onClick={() => viewLocationOnMap(user.location.latitude, user.location.longitude)} style={{ padding: '5px 10px', cursor: 'pointer', borderRadius:'15px', backgroundColor: 'rgba(60, 140, 247, 0.9)', marginLeft: '10px' }}>
                         View Location
                       </button>
+                      </center>
                     </td>
                   </tr>
                 ))}
