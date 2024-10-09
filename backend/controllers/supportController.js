@@ -13,6 +13,8 @@ const createTicket = async (req, res) => {
             description: description,
             status: "Received",
         });
+
+        console.log('Saved Ticket:', savedTicket); // Log the saved ticket
         res.status(201).json({ message: 'Ticket created successfully',savedTicket });
     } catch (error) {
         res.status(500).json({ message: 'Failed to create ticket', error: error.message });
@@ -20,13 +22,27 @@ const createTicket = async (req, res) => {
 };
 
 // Get all tickets
-const getTickets = async (req, res) => {
+const getUserTickets = async (req, res) => {
     try {
-        const tickets = await SupportTicket.find();
+        const userId = req.params.userId;
+        const tickets = await SupportTicket.find({ userId: userId });
         res.status(200).json(tickets);
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch tickets', error: error.message });
     }
 };
 
-module.exports = { createTicket, getTickets };
+const deleteTicket = async (req, res) => {
+    try {
+        const ticketId = req.params.id;
+        const deletedTicket = await SupportTicket.findByIdAndDelete(ticketId);
+        if (!deletedTicket) {
+            return res.status(404).json({ message: 'Ticket not found' });
+        }
+        res.status(200).json({ message: 'Ticket deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to delete ticket', error: error.message });
+    }
+};
+
+module.exports = { createTicket, getUserTickets,  deleteTicket};

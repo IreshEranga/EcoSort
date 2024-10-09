@@ -26,4 +26,5 @@ const supportSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('SupportTicket', supportSchema);
+const SupportTicket = mongoose.model('SupportTicket', supportSchema);
+module.exports = SupportTicket;
