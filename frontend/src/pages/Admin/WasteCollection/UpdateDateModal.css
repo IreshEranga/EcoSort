@@ -12,19 +12,59 @@
 }
 
 .modal-content {
-    background: white;
+    background: #f9f9f9; /* Light background for the modal */
+    color: #333; /* Dark text color */
     padding: 20px;
     border-radius: 5px;
-    width: 300px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .modal-content h2 {
     margin: 0 0 20px;
+    font-size: 1.5em; /* Adjust the font size */
+}
+
+.close-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em; /* Adjust icon size */
+    color: #ff5c5c; /* Red color for the close icon */
+}
+
+.close-button:hover {
+    color: #d9534f; /* Darker red on hover */
 }
 
 .modal-content button {
     margin-top: 10px;
     padding: 10px;
     cursor: pointer;
+    background-color: #ffffff; /* Green background for update button */
+    color: rgb(0, 0, 0); /* White text for update button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.modal-content button:hover {
+    background-color: rgba(0, 0, 0, 0.2); /* Darker green on hover */
+}
+
+.modal-content .update-button{
+    background-color: rgb(9, 40, 219);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.modal-content .update-button:hover{
+    background-color: rgb(12, 35, 164);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
 }

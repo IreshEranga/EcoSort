@@ -1,5 +1,6 @@
 import React from 'react';
 import './UpdateDateModal.css'; // Add your own styling
+import { FaTimes } from 'react-icons/fa'; // Importing an icon (you can choose any icon)
 
 const UpdateDateModal = ({ isOpen, onClose, onUpdate }) => {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -16,7 +17,12 @@ const UpdateDateModal = ({ isOpen, onClose, onUpdate }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Update Waste Collection Date</h2>
+        <div className="modal-header">
+          <h2>Update Waste Collection Date</h2>
+          <button className="close-button" onClick={onClose} aria-label="Close modal">
+            <FaTimes />
+          </button>
+        </div>
         <form onSubmit={handleUpdate}>
           <label>
             Select Day:
@@ -28,8 +34,7 @@ const UpdateDateModal = ({ isOpen, onClose, onUpdate }) => {
               ))}
             </select>
           </label>
-          <button type="submit">Update</button>
-          <button type="button" onClick={onClose}>Cancel</button>
+          <button type="submit" className="update-button">Update</button>
         </form>
       </div>
     </div>
