@@ -41,7 +41,7 @@
     color: white;
     text-decoration: none;
     display: block;
-    font-size: 18px;
+    font-size: 15px;
   }
   
   .nav-links li a:hover {
@@ -54,8 +54,8 @@
     background-color: #ff6b6b;
     color: white;
     border: none;
-    padding: 15px;
-    font-size: 16px;
+    padding: 10px;
+    font-size: 15px;
     cursor: pointer;
     width: 100%;
   }

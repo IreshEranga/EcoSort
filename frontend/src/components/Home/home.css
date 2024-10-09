@@ -11,16 +11,18 @@ body {
 .navbar-custom {
     background-color: #2a9d8f;
     padding: 15px 0;
+    height: 100px;
 }
 
 .navbar-logo {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: bold;
     color: #fff !important;
 }
 
 .logo{
     width:100px;
+    height:60px;
     margin-left: 50px;
 }
 
@@ -41,7 +43,7 @@ body {
 }
 
 .login-button {
-    background-color: #e9c46a;
+    background-color: white;
     padding: 8px 20px;
     border-radius: 20px;
     color: #000 !important;
@@ -49,6 +51,7 @@ body {
 
 .login-button:hover {
     background-color: #f4a261 !important;
+    color: #000 !important;
 }
 
 /* Hero Section */
@@ -76,12 +79,14 @@ body {
 .hero-content {
     position: relative;
     z-index: 2;
+    margin-top: 80px;
 }
 
 .main-title {
     font-size: 4rem;
     font-weight: 700;
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .subtitle {
@@ -121,6 +126,12 @@ body {
     margin-right: 20px;
 }
 
+.feature-box:hover {
+    transform: translateY(-10px); /* Slight upward movement on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+}
+
 .feature-icon {
     font-size: 3rem;
     color: #2a9d8f;
@@ -144,7 +155,7 @@ body {
 }
 
 .cta-button-large:hover {
-    background-color: #f4a261;
+    background-color: #2a9d8f;
 }
 
 /* Footer */
@@ -159,10 +170,6 @@ body {
 .footer a {
     color: #e9c46a;
     text-decoration: none;
-}
-
-.footer a:hover {
-    text-decoration: underline;
 }
 
 /* Centering Elements */
