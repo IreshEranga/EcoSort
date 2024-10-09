@@ -26,11 +26,11 @@ export default function AdminDashBoard() {
       
       {/* Main Content */}
       <div className="main-content">
-        <h1>Welcome to Admin Dashboard</h1>
+        <h1>Welcome Admin !</h1>
         
         {/* User Count Card */}
         <div className="user-count-card">
-          <h2>Total Users</h2>
+          <h2>Total Users 👤</h2>
           <p>{userCount}</p>
         </div>
         
