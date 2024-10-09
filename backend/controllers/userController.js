@@ -141,3 +141,25 @@ exports.getUsersByCity = async (req, res) => {
     res.status(500).json({ message: 'Error fetching users by city', error });
   }
 };
+
+
+// Get users by city and sort in a "door-to-door" sequence based on location
+exports.getUsersDoorToDoor = async (req, res) => {
+  try {
+    const { city } = req.params;
+
+    // Find users by city and sort by latitude first, then by longitude
+    const users = await User.find({ city }).sort({
+      'location.latitude': 1,  // Sort by latitude
+      'location.longitude': 1  // Then by longitude
+    });
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: `No users found in city: ${city}` });
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users by door-to-door location', error });
+  }
+};

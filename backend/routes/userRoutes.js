@@ -25,8 +25,11 @@ router.delete('/users/:id', userController.deleteUser);
 
 router.get('/users/count', userController.getUserCount);
 
-// In your routes file
+// 
 router.get('/users/city/:city', userController.getUsersByCity);
+
+// 
+router.get('/users/city/:city/door-to-door', userController.getUsersDoorToDoor);
 
 
 
