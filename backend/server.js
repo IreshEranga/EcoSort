@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 
 const UserRoutes = require('./routes/userRoutes');
 const supportRoutes = require('./routes/supportRoutes');
+const adSupportRoutes = require('./routes/adSupportRoutes');
 const DriverRoutes = require('./routes/driverRoutes');
 
 dotenv.config();
@@ -26,6 +27,7 @@ app.use(express.json());
 
 app.use('/api', UserRoutes);
 app.use('/api/support', supportRoutes);
+app.use('/api/admin/', adSupportRoutes);
 app.use('/api/driver', DriverRoutes);
 
 
