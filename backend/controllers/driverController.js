@@ -59,10 +59,18 @@ exports.createDriver = async (req, res) => {
 
     // Send an email with the generated password
     const mailOptions = {
-      from: EMAIL, // Sender address
+      from:`"ECO SORT" <${EMAIL}>`, // Sender address
       to: driver.email,              // Receiver address (driver's email)
       subject: 'Your Driver Account Password',
-      text: `Hello ${driver.name},\n\nYour driver account has been created successfully.\n\nYour login password is: ${generatedPassword}\n\nPlease change your password after logging in.`,
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+          <h2 style="color: #4CAF50;">Hello ${driver.name},</h2>
+          <p>Your driver account has been created successfully for <strong>Eco SORT</strong>.</p>
+          <p>Your login password is: <strong style="color: #FF5722;">${generatedPassword}</strong></p>
+          <p>Please change your password after logging in.</p>
+          <p>Best Regards,<br>The Eco SORT Team</p>
+        </div>
+      `,
     };
 
     // Send the email
