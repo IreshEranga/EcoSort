@@ -77,7 +77,7 @@ const UserHome = () => {
             <h4>Collection Routines</h4>
           </Link>
 
-          <Link to="/special-waste" className="service-card special-waste-card">
+          <Link to="/report-issue" className="service-card special-waste-card">
             <div className="service-image special-waste-image"></div>
             <h4>Issues</h4>
           </Link>

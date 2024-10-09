@@ -35,7 +35,7 @@ const NavbarComponent = () => {
                         <Nav.Link as={Link} to="/userHome" className="nav-link-custom">Home</Nav.Link>
                         <Nav.Link as={Link} to="/waste" className="nav-link-custom">Waste</Nav.Link>
                         <Nav.Link as={Link} to="/CollectionRouting" className="nav-link-custom">Schedules</Nav.Link>
-                        <Nav.Link as={Link} to="/contact" className="nav-link-custom">Issues</Nav.Link>
+                        <Nav.Link as={Link} to="/report-issue" className="nav-link-custom">Issues</Nav.Link>
                         <Nav.Link as={Link} to="/payments" className="nav-link-custom">Payments</Nav.Link>
                         <Nav.Link as={Link} to="/login" className="nav-link-custom login-button">Logout</Nav.Link>
 
