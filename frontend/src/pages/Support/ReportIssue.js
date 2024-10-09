@@ -102,6 +102,7 @@ const ReportIssue = () => {
                         <th>Description</th>
                         <th>Status</th>
                         <th>Actions</th>
+                        <th>Special Note</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -116,6 +117,7 @@ const ReportIssue = () => {
                                     <button onClick={() => deleteTicket(ticket._id)}>Delete</button>
                                 )}
                             </td>
+                            <td>{ticket.note}</td>
                         </tr>
                     ))}
                 </tbody>
