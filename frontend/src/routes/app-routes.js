@@ -56,6 +56,10 @@ const AppRoutes = () => {
             path="/sheduleCollection" 
             element={<ProtectedRoute component={ScheduleCollection} allowedRoles={['User']} />} 
           />
+          <Route 
+            path="/report-issue" 
+            element={<ProtectedRoute component={ReportIssue} allowedRoles={['User']} />} 
+          />
 
           {/* Example protected route for admin */}
           <Route 
