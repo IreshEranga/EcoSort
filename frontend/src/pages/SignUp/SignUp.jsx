@@ -13,7 +13,7 @@ function SignUp() {
     address: '',
     mobile: '',
     password: '',
-    type: 'individual', // Default to individual
+    type: 'household', // Default to individual
     city: '',
     latitude: '',   // New latitude field
     longitude: ''   // New longitude field
@@ -182,7 +182,7 @@ function SignUp() {
                 onChange={handleChange}
                 required
               >
-                <option value="individual">Individual</option>
+                <option value="household">Household</option>
                 <option value="business">Business</option>
               </Form.Control>
             </Form.Group>

@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['business', 'individual'],
+    enum: ['business', 'household'],
     required: true
   },
   wasteGenerated: { type: Number, default: 0 },
