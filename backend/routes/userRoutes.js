@@ -33,7 +33,7 @@ router.get('/users/city/:city/door-to-door', userController.getUsersDoorToDoor);
 
 router.put('/users/:id/waste-collection-date', userController.updateWasteCollectionDate);
 
-
+router.get('/cities', userController.getCities);
 
 
 // Schedule collection
