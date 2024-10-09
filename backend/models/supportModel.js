@@ -20,6 +20,10 @@ const supportSchema = new mongoose.Schema({
         enum: ['Received', 'Pending', 'Denied', 'Completed'], // Status options
         default: 'Received' // Default status when a ticket is created
     },
+    note: {
+        type: String, // Field for storing admin's notes
+        default: ''
+    },
     createdAt: {
         type: Date,
         default: Date.now
