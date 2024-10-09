@@ -25,6 +25,12 @@ router.delete('/users/:id', userController.deleteUser);
 
 router.get('/users/count', userController.getUserCount);
 
+// In your routes file
+router.get('/users/city/:city', userController.getUsersByCity);
+
+
+
+
 
 // Schedule collection
 router.post('/schedule', async (req, res) => {

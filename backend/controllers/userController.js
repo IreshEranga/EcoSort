@@ -124,3 +124,20 @@ exports.getUserCount = async (req, res) => {
   }
 };
 
+// Get users by city and display in alphabetical order
+exports.getUsersByCity = async (req, res) => {
+  try {
+    const { city } = req.params;
+
+    // Find users by city and sort by firstName in alphabetical order
+    const users = await User.find({ city }).sort({ firstName: 1 });
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: `No users found in city: ${city}` });
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users by city', error });
+  }
+};
