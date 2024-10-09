@@ -26,13 +26,15 @@ const SupportTicketForm = () => {
         setIsSubmitting(true);
         try {
             const response = await axios.post('http://localhost:8000/api/support/create-ticket', {
-                userId: user.id,
+                userId: user._id,
                 issueType,
                 description,
             });
             setMessage(response.data.message || 'Ticket submitted successfully!');
             setIssueType('');
             setDescription('');
+
+            
         } catch (error) {
             setMessage('Error submitting ticket. Please try again.');
         } finally {
