@@ -4,10 +4,11 @@ const User = require("../models/user");
 // Create a new support ticket
 const createTicket = async (req, res) => {
     try {
-        const { issueType, description } = req.body;
+        const { userId, issueType, description } = req.body;
 
         //const newTicket = new SupportTicket({ userId, issueType, description });
         const savedTicket = await SupportTicket.create({
+            userId: userId,
             issueType: issueType,
             description: description,
             status: "Received",
