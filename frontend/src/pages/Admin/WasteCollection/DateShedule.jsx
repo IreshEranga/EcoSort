@@ -57,7 +57,7 @@ function DateShedule() {
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.city.toLowerCase().includes(searchTerm.toLowerCase())
       )
-    ])
+    ]).filter(([_, users]) => users.length > 0) // Filter out cities with no matching users
   );
 
   return (
@@ -66,15 +66,15 @@ function DateShedule() {
 
       {/* Main Content */}
       <div className="main-content">
-        <h1 style={{ fontStyle: 'bold' }}>Schedule Date</h1>
+        <h1 style={{ fontWeight: 'bold' }}>Schedule Date</h1>
 
         {/* Search Bar */}
         <input
           type="text"
-          placeholder="Search by Name or Email"
+          placeholder="Search by Name or Email or City"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ marginBottom: '20px', padding: '10px', width: '100%' }}
+          style={{ marginBottom: '20px', padding: '10px', width: '30%', marginLeft:'800px', marginTop:'-100px'  }}
         />
 
         {/* Users Table by City */}
@@ -111,7 +111,7 @@ function DateShedule() {
             </table>
           </div>
         ))}
-
+<br /><br /><br />
         {/* Modal for updating date */}
         <UpdateDateModal
           isOpen={isModalOpen}
