@@ -18,6 +18,7 @@
   .login-header .login-logo {
     width: 100px;
     height: auto;
+    margin-top: 10px;
   }
   
   .login-header h2 {
@@ -33,7 +34,7 @@
   .login-input {
     border-radius: 8px;
     border: 1px solid #cbd5e0;  /* Light border */
-    padding: 12px;
+    padding: 10px;
     font-size: 16px;
   }
   

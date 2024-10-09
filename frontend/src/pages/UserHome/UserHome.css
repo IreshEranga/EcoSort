@@ -1,75 +1,76 @@
 /* Navbar Styles */
 .navbar-custom {
-    background-color: #5DBB63;
+    background-color: #2a9d8f;
     padding: 0.75rem 2rem; /* More padding for a sleeker look */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
-  }
-  
-  .navbar-logo .logo {
+}
+
+.navbar-logo .logo {
     max-width: 50px;
-  }
-  
-  .nav-link-custom {
+}
+
+.nav-link-custom {
     color: white;
     margin-right: 20px;
     font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase; /* Make nav links stand out */
-  }
-  
-  .nav-link-custom:hover {
+}
+
+.nav-link-custom:hover {
     color: #f0f0f0;
-  }
-  
-  .login-button {
+}
+
+.login-button {
     background-color: #fff;
-    color: #5DBB63;
+    color: #2a9d8f;
     padding: 0.5rem 1.25rem;
     border-radius: 5px;
     font-weight: bold;
     transition: background-color 0.3s ease;
-  }
-  /* Profile icon styling */
-.profile-icon {
-  margin-left: 15px;
-  color: #ffffff; /* Change the color as needed */
-  cursor: pointer;
 }
 
-  
-  .login-button:hover {
+/* Profile icon styling */
+.profile-icon {
+    margin-left: 15px;
+    color: #ffffff; /* Change the color as needed */
+    cursor: pointer;
+}
+
+.login-button:hover {
     background-color: #e0e0e0;
-  }
-  
-  /* General Page Styles */
-  .user-home {
+}
+
+/* General Page Styles */
+.user-home {
     font-family: 'Arial', sans-serif;
     padding-top: 70px; /* For navbar height */
     background-color: #f4f4f4; /* Light background for better contrast */
     min-height: 100vh;
-  }
-  
-  .user-header {
+}
+
+.user-header {
     background-color: #e0f7e9;
     color: #333;
     text-align: center;
-    padding: 2rem 1rem; /* Increased padding for spacing */
+    padding: 2rem 2rem; /* Increased padding for spacing */
+    margin-top: 1.5rem;
     /*border-bottom: 4px solid #5DBB63; /* Accent line for styling */
-  }
-  
-  .user-header h2 {
+}
+
+.user-header h2 {
     font-size: 28px; /* Larger font size */
     margin: 0;
-  }
-  
-  .user-header p {
+}
+
+.user-header p {
     font-size: 16px;
     margin: 10px 0 0;
     color: #777;
-  }
-  
-  /* Banner Section */
-  .banner-section {
+}
+
+/* Banner Section */
+.banner-section {
     background-color: white;
     text-align: center;
     padding: 40px 20px; /* More padding for a spacious feel */
@@ -77,131 +78,126 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     margin: 20px auto;
     max-width: 800px;
-  }
-  
-  .banner-content {
+}
+
+.banner-content {
     color: #333;
-  }
-  
-  .banner-content h3 {
+}
+
+.banner-content h3 {
     font-size: 26px; /* Larger and more prominent heading */
     font-weight: bold;
-  }
-  
-  .banner-content p {
+}
+
+.banner-content p {
     margin: 10px 0;
     font-size: 18px;
     color: #555;
-  }
-  
-  
+}
+
 /* Service Cards */
 .services-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Flexible layout */
-  gap: 1.5rem; /* More spacing */
-  padding: 2rem 1rem;
-  max-width: 1200px;
-  margin: 0 auto; /* Centering the grid */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Flexible layout */
+    gap: 1.5rem; /* More spacing */
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto; /* Centering the grid */
 }
 
 .service-card {
-  background-color: #fff;
-  border-radius: 12px;
-  width: 100%;
-  height: auto; /* No fixed height for cards */
-  padding: 1rem;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Deeper shadow for depth */
-  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s ease;
-  text-decoration: none;
-  color: rgb(0, 0, 0);
+    background-color: #fff;
+    border-radius: 12px;
+    width: 100%;
+    height: auto; /* No fixed height for cards */
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Deeper shadow for depth */
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s ease;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
 }
 
 .service-image {
-  background-size: cover;
-  background-position: center;
-  border-radius: 12px;
-  height: 150px; /* Set a fixed height for the image */
-  margin-bottom: 10px; /* Space between image and text */
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    height: 200px; /* Set a uniform height for all images */
+    margin-bottom: 10px; /* Space between image and text */
 }
 
 .service-card h4 {
-  font-size: 18px;
-  font-weight: bold;
-  color: rgb(0, 0, 0);
-  margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    margin: 0;
 }
 
-.service-card:hover{
-  transform: translateY(-10px); /* Slight upward movement on hover */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  background-color: rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+.service-card:hover {
+    transform: translateY(-10px); /* Slight upward movement on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
 }
 
 /* Individual Background Images for Service Cards */
-.waste-image { background-image: url('../../assets/images/wastePut.png'); }
+.waste-image { background-image: url('../../assets/images/pope.png'); }
 .routine-image { background-image: url('../../assets/images/Collection.png'); }
 .special-waste-image { background-image: url('../../assets/images/issue.png'); }
 .payment-image { background-image: url('../../assets/images/payment1.png'); }
 
-
-
 /* Main content area that contains both service cards and introduction */
-
-
 .intro-section {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 .intro-image {
-  max-width: 100%;
-  height: 300px;
-  border-radius: 8px;
-  margin-bottom: 2rem;
+    max-width: 100%;
+    height: 300px;
+    border-radius: 8px;
+    margin-bottom: 2rem;
 }
 
 .intro-text {
-  color: #333;
+    color: #333;
 }
 
 .intro-text h3 {
-  font-size: 24px;
-  font-weight: bold;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 .intro-text p {
-  font-size: 16px;
-  color: #555;
+    font-size: 16px;
+    color: #555;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .main-content {
-    grid-template-columns: 1fr; /* Stack content vertically on mobile */
-    gap: 1rem;
-  }
+    .main-content {
+        grid-template-columns: 1fr; /* Stack content vertically on mobile */
+        gap: 1rem;
+    }
 
-  .services-grid {
-    grid-template-columns: 1fr; /* Make services grid full width */
-  }
+    .services-grid {
+        grid-template-columns: 1fr; /* Make services grid full width */
+    }
 
-  .intro-section {
-    margin-top: 2rem; /* Space between service cards and intro on mobile */
-  }
+    .intro-section {
+        margin-top: 2rem; /* Space between service cards and intro on mobile */
+    }
 }
 
 /* Responsive Layout */
 @media (max-width: 768px) {
-  .services-grid {
-    grid-template-columns: 1fr;
-    padding: 1rem;
-  }
-  .service-image {
-    height: 130px; /* Adjust image height for smaller screens */
-  }
+    .services-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+    .service-image {
+        height: 130px; /* Adjust image height for smaller screens */
+    }
 }
