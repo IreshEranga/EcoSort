@@ -26,7 +26,7 @@ export default function AdminSidebar() {
         <li><Link to="/admindashboard">Dashboard</Link></li>
         <li><Link to="/users">Users</Link></li>
         <li><Link to="/waste-management">Waste Management</Link></li>
-        <li><Link to="/collection-routine">Collection Routines</Link></li>
+        <li><Link to="/admindashboard/collection-routine">Collection Routines</Link></li>
         <li><Link to="/waste-management">Payments</Link></li>
         <li><Link to="/waste-management">Issues</Link></li>
         {/* Add more links as needed */}
