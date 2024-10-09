@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './UpdateDateModal.css'; // Add your own styling
 import { FaTimes } from 'react-icons/fa'; // Importing an icon (you can choose any icon)
-import axios from 'axios'; // Make sure to install axios if you haven't
+//import axios from 'axios'; // Make sure to install axios if you haven't
 
 const UpdateDateModal = ({ isOpen, onClose, onUpdate, userId }) => { // Accept userId prop
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

@@ -167,6 +167,16 @@ exports.updateWasteCollectionDate = async (req, res) => {
 };
 
 
+exports.getCities = async (req, res) => {
+  try {
+    const cities = await User.distinct('city'); // Fetch distinct cities from User model
+    res.status(200).json(cities); // Send cities as response
+  } catch (error) {
+    console.error('Error fetching cities:', error);
+    res.status(500).json({ message: 'Server error' }); // Handle error
+  }
+};
+
 
 // Get users by city and sort in a "door-to-door" sequence based on location
 exports.getUsersDoorToDoor = async (req, res) => {
