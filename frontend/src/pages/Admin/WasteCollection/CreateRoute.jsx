@@ -1,44 +1,25 @@
 import React, { useState } from 'react';
-import AdminSidebar from '../components/Admin/AdminSidebar';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
-import L from 'leaflet';
+import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import './CreateRoute.css';
-
-// Default marker icon fix for Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-});
 
 function CreateRoute() {
   const [routeName, setRouteName] = useState('');
   const [driver, setDriver] = useState('');
-  const [stops, setStops] = useState([]);
-
-  // Function to add a new stop with lat and lng
-  const addStop = (lat, lng) => {
-    setStops([...stops, { lat, lng }]);
+  const [stops, setStops] = useState(['']);
+  
+  const addStop = () => setStops([...stops, '']);
+  const handleStopChange = (index, value) => {
+    const newStops = [...stops];
+    newStops[index] = value;
+    setStops(newStops);
   };
+  const removeStop = (index) => setStops(stops.filter((_, i) => i !== index));
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const routeData = { routeName, driver, stops };
     console.log('Route Created:', routeData);
     // Submit logic (e.g., API call) goes here
-  };
-
-  // Component to handle clicks on the map
-  const MapClickHandler = () => {
-    useMapEvents({
-      click(e) {
-        const { lat, lng } = e.latlng;
-        addStop(lat, lng); // Add stop to state when map is clicked
-      },
-    });
-    return null;
   };
 
   return (
@@ -68,23 +49,30 @@ function CreateRoute() {
               required
             >
               <option value="">Select Driver</option>
+              {/* Options for drivers */}
               <option value="Driver 1">Driver 1</option>
               <option value="Driver 2">Driver 2</option>
+              {/* Add more driver options dynamically if needed */}
             </select>
           </div>
 
           <div className="form-group">
-            <label>Stopping Places (click on the map to add stops):</label>
-            <MapContainer center={[7.8731, 80.7718]} zoom={7} className="map-container">
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-              <MapClickHandler />
-              {stops.map((stop, index) => (
-                <Marker key={index} position={[stop.lat, stop.lng]} />
-              ))}
-            </MapContainer>
+            <label>Stopping Places:</label>
+            {stops.map((stop, index) => (
+              <div key={index} className="stop-item">
+                <input
+                  type="text"
+                  value={stop}
+                  onChange={(e) => handleStopChange(index, e.target.value)}
+                  placeholder={`Stop ${index + 1}`}
+                  required
+                />
+                <button type="button" onClick={() => removeStop(index)}>Remove</button>
+              </div>
+            ))}
+            <button type="button" onClick={addStop} className="add-stop-btn">
+              Add Stop
+            </button>
           </div>
 
           <button type="submit" className="submit-btn">Create Route</button>
