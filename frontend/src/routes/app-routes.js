@@ -15,7 +15,8 @@ import ReportIssue from '../pages/Support/ReportIssue';
 import UsersPage from '../pages/Admin/UsersPage/UsersPage';
 import RouteShedule from '../pages/Admin/WasteCollection/RouteShedule';
 import DateShedule from '../pages/Admin/WasteCollection/DateShedule';
-import Issues from '../pages/Admin/Support/SupportDashboard';import DriversPage from '../pages/Admin/DriversPage/DriversPage';
+import Issues from '../pages/Admin/Support/SupportDashboard';
+import DriversPage from '../pages/Admin/DriversPage/DriversPage';
 
 
 
@@ -82,6 +83,14 @@ const AppRoutes = () => {
           <Route 
             path="/admindashboard/collection-routine/dateShedule" 
             element={<ProtectedRoute component={DateShedule} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="admindashboard/issues" 
+            element={<ProtectedRoute component={Issues} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="admindashboard/drivers" 
+            element={<ProtectedRoute component={DriversPage} allowedRoles={['admin']} />} 
           />
         </Routes>
       </Router>
