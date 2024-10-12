@@ -60,7 +60,6 @@ function DisplayRoutes() {
     try {
       const response = await axios.get(`http://localhost:8000/api/driver/drivers/available/${city}`);
       setAvailableDrivers(response.data);
-      console.log(availableDrivers);
     } catch (error) {
       console.error('Error fetching available drivers:', error);
     }
@@ -69,21 +68,31 @@ function DisplayRoutes() {
   // Open the modal to assign a driver
   const handleAssignDriver = (route) => {
     setSelectedRoute(route);
-    fetchAvailableDrivers(route.city); // Fetch drivers for the route's city
+    fetchAvailableDrivers(route.city);
     setIsModalOpen(true);
   };
 
-  // Handle driver assignment
+  // Handle driver assignment and update driver status
   const handleDriverAssignment = async () => {
     if (!selectedDriver) return;
+
     try {
+      // Assign driver to the route
       await axios.put(`http://localhost:8000/router/routes/${selectedRoute._id}`, {
         assignedDriver: selectedDriver
       });
+
+      // Update driver status to 'onRide'
+      await axios.put(`http://localhost:8000/api/driver/drivers/${selectedDriver}`, {
+        status: 'onRide'
+      });
+
       setIsModalOpen(false);
+
       // Optionally refresh the routes after assignment
+      // fetchRoutes(); // Uncomment this if you want to refresh the route list after assignment
     } catch (error) {
-      console.error('Error assigning driver:', error);
+      console.error('Error assigning driver or updating status:', error);
     }
   };
 
