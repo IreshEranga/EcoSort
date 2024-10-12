@@ -8,6 +8,10 @@ function DisplayRoutes() {
   const [routes, setRoutes] = useState([]);
   const [filteredRoutes, setFilteredRoutes] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedRoute, setSelectedRoute] = useState(null);
+  const [availableDrivers, setAvailableDrivers] = useState([]);
+  const [selectedDriver, setSelectedDriver] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   // Get the current day of the week
@@ -22,16 +26,13 @@ function DisplayRoutes() {
       try {
         const response = await axios.get('http://localhost:8000/router/routes');
         const today = getCurrentDay();
-
-        // Filter routes based on today's day
         const filteredRoutes = response.data.filter(route => route.date === today);
         setRoutes(filteredRoutes);
-        setFilteredRoutes(filteredRoutes); // Set initial filtered routes to the full list
+        setFilteredRoutes(filteredRoutes);
       } catch (error) {
         console.error('Error fetching routes:', error);
       }
     };
-
     fetchRoutes();
   }, []);
 
@@ -39,14 +40,11 @@ function DisplayRoutes() {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
     const lowerCaseQuery = e.target.value.toLowerCase();
-
-    // Filter routes based on search query (match route name or city)
     const filtered = routes.filter(
       (route) =>
         route.routeName.toLowerCase().includes(lowerCaseQuery) ||
         route.city.toLowerCase().includes(lowerCaseQuery)
     );
-
     setFilteredRoutes(filtered);
   };
 
@@ -57,26 +55,56 @@ function DisplayRoutes() {
     return acc;
   }, {});
 
+  // Fetch available drivers for a selected city
+  const fetchAvailableDrivers = async (city) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/driver/drivers/available/${city}`);
+      setAvailableDrivers(response.data);
+      console.log(availableDrivers);
+    } catch (error) {
+      console.error('Error fetching available drivers:', error);
+    }
+  };
+
+  // Open the modal to assign a driver
+  const handleAssignDriver = (route) => {
+    setSelectedRoute(route);
+    fetchAvailableDrivers(route.city); // Fetch drivers for the route's city
+    setIsModalOpen(true);
+  };
+
+  // Handle driver assignment
+  const handleDriverAssignment = async () => {
+    if (!selectedDriver) return;
+    try {
+      await axios.put(`http://localhost:8000/router/routes/${selectedRoute._id}`, {
+        assignedDriver: selectedDriver
+      });
+      setIsModalOpen(false);
+      // Optionally refresh the routes after assignment
+    } catch (error) {
+      console.error('Error assigning driver:', error);
+    }
+  };
+
   const handleViewRoute = (route) => {
-    navigate('/view-route', { state: { route } }); // Pass the full route as state
+    navigate('/view-route', { state: { route } });
   };
 
   const handleCreateRoute = () => {
-    navigate('/create-route'); // Navigate to the route creation page
+    navigate('/create-route');
   };
 
   return (
-    <div className='admin-dashboard' style={{backgroundColor:'white'}}>
+    <div className='admin-dashboard' style={{ backgroundColor: 'white' }}>
       <AdminSidebar />
-      <div className="main-content" style={{backgroundColor:'white'}}>
-        {/* Create Route Button */}
+      <div className="main-content" style={{ backgroundColor: 'white' }}>
         <button className="create-route-btn" onClick={handleCreateRoute}>
           Create Route
         </button>
 
-        <h1> Routes for {getCurrentDay()}</h1> {/* Show current day */}
+        <h1> Routes for {getCurrentDay()}</h1>
 
-        {/* Search Bar */}
         <input
           type="text"
           className="search-bar"
@@ -88,7 +116,7 @@ function DisplayRoutes() {
         {Object.keys(groupedRoutes).length > 0 ? (
           Object.keys(groupedRoutes).map((city) => (
             <div key={city} className="city-section">
-              <h2>{city}</h2> {/* Display city name */}
+              <h2>{city}</h2>
               <table className="routes-table">
                 <thead>
                   <tr>
@@ -102,14 +130,19 @@ function DisplayRoutes() {
                 <tbody>
                   {groupedRoutes[city].map((route) => (
                     <tr key={route._id}>
-                      <td style={{width:'250px'}}>{route.routeName}</td>
+                      <td style={{ width: '250px' }}>{route.routeName}</td>
                       <td>{route.date}</td>
                       <td>{route.routes.length} Stops</td>
                       <td>
                         <button onClick={() => handleViewRoute(route)}>View Route</button>
-                        <button style={{marginLeft:'20px', marginRight:'-150px'}}>Assign Rider</button>
+                        <button
+                          style={{ marginLeft: '20px' }}
+                          onClick={() => handleAssignDriver(route)}
+                        >
+                          Assign Rider
+                        </button>
                       </td>
-                      <td>{route.driver}</td>
+                      <td>{route.assignedDriver ? route.assignedDriver.name : 'Unassigned'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -118,6 +151,28 @@ function DisplayRoutes() {
           ))
         ) : (
           <p>No routes scheduled for today</p>
+        )}
+
+        {/* Modal for assigning a driver */}
+        {isModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h2>Assign Driver to {selectedRoute.routeName}</h2>
+              <select
+                value={selectedDriver}
+                onChange={(e) => setSelectedDriver(e.target.value)}
+              >
+                <option value="">Select a driver</option>
+                {availableDrivers.map((driver) => (
+                  <option key={driver._id} value={driver._id}>
+                    {driver.name}
+                  </option>
+                ))}
+              </select>
+              <button onClick={handleDriverAssignment}>Assign</button>
+              <button onClick={() => setIsModalOpen(false)}>Cancel</button>
+            </div>
+          </div>
         )}
       </div>
     </div>
