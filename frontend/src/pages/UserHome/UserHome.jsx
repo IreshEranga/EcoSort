@@ -67,7 +67,7 @@ const UserHome = () => {
       {/* Main Content with Service Cards and Introduction */}
       <section className="main-content">
         <div className="services-grid">
-          <Link to="/waste-management" className="service-card waste-card">
+          <Link to="/waste" className="service-card waste-card">
             <div className="service-image waste-image"></div>
             <h4>My Waste Management</h4>
           </Link>

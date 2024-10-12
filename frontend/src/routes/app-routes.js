@@ -6,6 +6,8 @@ import Login from '../pages/Login/Login';
 import UserHomePage from '../pages/UserHome/UserHomePage';
 import SignUp from '../pages/SignUp/SignUp';
 import UserHome from '../pages/UserHome/UserHome';
+import WasteManagement from '../pages/WasteManagement/WasteManagement';
+import WasteManagementPage from '../pages/Admin/WasteManagementPage/WasteManagementPage';
 import ScheduleCollection from '../pages/SheduleWaste/ScheduleCollection';
 import ProtectedRoute from './ProtectedRoute';
 import Unauthorized from '../pages/Login/Unauthorized';
@@ -54,6 +56,22 @@ const AppRoutes = () => {
             element={<ProtectedRoute component={UserHome} allowedRoles={['User']} />} 
           />
           <Route 
+            path="/waste" 
+            element={<ProtectedRoute component={WasteManagement} allowedRoles={['User']} />} 
+          />
+          <Route 
+            path="/admindashboard/waste-management" 
+            element={<ProtectedRoute component={WasteManagementPage} allowedRoles={['admin']} />} 
+          />
+
+
+
+
+
+
+
+
+          <Route 
             path="/sheduleCollection" 
             element={<ProtectedRoute component={ScheduleCollection} allowedRoles={['User']} />} 
           />
@@ -73,7 +91,7 @@ const AppRoutes = () => {
             element={<ProtectedRoute component={AdminDashBoard} allowedRoles={['admin']} />} 
           />
           <Route 
-            path="/users" 
+            path="/admindashboard/users" 
             element={<ProtectedRoute component={UsersPage} allowedRoles={['admin']} />} 
           />
           <Route 

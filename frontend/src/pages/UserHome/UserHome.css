@@ -98,12 +98,14 @@
 /* Service Cards */
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Flexible layout */
-    gap: 1.5rem; /* More spacing */
-    padding: 2rem 1rem;
+    /*grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Flexible layout */
+    grid-template-columns: repeat(2, 1fr); /* Two cards per row */
+    margin-left: 0; /* Remove the negative margin */
+    gap: 3rem; /* More spacing */
+    padding: 2rem 2rem;
     max-width: 1200px;
     margin: 0 auto; /* Centering the grid */
-    margin-left: -100px;
+    margin-left: -230px;
 }
 
 .service-card {
@@ -111,7 +113,7 @@
     border-radius: 12px;
     width: 100%;
     height: auto; /* No fixed height for cards */
-    padding: 1rem;
+    padding: 2rem;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Deeper shadow for depth */
     transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s ease;
@@ -123,7 +125,7 @@
     background-size: cover;
     background-position: center;
     border-radius: 12px;
-    height: 200px; /* Set a uniform height for all images */
+    height: 300px; /* Set a uniform height for all images */
     margin-bottom: 10px; /* Space between image and text */
 }
 
