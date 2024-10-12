@@ -3,13 +3,14 @@ const Route = require('../models/routeModel');
 // Create a new route
 const createRoute = async (req, res) => {
   try {
-    const { routeName, routes, assignedDriver, date } = req.body;
+    const { routeName, routes, assignedDriver, date , city} = req.body;
 
     const newRoute = new Route({
       routeName,
       routes,
       assignedDriver,
-      date, // assuming date is passed as a string in the format 'YYYY-MM-DD'
+      date,
+      city // assuming date is passed as a string in the format 'YYYY-MM-DD'
     });
 
     const savedRoute = await newRoute.save();
