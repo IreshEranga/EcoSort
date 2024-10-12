@@ -63,13 +63,17 @@ function RouteShedule() {
     navigate('/admindashboard/collection-routine/dateShedule');
   };
 
+  const handleNavigationRoutes = () => {
+    navigate('/admindashboard/displayRoutes');
+  };
+
   return (
     <div className="admin-dashboard">
       <AdminSidebar /> {/* Sidebar component */}
 
       {/* Main Content */}
       <div className="main-content" style={{ backgroundColor: 'white' }}>
-        <h1 style={{ fontStyle: 'italic' }}>Schedule Route</h1>
+        
 
         {/* Display Current Date and Time */}
         <div className="date-time-container" style={dateTimeStyles}>
@@ -78,6 +82,13 @@ function RouteShedule() {
         </div>
 
         {/* Button to navigate, positioned at the top right */}
+        <button 
+          onClick={handleNavigationRoutes} 
+          style={buttonStylesRoutes}
+        >
+          Routes
+        </button>
+
         <button 
           onClick={handleNavigation} 
           style={buttonStyles}
@@ -130,6 +141,18 @@ const buttonStyles = {
   position: 'absolute',
   top: '20px',
   right: '20px',
+  padding: '10px 20px',
+  backgroundColor: '#007bff',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer'
+};
+
+const buttonStylesRoutes = {
+  position: 'absolute',
+  top: '20px',
+  left: '300px',
   padding: '10px 20px',
   backgroundColor: '#007bff',
   color: 'white',
