@@ -13,6 +13,9 @@ const supportRoutes = require('./routes/supportRoutes');
 const adSupportRoutes = require('./routes/adSupportRoutes');
 const DriverRoutes = require('./routes/driverRoutes');
 
+
+const RouterRoutes = require('./routes/routeRoutes');
+
 dotenv.config();
 
 connectDB();
@@ -29,6 +32,7 @@ app.use('/api', UserRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/admin/', adSupportRoutes);
 app.use('/api/driver', DriverRoutes);
+app.use('/router', RouterRoutes);
 
 
 const PORT = process.env.PORT || 5000;
