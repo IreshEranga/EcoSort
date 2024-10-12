@@ -1,97 +1,105 @@
-import React, { useState } from 'react';
-import AdminSidebar from '../components/Admin/AdminSidebar';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
-import L from 'leaflet';
-import './CreateRoute.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Default marker icon fix for Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-});
+import Home from '../components/Home';
+import Login from '../pages/Login/Login';
+import UserHomePage from '../pages/UserHome/UserHomePage';
+import SignUp from '../pages/SignUp/SignUp';
+import UserHome from '../pages/UserHome/UserHome';
+import ScheduleCollection from '../pages/SheduleWaste/ScheduleCollection';
+import ProtectedRoute from './ProtectedRoute';
+import Unauthorized from '../pages/Login/Unauthorized';
+import AdminDashBoard from '../pages/Admin/AdminDashBoard';
+import ReportIssue from '../pages/Support/ReportIssue';
+//import CollectionRouting from '../pages/SheduleWaste/CollectionRouting';
+import UsersPage from '../pages/Admin/UsersPage/UsersPage';
+import RouteShedule from '../pages/Admin/WasteCollection/RouteShedule';
+import DateShedule from '../pages/Admin/WasteCollection/DateShedule';
+import Issues from '../pages/Admin/Support/SupportDashboard';
+import DriversPage from '../pages/Admin/DriversPage/DriversPage';
+import CreateRoute from '../pages/Admin/WasteCollection/CreateRoute';
 
-function CreateRoute() {
-  const [routeName, setRouteName] = useState('');
-  const [driver, setDriver] = useState('');
-  const [stops, setStops] = useState([]);
 
-  // Function to add a new stop with lat and lng
-  const addStop = (lat, lng) => {
-    setStops([...stops, { lat, lng }]);
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const routeData = { routeName, driver, stops };
-    console.log('Route Created:', routeData);
-    // Submit logic (e.g., API call) goes here
-  };
 
-  // Component to handle clicks on the map
-  const MapClickHandler = () => {
-    useMapEvents({
-      click(e) {
-        const { lat, lng } = e.latlng;
-        addStop(lat, lng); // Add stop to state when map is clicked
-      },
-    });
-    return null;
-  };
 
+
+
+
+
+
+
+
+
+
+
+const AppRoutes = () => {
   return (
-    <div className="admin-dashboard">
-      <AdminSidebar />
-      <div className="main-content">
-        <h2>Create Route</h2>
-        <form onSubmit={handleSubmit} className="route-form">
-          <div className="form-group">
-            <label htmlFor="routeName">Route Name:</label>
-            <input
-              type="text"
-              id="routeName"
-              value={routeName}
-              onChange={(e) => setRouteName(e.target.value)}
-              placeholder="Enter route name"
-              required
-            />
-          </div>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
-          <div className="form-group">
-            <label htmlFor="driver">Assign Driver:</label>
-            <select
-              id="driver"
-              value={driver}
-              onChange={(e) => setDriver(e.target.value)}
-              required
-            >
-              <option value="">Select Driver</option>
-              <option value="Driver 1">Driver 1</option>
-              <option value="Driver 2">Driver 2</option>
-            </select>
-          </div>
+          
+          {/* Protected routes for users */}
+          <Route 
+            path="/dashboard" 
+            element={<ProtectedRoute component={UserHomePage} allowedRoles={['User']} />} 
+          />
+          <Route 
+            path="/userHome" 
+            element={<ProtectedRoute component={UserHome} allowedRoles={['User']} />} 
+          />
+          <Route 
+            path="/sheduleCollection" 
+            element={<ProtectedRoute component={ScheduleCollection} allowedRoles={['User']} />} 
+          />
+          <Route 
+            path="/report-issue" 
+            element={<ProtectedRoute component={ReportIssue} allowedRoles={['User']} />} 
+          />
 
-          <div className="form-group">
-            <label>Stopping Places (click on the map to add stops):</label>
-            <MapContainer center={[7.8731, 80.7718]} zoom={7} className="map-container">
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-              <MapClickHandler />
-              {stops.map((stop, index) => (
-                <Marker key={index} position={[stop.lat, stop.lng]} />
-              ))}
-            </MapContainer>
-          </div>
+          <Route 
+            path="/report-issue" 
+            element={<ProtectedRoute component={ReportIssue} allowedRoles={['User']} />} 
+          />
 
-          <button type="submit" className="submit-btn">Create Route</button>
-        </form>
-      </div>
-    </div>
+          {/* Example protected route for admin */}
+          <Route 
+            path="/admindashboard" 
+            element={<ProtectedRoute component={AdminDashBoard} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="/users" 
+            element={<ProtectedRoute component={UsersPage} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="/admindashboard/collection-routine" 
+            element={<ProtectedRoute component={RouteShedule} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="/admindashboard/collection-routine/dateShedule" 
+            element={<ProtectedRoute component={DateShedule} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="admindashboard/issues" 
+            element={<ProtectedRoute component={Issues} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="admindashboard/drivers" 
+            element={<ProtectedRoute component={DriversPage} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="admindashboard/createRoute" 
+            element={<ProtectedRoute component={CreateRoute} allowedRoles={['admin']} />} 
+          />
+        </Routes>
+      </Router>
+    </>
   );
 }
 
-export default CreateRoute;
+export default AppRoutes;
