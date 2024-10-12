@@ -4,6 +4,7 @@ import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import { useNavigate } from 'react-router-dom';
 import './DisplayRoutes.css';
 import { toast } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -113,7 +114,7 @@ function DisplayRoutes() {
     }
   };
   */
-
+/*
   const handleDriverAssignment = async () => {
     if (!selectedDriver) return;
   
@@ -130,6 +131,41 @@ function DisplayRoutes() {
       fetchRoutes(); // Refresh the routes after assignment
     } catch (error) {
       console.error('Error assigning driver:', error);
+    }
+  };
+  */
+
+  const handleDriverAssignment = async () => {
+    if (!selectedDriver) return;
+  
+    try {
+      // Assign driver to the route
+      await axios.post('http://localhost:8000/api/driver/assignDriver', {
+        routeId: selectedRoute._id,
+        driverId: selectedDriver,
+      });
+      
+      // Show success toast
+      toast.success('Driver assigned successfully!', {
+        position: 'top-right', // Use string instead of toast.POSITION
+      });
+      
+  
+      // Close modal
+      setIsModalOpen(false);
+      
+      // Refresh the routes after assignment
+      fetchRoutes(); 
+    } catch (error) {
+      console.error('Error assigning driver:', error);
+      
+      // Show error toast if assignment fails
+      toast.error('Failed to assign driver. Please try again.', {
+        position: toast.POSITION.TOP_RIGHT
+      });
+      
+      // Optionally close the modal or keep it open depending on your preference
+      // setIsModalOpen(false); // Uncomment if you want to close the modal on error
     }
   };
   
