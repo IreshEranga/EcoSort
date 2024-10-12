@@ -19,9 +19,9 @@ import RouteShedule from '../pages/Admin/WasteCollection/RouteShedule';
 import DateShedule from '../pages/Admin/WasteCollection/DateShedule';
 import Issues from '../pages/Admin/Support/SupportDashboard';
 import DriversPage from '../pages/Admin/DriversPage/DriversPage';
-
-
-
+import CreateRoute from '../pages/Admin/WasteCollection/CreateRoute';
+import DisplayRoutes from '../pages/Admin/WasteCollection/DisplayRoutes';
+import ViewRoute from '../pages/Admin/WasteCollection/ViewRoute';
 
 
 
@@ -109,6 +109,18 @@ const AppRoutes = () => {
           <Route 
             path="admindashboard/drivers" 
             element={<ProtectedRoute component={DriversPage} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="admindashboard/createRoute" 
+            element={<ProtectedRoute component={CreateRoute} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="admindashboard/displayRoutes" 
+            element={<ProtectedRoute component={DisplayRoutes} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="admindashboard/view-route" 
+            element={<ProtectedRoute component={ViewRoute} allowedRoles={['admin']} />} 
           />
         </Routes>
       </Router>

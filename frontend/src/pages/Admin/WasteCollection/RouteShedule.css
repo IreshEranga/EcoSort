@@ -1,0 +1,14 @@
+.table-row {
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+  }
+  
+  .table-row:hover {
+    background-color: #b7e0b0; 
+    /* Light grey on hover */
+  }
+  
+  .table-header {
+    background-color: #007bff; /* Blue header */
+    color: white; /* White text for header */
+  }
+  

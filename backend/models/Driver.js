@@ -6,7 +6,7 @@ const driverSchema = new mongoose.Schema({
   mobile: { type: String, required: true },
   address: { type: String, required: true },
   password: { type: String, required: true },
-  status: { type: String, enum: ['available', 'unavailable'], default: 'available' },
+  status: { type: String, enum: ['available', 'unavailable', 'onRide'], default: 'available' },
   assignedRoutes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Collection' }],
   city: { type: String, required: true },
   role:{type: String, default:'Driver'}

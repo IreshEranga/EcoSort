@@ -4,6 +4,7 @@ const driverController = require('../controllers/driverController');
 const router = express.Router();
 
 router.post('/drivers', driverController.createDriver);
+router.post('/assignDriver', driverController.assignDriverToRoute);
 router.get('/drivers', driverController.getAllDrivers);
 router.get('/drivers/:id', driverController.getDriverById);
 router.put('/drivers/:id', driverController.updateDriver);

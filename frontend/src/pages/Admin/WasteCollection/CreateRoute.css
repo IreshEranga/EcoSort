@@ -1,0 +1,44 @@
+.admin-dashboard {
+    display: flex;
+  }
+  
+  .main-content {
+    padding: 20px;
+    width: 100%;
+    background-color: #f4f4f9;
+  }
+  
+  .map-container {
+    height: 400px;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+  }
+  
+  .route-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .submit-btn {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .submit-btn:hover {
+    background-color: #0056b3;
+  }
+  

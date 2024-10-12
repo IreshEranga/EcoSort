@@ -3,7 +3,8 @@ const Driver = require('../models/Driver');
 const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
 const crypto = require('crypto');
 const sendEmail =  require('../util/sendEmail');
-
+const sendAssignmentEmail = require('../util/DriverAssignEmail');
+const Route = require('../models/routeModel');
 const APP_PASSWORD = process.env.APP_PASSWORD;
 const EMAIL = process.env.EMAIL;
 
@@ -162,5 +163,36 @@ exports.getAvailableDriversByCity = async (req, res) => {
     res.status(200).json(availableDrivers);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+// Handle driver assignment to a route (this can be a new function)
+exports.assignDriverToRoute = async (req, res) => {
+  try {
+    const { routeId, driverId } = req.body;
+
+    // Find the route by ID and assign the driver
+    const route = await Route.findById(routeId); // Assuming you have a Route model
+    const driver = await Driver.findById(driverId);
+
+    if (!route || !driver) {
+      return res.status(404).json({ message: 'Route or Driver not found' });
+    }
+
+    // Assign driver to the route
+    route.assignedDriver = driverId;
+    await route.save();
+
+    // Update driver's status
+    driver.status = 'onRide';
+    await driver.save();
+
+    // Send email to the driver
+    await sendAssignmentEmail(driver.email, driver.name, route.routeName);
+
+    res.status(200).json({ message: 'Driver assigned successfully and email sent!' });
+  } catch (error) {
+    console.error('Error assigning driver:', error);
+    res.status(500).json({ message: 'Internal server error', error });
   }
 };
