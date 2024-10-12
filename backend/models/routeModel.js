@@ -16,6 +16,7 @@ const RouteSchema = new mongoose.Schema({
     ref: 'Driver'
   },
   date:{type : String},
+  city:{type : String},
 }, { timestamps: true });
 
 module.exports = mongoose.model('Route', RouteSchema);
