@@ -69,7 +69,7 @@ export default function AdminDashBoard() {
       <div className="main-content" style={{backgroundColor:'white'}}>
         <h1>Welcome Admin!</h1>
 
-       <div className="card" style={{display:'flex', flexDirection:'row', gap:20, backgroundColor:'#f4f4f4', border:'1px solid #f4f4f4'}}>
+       <div className="card" style={{display:'flex', flexDirection:'row', gap:20, backgroundColor:'#ffffff', border:'1px solid #ffffff'}}>
          {/* User Count Card */}
          <div className="user-count-card" style={{marginLeft:'50px'}}>
           <h2>Total Users 👤</h2>
@@ -86,6 +86,8 @@ export default function AdminDashBoard() {
           <h2>Today Routes 🛣️</h2>
           <p>{routeCount}</p>
         </div>
+
+        
 
        </div>
 
