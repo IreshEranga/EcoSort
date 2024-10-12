@@ -3,6 +3,9 @@ import axios from 'axios';
 import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import { useNavigate } from 'react-router-dom';
 import './DisplayRoutes.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 function DisplayRoutes() {
   const [routes, setRoutes] = useState([]);
@@ -21,19 +24,21 @@ function DisplayRoutes() {
     return days[today];
   };
 
+  // Fetch routes function
+  const fetchRoutes = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/router/routes');
+      const today = getCurrentDay();
+      const filteredRoutes = response.data.filter(route => route.date === today);
+      setRoutes(filteredRoutes);
+      setFilteredRoutes(filteredRoutes);
+    } catch (error) {
+      console.error('Error fetching routes:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/router/routes');
-        const today = getCurrentDay();
-        const filteredRoutes = response.data.filter(route => route.date === today);
-        setRoutes(filteredRoutes);
-        setFilteredRoutes(filteredRoutes);
-      } catch (error) {
-        console.error('Error fetching routes:', error);
-      }
-    };
-    fetchRoutes();
+    fetchRoutes(); // Fetch routes on component mount
   }, []);
 
   // Handle search query change
@@ -73,6 +78,8 @@ function DisplayRoutes() {
   };
 
   // Handle driver assignment and update driver status
+
+  /*
   const handleDriverAssignment = async () => {
     if (!selectedDriver) return;
 
@@ -87,14 +94,45 @@ function DisplayRoutes() {
         status: 'onRide'
       });
 
+       // Fetch driver details to get their email
+    const driverResponse = await axios.get(`http://localhost:8000/api/driver/drivers/${selectedDriver}`);
+    const driverEmail = driverResponse.data.email; // Assuming the driver object has an email field
+
+    // Send email to driver
+    await axios.post('http://localhost:8000/email/api/send-assignment-email', {
+      driverEmail,
+      routeName: selectedRoute.routeName,
+    });
+
       setIsModalOpen(false);
 
-      // Optionally refresh the routes after assignment
-      // fetchRoutes(); // Uncomment this if you want to refresh the route list after assignment
+      // Refresh the routes after assignment
+      fetchRoutes(); // Now this will work
     } catch (error) {
       console.error('Error assigning driver or updating status:', error);
     }
   };
+  */
+
+  const handleDriverAssignment = async () => {
+    if (!selectedDriver) return;
+  
+    try {
+      // Assign driver to the route
+      await axios.post('http://localhost:8000/api/driver/assignDriver', {
+        routeId: selectedRoute._id,
+        driverId: selectedDriver,
+      });
+      toast.success('Driver assigned successfully!', {
+        position: toast.POSITION.TOP_RIGHT
+      });
+      setIsModalOpen(false);
+      fetchRoutes(); // Refresh the routes after assignment
+    } catch (error) {
+      console.error('Error assigning driver:', error);
+    }
+  };
+  
 
   const handleViewRoute = (route) => {
     navigate('/view-route', { state: { route } });
@@ -184,6 +222,7 @@ function DisplayRoutes() {
           </div>
         )}
       </div>
+      <ToastContainer />
     </div>
   );
 }
