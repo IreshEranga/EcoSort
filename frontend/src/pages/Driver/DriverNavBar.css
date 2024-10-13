@@ -1,0 +1,21 @@
+.driver-navbar {
+    background-color: #007bff; /* Customize the background color */
+  }
+  
+  .driver-navbar .logo {
+    width: 50px; /* Adjust the size of the logo */
+  }
+  
+  .nav-items .nav-link-custom {
+    color: white; /* Link text color */
+    margin-right: 15px; /* Spacing between links */
+  }
+  
+  .nav-items .nav-link-custom:hover {
+    color: #d1e7dd; /* Hover color */
+  }
+  
+  .logout-button {
+    font-weight: bold; /* Make logout button bold */
+  }
+  
