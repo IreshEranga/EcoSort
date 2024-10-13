@@ -1,19 +1,24 @@
 // routes/binRoutes.js
+
 const express = require('express');
-const {
-  createBin,
-  getAllBins,
-  getBinById,
-  updateBin,
-  deleteBin,
-} = require('../controllers/binController');
-
 const router = express.Router();
+const binController = require('../controllers/binController');
 
-router.post('/', createBin);
-router.get('/', getAllBins);
-router.get('/:id', getBinById);
-router.put('/:id', updateBin);
-router.delete('/:id', deleteBin);
+// Create a new bin
+router.post('/', binController.createBin);
+
+// Get all bins
+router.get('/', binController.getAllBins);
+
+// Get a bin by ID
+router.get('/:id', binController.getBinById);
+
+// Update a bin by ID
+router.put('/:id', binController.updateBin);
+
+// Delete a bin by ID
+router.delete('/:id', binController.deleteBin);
+
+router.get('/user/:userId', binController.getBinsByUserId);
 
 module.exports = router;
