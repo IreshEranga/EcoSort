@@ -6,7 +6,10 @@ function UserHomePage() {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem('user'); // Remove user data
+        localStorage.removeItem('driver');
+
+    // Optionally remove user details as well if stored
+    localStorage.removeItem('user'); // Remove user data
         navigate('/login'); // Redirect to login page
     };
 
