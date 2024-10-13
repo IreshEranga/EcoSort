@@ -13,7 +13,7 @@ function ViewDriverSchedules() {
     height: '400px',
   };
 
-  const defaultCenter = { lat: 7.50089752317855, lng: 80.34802588329134 }; // Set a valid default center for your region
+  const defaultCenter = { lat: 7.50089752317855, lng: 80.34802588329134 }; // Default center for your region
 
   const getCurrentDay = () => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -92,12 +92,14 @@ function ViewDriverSchedules() {
                         mapContainerStyle={containerStyle}
                         center={route.routes.length > 0 ? { lat: route.routes[0].lat, lng: route.routes[0].lng } : defaultCenter} // Fallback to default center if no stops
                         zoom={14} // Adjust zoom level as needed
+                        onLoad={() => console.log('Map Loaded')} // Debugging log
                       >
                         {route.routes.map((stop) => (
                           <Marker
                             key={stop._id} // Use stop ID for a unique key
                             position={{ lat: stop.lat, lng: stop.lng }}
                             label={(route.routes.indexOf(stop) + 1).toString()} // Number the stops
+                            onLoad={() => console.log('Marker Loaded:', stop.lat, stop.lng)} // Debugging log
                           />
                         ))}
                       </GoogleMap>
