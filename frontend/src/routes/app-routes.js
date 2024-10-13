@@ -22,8 +22,8 @@ import DriversPage from '../pages/Admin/DriversPage/DriversPage';
 import CreateRoute from '../pages/Admin/WasteCollection/CreateRoute';
 import DisplayRoutes from '../pages/Admin/WasteCollection/DisplayRoutes';
 import ViewRoute from '../pages/Admin/WasteCollection/ViewRoute';
-
-
+import DriverHome from '../pages/Driver/DriverHome';
+import CreateBin from '../pages/WasteManagement/CreateBin';
 
 
 
@@ -64,6 +64,11 @@ const AppRoutes = () => {
             element={<ProtectedRoute component={WasteManagementPage} allowedRoles={['admin']} />} 
           />
 
+
+          <Route 
+            path="/createbin" 
+            element={<ProtectedRoute component={CreateBin} allowedRoles={['User']} />} 
+          />
 
 
 
@@ -122,6 +127,28 @@ const AppRoutes = () => {
             path="admindashboard/view-route" 
             element={<ProtectedRoute component={ViewRoute} allowedRoles={['admin']} />} 
           />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <Route 
+            path="/driverHome" 
+            element={<ProtectedRoute component={DriverHome} allowedRoles={['Driver']} />} 
+          />
+
+
+
         </Routes>
       </Router>
     </>
