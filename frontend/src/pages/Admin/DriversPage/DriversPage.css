@@ -80,18 +80,22 @@
 }
 
 /* Modal Styling */
-.modal-overlay {
-  position: fixed;
+.modal-overlayDriver {
+ /* position: fixed;
   top: 0;
   left: 0;
   width: 35%;
-  height: 600px;
+  height: auto;
   margin-top:30px;
-  background: rgba(255, 255, 255, 0.9); /* Remove visible background */
+  background: rgba(255, 255, 255, 0.9); 
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Ensure modal is on top */
+  z-index: 9999; 
+  */
+  position: absolute;
+  background: rgba(255, 255, 255, 0.9);
+  
   
 }
 
@@ -105,7 +109,9 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   position: relative;
   z-index: 10000;
-  
+  margin-top: -250px;
+  scroll-behavior: smooth;
+  background-color: white;
 }
 
 .modal-content h2 {
