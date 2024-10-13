@@ -196,3 +196,52 @@ exports.assignDriverToRoute = async (req, res) => {
     res.status(500).json({ message: 'Internal server error', error });
   }
 };
+
+
+
+
+// Driver login without JWT
+exports.driverLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Check if the driver exists
+    const driver = await Driver.findOne({ email });
+    if (!driver) {
+      return res.status(404).json({
+        success: false,
+        message: 'Driver not found',
+      });
+    }
+
+    // Compare the entered password with the hashed password
+    const isMatch = await bcrypt.compare(password, driver.password);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
+    }
+
+    // Send response with driver details (no token)
+    res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      driver: {
+        id: driver._id,
+        name: driver.name,
+        email: driver.email,
+        city: driver.city,
+        status: driver.status,
+        role: driver.role,
+      },
+    });
+
+  } catch (error) {
+    console.error('Error during driver login:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
+};
