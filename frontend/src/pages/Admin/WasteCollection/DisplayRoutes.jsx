@@ -40,7 +40,7 @@ function DisplayRoutes() {
 
   useEffect(() => {
     fetchRoutes(); // Fetch routes on component mount
-  }, []);
+  });
 
   // Handle search query change
   const handleSearchChange = (e) => {
@@ -175,7 +175,7 @@ function DisplayRoutes() {
   };
 
   const handleCreateRoute = () => {
-    navigate('/create-route');
+    navigate('/admindashboard/createRoute');
   };
 
   return (
@@ -214,9 +214,9 @@ function DisplayRoutes() {
                   {groupedRoutes[city].map((route) => (
                     <tr key={route._id}>
                       <td style={{ width: '250px' }}>{route.routeName}</td>
-                      <td>{route.date}</td>
-                      <td>{route.routes.length} Stops</td>
-                      <td>
+                      <td style={{ width: '150px' }}>{route.date}</td>
+                      <td style={{ width: '150px' }}>{route.routes.length} Stops</td>
+                      <td style={{width:'300px'}}>
                         <button onClick={() => handleViewRoute(route)}>View Route</button>
                         <button
                           style={{ marginLeft: '20px' }}
@@ -225,7 +225,7 @@ function DisplayRoutes() {
                           Assign Rider
                         </button>
                       </td>
-                      <td>{route.assignedDriver ? route.assignedDriver.name : 'Unassigned'}</td>
+                      <td style={{ width: '250px' }}>{route.assignedDriver ? route.assignedDriver.name : 'Unassigned'}</td>
                     </tr>
                   ))}
                 </tbody>
