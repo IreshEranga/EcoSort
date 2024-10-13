@@ -47,37 +47,74 @@ export default function Login() {
           navigate('/admindashboard');
         }, 2000);
       } else {
-        // Make API call to login for non-admin users
-        const response = await axios.post('http://localhost:8000/api/login', {
-          email,
-          password,
-        });
+        try {
+          // Make API call to login for non-admin users
+          const response = await axios.post('http://localhost:8000/api/login', {
+            email,
+            password,
+          });
 
-        // Assuming the response contains user details
-        const user = response.data.user;
+          // Assuming the response contains user details
+          const user = response.data.user;
 
-        // Store user details in localStorage
-        localStorage.setItem('user', JSON.stringify(user));
+          // Check if the user is a regular user or admin
+          if (user.role === 'User' || user.role === 'admin') {
+            // Store user details in localStorage
+            localStorage.setItem('user', JSON.stringify(user));
 
-        toast.success("Log In successful!", {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        setTimeout(() => {
-          if (user.role === 'admin') {
-            navigate('/admin-dashboard');
-          } else if (user.role === 'User') {
-            navigate('/userHome');
+            toast.success("Log In successful!", {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+
+            setTimeout(() => {
+              if (user.role === 'admin') {
+                navigate('/admin-dashboard');
+              } else if (user.role === 'User') {
+                navigate('/userHome');
+              }
+            }, 2000);
           }
-        }, 2000);
+        } catch (userError) {
+          // If non-admin login fails, check for driver login
+          try {
+            const driverResponse = await axios.post('http://localhost:8000/api/driver/login', {
+              email,
+              password,
+            });
+
+            const driver = driverResponse.data.driver;
+
+            if (driver.role === 'Driver') {
+              // Store driver details in localStorage
+              localStorage.setItem('driver', JSON.stringify(driver));
+
+              toast.success("Driver Log In successful!", {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+
+              setTimeout(() => {
+                navigate('/driverHome');
+              }, 2000);
+            }
+          } catch (driverError) {
+            setError('Driver login failed. Please check your credentials.');
+          }
+        }
       }
     } catch (err) {
-      // Handle error if login fails
+      // Handle error if login fails for any case
       setError('Login failed. Please check your credentials and try again.');
     }
   };
