@@ -23,7 +23,6 @@ import CreateRoute from '../pages/Admin/WasteCollection/CreateRoute';
 import DisplayRoutes from '../pages/Admin/WasteCollection/DisplayRoutes';
 import ViewRoute from '../pages/Admin/WasteCollection/ViewRoute';
 import DriverHome from '../pages/Driver/DriverHome';
-import CreateBin from '../pages/WasteManagement/CreateBin';
 
 
 
@@ -31,6 +30,7 @@ import CreateBin from '../pages/WasteManagement/CreateBin';
 
 
 
+import ViewDriverShedules from '../pages/Driver/ViewDriverShedules';
 
 
 
@@ -65,10 +65,10 @@ const AppRoutes = () => {
           />
 
 
-          <Route 
-            path="/createbin" 
-            element={<ProtectedRoute component={CreateBin} allowedRoles={['User']} />} 
-          />
+         
+
+
+         
 
 
 
@@ -145,6 +145,11 @@ const AppRoutes = () => {
           <Route 
             path="/driverHome" 
             element={<ProtectedRoute component={DriverHome} allowedRoles={['Driver']} />} 
+          />
+
+          <Route 
+            path="/driverShedule" 
+            element={<ProtectedRoute component={ViewDriverShedules} allowedRoles={['Driver']} />} 
           />
 
 
