@@ -23,6 +23,7 @@ import CreateRoute from '../pages/Admin/WasteCollection/CreateRoute';
 import DisplayRoutes from '../pages/Admin/WasteCollection/DisplayRoutes';
 import ViewRoute from '../pages/Admin/WasteCollection/ViewRoute';
 import DriverHome from '../pages/Driver/DriverHome';
+import DriverSupport from '../pages/Driver/DriverReportIssue';
 
 
 
@@ -85,10 +86,7 @@ const AppRoutes = () => {
             element={<ProtectedRoute component={ReportIssue} allowedRoles={['User']} />} 
           />
 
-          <Route 
-            path="/report-issue" 
-            element={<ProtectedRoute component={ReportIssue} allowedRoles={['User']} />} 
-          />
+      
 
           {/* Example protected route for admin */}
           <Route 
@@ -150,6 +148,11 @@ const AppRoutes = () => {
           <Route 
             path="/driverShedule" 
             element={<ProtectedRoute component={ViewDriverShedules} allowedRoles={['Driver']} />} 
+          />
+
+          <Route 
+            path="/driver-support" 
+            element={<ProtectedRoute component={DriverSupport} allowedRoles={['Driver']} />} 
           />
 
 
