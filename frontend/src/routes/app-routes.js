@@ -31,6 +31,7 @@ import DriverHome from '../pages/Driver/DriverHome';
 
 
 
+import ViewDriverShedules from '../pages/Driver/ViewDriverShedules';
 
 
 
@@ -141,6 +142,11 @@ const AppRoutes = () => {
           <Route 
             path="/driverHome" 
             element={<ProtectedRoute component={DriverHome} allowedRoles={['Driver']} />} 
+          />
+
+          <Route 
+            path="/driverShedule" 
+            element={<ProtectedRoute component={ViewDriverShedules} allowedRoles={['Driver']} />} 
           />
 
 

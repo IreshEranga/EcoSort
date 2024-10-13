@@ -1,0 +1,48 @@
+.drivershedulecontainer{
+    margin-top: 100px;
+}
+
+.driver-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .driverschedule-container {
+    margin-top: 150px;
+    width: 90%;
+    max-width: 800px;
+  }
+  
+  .route-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .route-item {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .route-item h2 {
+    margin: 0 0 10px;
+  }
+  
+  .route-details {
+    margin-top: 10px;
+  }
+  
+  @media (max-width: 600px) {
+    .driverschedule-container {
+      width: 100%;
+      padding: 10px;
+    }
+  
+    .route-item {
+      padding: 15px;
+    }
+  }
+  
