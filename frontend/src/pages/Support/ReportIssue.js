@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 //import SupportTicketForm from '../../components/User/SupportTicketForm';
-import NavbarComponent from '../UserHome/NavbarComponent'; 
+import NavbarComponent from '../../components/NavbarComponent'; 
 import Footer from '../../components/Footer/Footer';
 import './reportIssue.css';
 import axios from 'axios';
