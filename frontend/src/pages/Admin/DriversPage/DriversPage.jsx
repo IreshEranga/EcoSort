@@ -206,6 +206,7 @@ function UsersPage() {
               <th>Mobile</th>
               <th>Address</th>
               <th>City</th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -218,6 +219,7 @@ function UsersPage() {
                   <td>{user.mobile}</td>
                   <td>{user.address}</td>
                   <td>{user.city}</td>
+                  <td>{user.status}</td>
                   <td>
                     <button className="btn btn-edit" onClick={() => handleUpdateDriver(user)}
                       style={{backgroundColor:'#34ca61', color:'white'}}>Update</button>
@@ -236,8 +238,8 @@ function UsersPage() {
 
         {/* Add/Update Driver Modal */}
         {showModal && (
-          <div className="modal-overlay" style={{marginLeft:'500px', marginTop:'50px'}}>
-            <div className="modal-content">
+          <div className="modal-overlayDriver" style={{marginLeft:'400px', marginTop:'50px', marginBottom:'20px'}}>
+            <div className="modal-contentDriver" style={{marginTop:'-220px', backgroundColor:'white', padding:'20px',boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)'}}>
               <h2>{isUpdate ? 'Update Driver' : 'Add Driver'}</h2>
               <form onSubmit={handleFormSubmit}>
                 <div className="form-group">
