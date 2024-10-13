@@ -187,6 +187,7 @@ const tableStyles = {
   margin: '20px 0',
 };
 
+/*
 const rowEvenStyles = {
   backgroundColor: '#f2f2f2', // Light grey for even rows
 };
@@ -199,5 +200,6 @@ const rowOddStyles = {
 const hoverStyles = {
   backgroundColor: '#e0e0e0', // Light grey on hover
 };
+*/
 
 export default RouteShedule;
