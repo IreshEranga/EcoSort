@@ -23,7 +23,7 @@ import CreateRoute from '../pages/Admin/WasteCollection/CreateRoute';
 import DisplayRoutes from '../pages/Admin/WasteCollection/DisplayRoutes';
 import ViewRoute from '../pages/Admin/WasteCollection/ViewRoute';
 import DriverHome from '../pages/Driver/DriverHome';
-import CreateBin from '../pages/WasteManagement/CreateBin';
+
 
 
 
@@ -65,10 +65,6 @@ const AppRoutes = () => {
           />
 
 
-          <Route 
-            path="/createbin" 
-            element={<ProtectedRoute component={CreateBin} allowedRoles={['User']} />} 
-          />
 
 
 
