@@ -1,64 +1,77 @@
 // controllers/binController.js
-const Bin = require('../models/Bin');
+
+const Bin = require('../models/bin'); // Adjust the path as needed
 
 // Create a new bin
-const createBin = async (req, res) => {
+exports.createBin = async (req, res) => {
   try {
-    const bin = new Bin(req.body);
-    await bin.save();
-    res.status(201).json(bin);
+    const newBin = new Bin(req.body);
+    await newBin.save();
+    res.status(201).json(newBin);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
 // Get all bins
-const getAllBins = async (req, res) => {
+exports.getAllBins = async (req, res) => {
   try {
-    const bins = await Bin.find().populate('user'); // Populate user reference
-    res.json(bins);
+    const bins = await Bin.find().populate('user', 'name email'); // Adjust fields as necessary
+    res.status(200).json(bins);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 // Get a bin by ID
-const getBinById = async (req, res) => {
+exports.getBinById = async (req, res) => {
   try {
-    const bin = await Bin.findById(req.params.id).populate('user');
+    const bin = await Bin.findById(req.params.id).populate('user', 'name email');
     if (!bin) return res.status(404).json({ message: 'Bin not found' });
-    res.json(bin);
+    res.status(200).json(bin);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// Update a bin
-const updateBin = async (req, res) => {
+// Update a bin by ID
+exports.updateBin = async (req, res) => {
   try {
-    const bin = await Bin.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!bin) return res.status(404).json({ message: 'Bin not found' });
-    res.json(bin);
+    const updatedBin = await Bin.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!updatedBin) return res.status(404).json({ message: 'Bin not found' });
+    res.status(200).json(updatedBin);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
-// Delete a bin
-const deleteBin = async (req, res) => {
+// Delete a bin by ID
+exports.deleteBin = async (req, res) => {
   try {
-    const bin = await Bin.findByIdAndDelete(req.params.id);
-    if (!bin) return res.status(404).json({ message: 'Bin not found' });
-    res.json({ message: 'Bin deleted' });
+    const deletedBin = await Bin.findByIdAndDelete(req.params.id);
+    if (!deletedBin) return res.status(404).json({ message: 'Bin not found' });
+    res.status(204).send(); // No content
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = {
-  createBin,
-  getAllBins,
-  getBinById,
-  updateBin,
-  deleteBin,
+
+// Get all bins by user ID
+exports.getBinsByUserId = async (req, res) => {
+  try {
+    // Extract user ID from request parameters
+    const userId = req.params.userId; // Assuming userId is passed as a URL parameter
+
+    // Find all bins that belong to the user
+    const bins = await Bin.find({ user: userId }).populate('user', 'name email'); // Populate user fields as needed
+
+    if (bins.length === 0) {
+      return res.status(404).json({ message: 'No bins found for this user' });
+    }
+
+    res.status(200).json(bins);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
