@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './UserHome.css';
-import NavbarComponent from './NavbarComponent'; 
+import NavbarComponent from '../../components/NavbarComponent'; 
 import Footer from '../../components/Footer/Footer';
 import placeholderImage from '../../assets/images/image.png'; // Make sure this path is correct.
 
