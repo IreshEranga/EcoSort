@@ -80,3 +80,20 @@ exports.calculateAmount = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// Update special request status by ID
+exports.updateSpecialRequestStatus = async (req, res) => {
+  try {
+    const { status } = req.body; // Get the new status from the request body
+    const updatedRequest = await SpecialRequest.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true, runValidators: true }
+    );
+    
+    if (!updatedRequest) return res.status(404).json({ message: 'Special request not found' });
+    res.status(200).json(updatedRequest);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
