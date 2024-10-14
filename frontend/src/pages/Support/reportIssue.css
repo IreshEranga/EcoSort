@@ -1,5 +1,11 @@
 .support-home {
-    padding-top: 70px;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 .ticketContainer {
@@ -10,8 +16,6 @@
 .support-ticket-container {
     width: 100%;
     max-width: 500px;
-    margin-top: 100px;
-    margin: auto;
     padding: 20px;
     text-align: center;
     background-color: #f9f9f9;
