@@ -13,7 +13,7 @@ const binSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['Organic', 'Paper', 'Plastic', 'Electric', 'Other'],
+    enum: ['Organic', 'Paper', 'Plastic', 'Electronic', 'Other'],
     required: true,
   },
   percentage: {
