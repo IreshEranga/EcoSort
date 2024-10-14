@@ -84,6 +84,7 @@ function WasteManagementPage() {
       <AdminSidebar />
       <div className="main-content">
         <h1>Waste Management</h1>
+        <br />
         
         {/* Search Bar */}
         <div style={{ marginBottom: '20px' }}>
@@ -98,6 +99,7 @@ function WasteManagementPage() {
             Download Report
           </button>
         </div>
+        <br />
 
         <table style={{ borderCollapse: 'collapse', width: '100%' }}>
           <thead>
