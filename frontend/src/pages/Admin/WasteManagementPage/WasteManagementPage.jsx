@@ -4,6 +4,7 @@ import axios from 'axios';
 
 function WasteManagementPage() {
   const [binsData, setBinsData] = useState([]);
+  const [hoveredRow, setHoveredRow] = useState(null); // State to track the hovered row
 
   // Fetch bins data from the API
   useEffect(() => {
@@ -37,20 +38,20 @@ function WasteManagementPage() {
       <AdminSidebar />
       <div className="main-content">
         <h1>Waste Management</h1>
-        <table>
+        <table style={{ borderCollapse: 'collapse', width: '100%' }}>
           <thead>
             <tr>
-              <th>User ID</th>
-              <th>Name</th>
-              <th>Organic Bins</th>
-              <th>Paper Bins</th>
-              <th>Plastic Bins</th>
-              <th>Electric Bins</th>
-              <th>Other Bins</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>User ID</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Name</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Organic Bins</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Paper Bins</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Plastic Bins</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Electric Bins</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Other Bins</th>
             </tr>
           </thead>
           <tbody>
-            {binsData.map(user => {
+            {binsData.map((user, index) => {
               // Initialize bins details
               const binsMap = {
                 Organic: [],
@@ -66,14 +67,22 @@ function WasteManagementPage() {
               });
 
               return (
-                <tr key={user.userId}>
-                  <td>{user.userId}</td>
-                  <td>{user.name}</td>
-                  <td>{binsMap.Organic.length > 0 ? binsMap.Organic.map(formatBinDetails) : 'N/A'}</td>
-                  <td>{binsMap.Paper.length > 0 ? binsMap.Paper.map(formatBinDetails) : 'N/A'}</td>
-                  <td>{binsMap.Plastic.length > 0 ? binsMap.Plastic.map(formatBinDetails) : 'N/A'}</td>
-                  <td>{binsMap.Electric.length > 0 ? binsMap.Electric.map(formatBinDetails) : 'N/A'}</td>
-                  <td>{binsMap.Other.length > 0 ? binsMap.Other.map(formatBinDetails) : 'N/A'}</td>
+                <tr
+                  key={user.userId}
+                  onMouseEnter={() => setHoveredRow(index)} // Set hovered row on mouse enter
+                  onMouseLeave={() => setHoveredRow(null)} // Reset hovered row on mouse leave
+                  style={{
+                    backgroundColor: hoveredRow === index ? '#f1f1f1' : 'white', // Change background on hover
+                    transition: 'background-color 0.3s ease',
+                  }}
+                >
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.userId}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.name}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{binsMap.Organic.length > 0 ? binsMap.Organic.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{binsMap.Paper.length > 0 ? binsMap.Paper.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{binsMap.Plastic.length > 0 ? binsMap.Plastic.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{binsMap.Electric.length > 0 ? binsMap.Electric.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{binsMap.Other.length > 0 ? binsMap.Other.map(formatBinDetails) : 'N/A'}</td>
                 </tr>
               );
             })}
