@@ -207,6 +207,7 @@ function DisplayRoutes() {
                     <th>Date</th>
                     <th>Stops</th>
                     <th>Action</th>
+                    <th>Status</th>
                     <th>Driver</th>
                   </tr>
                 </thead>
@@ -216,6 +217,7 @@ function DisplayRoutes() {
                       <td style={{ width: '250px' }}>{route.routeName}</td>
                       <td style={{ width: '150px' }}>{route.date}</td>
                       <td style={{ width: '150px' }}>{route.routes.length} Stops</td>
+                      <td style={{ width: '150px' }}>{route.status}</td>
                       <td style={{width:'300px'}}>
                         <button onClick={() => handleViewRoute(route)}>View Route</button>
                         <button
