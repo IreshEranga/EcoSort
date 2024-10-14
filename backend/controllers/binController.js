@@ -72,6 +72,7 @@ exports.getBinsByUserId = async (req, res) => {
 
 
 // Get bins for all users
+/*
 exports.getBinsForAllUsers = async (req, res) => {
   try {
     const bins = await Bin.find()
@@ -92,3 +93,46 @@ exports.getBinsForAllUsers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+*/
+
+exports.getBinsForAllUsers = async (req, res) => {
+  try {
+    const bins = await Bin.find()
+      .populate('user', 'userId firstName lastName') // Adjust fields as necessary
+      .select('binId qrCode percentage user type'); // Select binType in addition to other fields
+
+    // Create an object to group bins by user
+    const groupedBins = {};
+
+    bins.forEach(bin => {
+      const userId = bin.user.userId;
+      const userName = `${bin.user.firstName} ${bin.user.lastName}`;
+      const binInfo = {
+        binId: bin.binId,
+        qr: bin.qrCode,
+        percentage: bin.percentage,
+        type: bin.type // Add binType to the object
+      };
+
+      // Check if the user already exists in the groupedBins
+      if (!groupedBins[userId]) {
+        groupedBins[userId] = {
+          userId,
+          name: userName,
+          bins: [] // Initialize bins array
+        };
+      }
+
+      // Push the bin information to the user's bins array
+      groupedBins[userId].bins.push(binInfo);
+    });
+
+    // Convert groupedBins object to an array
+    const result = Object.values(groupedBins);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+

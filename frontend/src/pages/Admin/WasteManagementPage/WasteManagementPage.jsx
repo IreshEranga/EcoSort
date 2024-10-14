@@ -3,60 +3,53 @@ import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import axios from 'axios';
 
 function WasteManagementPage() {
-  const [bins, setBins] = useState([]); // State to hold the bin data
-  const [loading, setLoading] = useState(true); // State to handle loading state
-  const [error, setError] = useState(null); // State to handle errors
+  const [binsData, setBinsData] = useState([]);
 
+  // Fetch bins data from the API
   useEffect(() => {
-    const fetchBins = async () => {
+    const fetchBinsData = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/bins/bins/all');
-        setBins(response.data); // Set the bin data from the response
-      } catch (err) {
-        setError('Error fetching bin data'); // Handle errors
-      } finally {
-        setLoading(false); // Set loading to false once the data is fetched
+        setBinsData(response.data);
+      } catch (error) {
+        console.error('Error fetching bins data:', error);
       }
     };
 
-    fetchBins();
-  }, []); // Empty dependency array means this effect runs once when the component mounts
-
-  if (loading) {
-    return <div>Loading...</div>; // Display loading message
-  }
-
-  if (error) {
-    return <div>{error}</div>; // Display error message if any
-  }
+    fetchBinsData();
+  }, []);
 
   return (
     <div className='admin-dashboard'>
       <AdminSidebar />
       <div className="main-content">
-        <h1>Waste Management Bins</h1>
+        <h1>Waste Management</h1>
         <table>
           <thead>
             <tr>
               <th>User ID</th>
               <th>Name</th>
               <th>Bin ID</th>
-              <th>QR Code</th>
+              <th>Type</th>
               <th>Percentage</th>
+              <th>QR Code</th>
             </tr>
           </thead>
           <tbody>
-            {bins.map((bin) => (
-              <tr key={bin.binId}>
-                <td>{bin.userId}</td>
-                <td>{bin.name}</td>
-                <td>{bin.binId}</td>
-                <td>
-                  <img src={bin.qr} alt={`QR Code for ${bin.binId}`} style={{ width: '100px' }} />
-                </td>
-                <td>{bin.percentage}%</td>
-              </tr>
-            ))}
+            {binsData.map(user => 
+              user.bins.map(bin => (
+                <tr key={bin.binId}>
+                  <td>{user.userId}</td>
+                  <td>{user.name}</td>
+                  <td>{bin.binId}</td>
+                  <td>{bin.type}</td>
+                  <td>{bin.percentage}%</td>
+                  <td>
+                    <img src={bin.qr} alt={`QR code for bin ${bin.binId}`} style={{ width: '50px', height: '50px' }} />
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
