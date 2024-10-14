@@ -101,6 +101,7 @@ function WasteManagementPage() {
             Download Report
           </button>
         </div>
+        <br />
 
         <table style={{ borderCollapse: 'collapse', width: '100%' }}>
           <thead>
