@@ -13,7 +13,7 @@ function ViewDriverSchedules() {
     height: '400px',
   };
 
-  const defaultCenter = { lat: 7.50089752317855, lng: 80.34802588329134 }; // Default center for your region
+  const defaultCenter = { lat: 7.50089752317855, lng: 80.34802588329134 };
 
   const getCurrentDay = () => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -23,7 +23,6 @@ function ViewDriverSchedules() {
 
   const today = getCurrentDay();
 
-  // Get the driver information from local storage
   const driver = JSON.parse(localStorage.getItem('driver'));
   const DriverId = driver ? driver.id : null;
 
@@ -32,8 +31,7 @@ function ViewDriverSchedules() {
       try {
         const response = await axios.get('http://localhost:8000/router/routes');
         const allRoutes = response.data;
-        
-        // Filter routes for the logged-in driver and today's date
+
         const filteredRoutes = allRoutes.filter(route =>
           route.assignedDriver && route.assignedDriver._id === DriverId && route.date === today
         );
@@ -49,6 +47,24 @@ function ViewDriverSchedules() {
     }
   }, [DriverId]);
 
+  // Mark the route as completed and the driver as available
+  const handleMarkAsCompleted = async (routeId) => {
+    try {
+      // Update the driver status to "available"
+      await axios.put(`http://localhost:8000/api/driver/drivers/${DriverId}`, { status: 'available' });
+
+      // Update the route status to "completed"
+      await axios.put(`http://localhost:8000/router/routes/${routeId}`, { status: 'Completed' });
+
+      // Fetch updated routes after marking as completed
+      setRoutes(prevRoutes => prevRoutes.filter(route => route._id !== routeId));
+      alert('Route marked as completed and driver set to available.');
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Failed to update the status.');
+    }
+  };
+
   return (
     <div className='driver-home'>
       <DriverNavBar />
@@ -63,6 +79,7 @@ function ViewDriverSchedules() {
                 <h2>{route.routeName}</h2>
                 <p>Date: {route.date}</p>
                 <p>City: {route.city}</p>
+                <p>Status: {route.status}</p>
                 <p>Total Stops: {route.routes.length}</p>
                 <div className="route-details">
                   <h3>Route Stops:</h3>
@@ -78,28 +95,47 @@ function ViewDriverSchedules() {
                     <p>No stops available for this route.</p>
                   )}
 
-                  {/* View Stops Button */}
                   <button
                     className="view-route-btn"
-                    onClick={() => setSelectedRoute(route)} // Set selected route for displaying stops on map
+                    onClick={() => setSelectedRoute(route)}
                   >
                     View Stops on Map
                   </button>
+
+                  
+
+                  {/* Mark as Completed Button */}
+                  {/* <button
+                    className="mark-completed-btn"
+                    onClick={() => handleMarkAsCompleted(route._id)}
+                  >
+                    Mark as Completed
+                  </button> */}
+
+                  <button
+                    className="mark-completed-btn"
+                    onClick={() => handleMarkAsCompleted(route._id)}
+                    disabled={route.status === 'Completed'} // Disable if route is completed
+                  >
+                    {route.status === 'Completed' ? 'Completed' : 'Mark as Completed'}
+                  </button>
+
+
                   {/* Render Google Map when the "View Stops" button is clicked */}
                   {selectedRoute && selectedRoute._id === route._id && (
-                    <LoadScript googleMapsApiKey="AIzaSyC_pYhIJVCAFchZnvhbnE9awl5u_XIoRIg"> {/* Replace with your actual API key */}
+                    <LoadScript googleMapsApiKey="AIzaSyC_pYhIJVCAFchZnvhbnE9awl5u_XIoRIg">
                       <GoogleMap
                         mapContainerStyle={containerStyle}
-                        center={route.routes.length > 0 ? { lat: route.routes[0].lat, lng: route.routes[0].lng } : defaultCenter} // Fallback to default center if no stops
-                        zoom={14} // Adjust zoom level as needed
-                        onLoad={() => console.log('Map Loaded')} // Debugging log
+                        center={route.routes.length > 0 ? { lat: route.routes[0].lat, lng: route.routes[0].lng } : defaultCenter}
+                        zoom={14}
+                        onLoad={() => console.log('Map Loaded')}
                       >
                         {route.routes.map((stop) => (
                           <Marker
-                            key={stop._id} // Use stop ID for a unique key
+                            key={stop._id}
                             position={{ lat: stop.lat, lng: stop.lng }}
-                            label={(route.routes.indexOf(stop) + 1).toString()} // Number the stops
-                            onLoad={() => console.log('Marker Loaded:', stop.lat, stop.lng)} // Debugging log
+                            label={(route.routes.indexOf(stop) + 1).toString()}
+                            onLoad={() => console.log('Marker Loaded:', stop.lat, stop.lng)}
                           />
                         ))}
                       </GoogleMap>

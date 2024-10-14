@@ -34,11 +34,33 @@
   .route-details {
     margin-top: 10px;
   }
+
+  .mark-completed-btn{
+    margin-left: 50px;
+    margin-top: 20px;
+    background-color: lightseagreen;
+
+  }
+
+  .mark-completed-btn:hover{
+    background-color: lightgreen;
+  }
   
   @media (max-width: 600px) {
     .driverschedule-container {
       width: 100%;
       padding: 10px;
+    }
+
+    .mark-completed-btn{
+      margin-left: 50px;
+      margin-top: 20px;
+  
+    }
+
+    .view-route-btn{
+      margin-left: 50px;
+      margin-top: 20px;
     }
   
     .route-item {

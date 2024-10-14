@@ -12,11 +12,12 @@ const RouteSchema = new mongoose.Schema({
     },
   ],
   assignedDriver: {
-    type: mongoose.Schema.Types.ObjectId, // Assuming you have a Driver model
+    type: mongoose.Schema.Types.ObjectId, 
     ref: 'Driver'
   },
   date:{type : String},
   city:{type : String},
+  status:{type:String, default:'Not Complete', enum: ['Completed', 'Not Complete'],}
 }, { timestamps: true });
 
 module.exports = mongoose.model('Route', RouteSchema);

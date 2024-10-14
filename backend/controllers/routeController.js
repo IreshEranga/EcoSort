@@ -3,14 +3,15 @@ const Route = require('../models/routeModel');
 // Create a new route
 const createRoute = async (req, res) => {
   try {
-    const { routeName, routes, assignedDriver, date , city} = req.body;
+    const { routeName, routes, assignedDriver, date , city, status} = req.body;
 
     const newRoute = new Route({
       routeName,
       routes,
       assignedDriver,
       date,
-      city // assuming date is passed as a string in the format 'YYYY-MM-DD'
+      city,
+      status // assuming date is passed as a string in the format 'YYYY-MM-DD'
     });
 
     const savedRoute = await newRoute.save();
@@ -46,7 +47,7 @@ const getRouteById = async (req, res) => {
 // Update a route by ID
 const updateRoute = async (req, res) => {
   try {
-    const { routeName, routes, assignedDriver, date } = req.body;
+    const { routeName, routes, assignedDriver, date, status } = req.body;
 
     const updatedRoute = await Route.findByIdAndUpdate(
       req.params.id,
@@ -54,7 +55,8 @@ const updateRoute = async (req, res) => {
         routeName,
         routes,
         assignedDriver,
-        date, // assuming date is passed as a string in the format 'YYYY-MM-DD'
+        date,
+        status 
       },
       { new: true }
     ).populate('assignedDriver');
