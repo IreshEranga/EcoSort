@@ -16,7 +16,7 @@ exports.createBin = async (req, res) => {
 // Get all bins
 exports.getAllBins = async (req, res) => {
   try {
-    const bins = await Bin.find().populate('user', 'name email'); // Adjust fields as necessary
+    const bins = await Bin.find().populate('user', 'name email location'); // Adjust fields as necessary
     res.status(200).json(bins);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -26,7 +26,7 @@ exports.getAllBins = async (req, res) => {
 // Get a bin by ID
 exports.getBinById = async (req, res) => {
   try {
-    const bin = await Bin.findById(req.params.id).populate('user', 'name email');
+    const bin = await Bin.findById(req.params.id).populate('user', 'name email location');
     if (!bin) return res.status(404).json({ message: 'Bin not found' });
     res.status(200).json(bin);
   } catch (error) {
@@ -60,7 +60,7 @@ exports.deleteBin = async (req, res) => {
 exports.getBinsByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const bins = await Bin.find({ user: userId }).populate('user', 'name email');
+    const bins = await Bin.find({ user: userId }).populate('user', 'name email location');
     if (bins.length === 0) {
       return res.status(404).json({ message: 'No bins found for this user' });
     }
@@ -99,7 +99,7 @@ exports.getBinsForAllUsers = async (req, res) => {
 exports.getBinsForAllUsers = async (req, res) => {
   try {
     const bins = await Bin.find()
-      .populate('user', 'userId firstName lastName') // Adjust fields as necessary
+      .populate('user', 'userId firstName lastName location') // Adjust fields as necessary
       .select('binId qrCode percentage user type'); // Select binType in addition to other fields
 
     // Create an object to group bins by user
@@ -108,6 +108,7 @@ exports.getBinsForAllUsers = async (req, res) => {
     bins.forEach(bin => {
       const userId = bin.user.userId;
       const userName = `${bin.user.firstName} ${bin.user.lastName}`;
+      const location = bin.user.location;
       const binInfo = {
         binId: bin.binId,
         qr: bin.qrCode,
@@ -120,6 +121,7 @@ exports.getBinsForAllUsers = async (req, res) => {
         groupedBins[userId] = {
           userId,
           name: userName,
+          location,
           bins: [] // Initialize bins array
         };
       }
