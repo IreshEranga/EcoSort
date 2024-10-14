@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import axios from 'axios';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 function WasteManagementPage() {
   const [binsData, setBinsData] = useState([]);
   const [hoveredRow, setHoveredRow] = useState(null); // State to track the hovered row
+  const [searchQuery, setSearchQuery] = useState(''); // State for search input
+  const [filteredData, setFilteredData] = useState([]); // State for filtered bins data
 
   // Fetch bins data from the API
   useEffect(() => {
@@ -12,6 +16,7 @@ function WasteManagementPage() {
       try {
         const response = await axios.get('http://localhost:8000/api/bins/bins/all');
         setBinsData(response.data);
+        setFilteredData(response.data); // Initialize filtered data
       } catch (error) {
         console.error('Error fetching bins data:', error);
       }
@@ -33,11 +38,67 @@ function WasteManagementPage() {
     );
   };
 
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    // Filter data based on search query
+    const filtered = binsData.filter(user => {
+      return (
+        user.userId.toString().includes(query) || // Search by User ID
+        user.bins.some(bin => 
+          bin.binId.toString().includes(query) || // Search by Bin ID
+          bin.type.toLowerCase().includes(query) // Search by Bin Type
+        )
+      );
+    });
+    setFilteredData(filtered);
+  };
+
+  // Download report based on filtered data
+  const downloadReport = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    doc.text('Waste Management Report', 14, 20);
+
+    // Prepare data for the table
+    const reportData = filteredData.map(user => ({
+      userId: user.userId,
+      name: user.name,
+      bins: user.bins.map(bin => `${bin.binId} (${bin.type}): ${bin.percentage}%`).join(', '),
+    }));
+
+    // Create the table
+    autoTable(doc, {
+      head: [['User ID', 'Name', 'Bins']],
+      body: reportData.map(item => [item.userId, item.name, item.bins]),
+    });
+
+    // Save the PDF
+    doc.save('Waste_Management_Report.pdf');
+  };
+
   return (
     <div className='admin-dashboard'>
       <AdminSidebar />
       <div className="main-content">
         <h1>Waste Management</h1>
+        
+        {/* Search Bar */}
+        <div style={{ marginBottom: '20px' }}>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search by User ID, Bin ID, or Bin Type"
+            style={{ padding: '8px', width: '300px' }}
+          />
+          <button onClick={downloadReport} style={{ marginLeft: '10px', padding: '8px' }}>
+            Download Report
+          </button>
+        </div>
+
         <table style={{ borderCollapse: 'collapse', width: '100%' }}>
           <thead>
             <tr>
@@ -51,7 +112,7 @@ function WasteManagementPage() {
             </tr>
           </thead>
           <tbody>
-            {binsData.map((user, index) => {
+            {filteredData.map((user, index) => {
               // Initialize bins details
               const binsMap = {
                 Organic: [],
