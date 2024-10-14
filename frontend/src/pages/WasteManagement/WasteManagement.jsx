@@ -234,13 +234,13 @@ function WasteManagement() {
       <NavbarComponent />
 
       {/* Bin Section */}
-      <div className="user-header" style={{ backgroundColor: '#f4f4f4', padding: '30px' }}>
+      <div className="user-header" style={{ backgroundColor: '#f4f4f4', padding: '20px' }}>
         <h1>Waste Management</h1>
         {!showCreateBinForm && (
           <Button 
             variant="primary" 
             onClick={() => setShowCreateBinForm(true)} 
-            style={{ margin: '20px' }}
+            style={{ margin: '10px' }}
           >
             Add New Bin
           </Button>
@@ -248,7 +248,7 @@ function WasteManagement() {
       </div>
 
       {showCreateBinForm && (
-        <Container style={{ marginTop: '20px', backgroundColor: '#e9ecef', padding: '20px', borderRadius: '10px', maxWidth: '400px', position: 'relative' }}>
+        <Container style={{ marginTop: '10px', backgroundColor: '#e9ecef', padding: '20px', borderRadius: '10px', maxWidth: '400px', position: 'relative' }}>
           <Button 
             variant="link" 
             onClick={() => { setShowCreateBinForm(false); setBinType(''); setError(''); }} 
@@ -286,7 +286,7 @@ function WasteManagement() {
       )}
 
       {/* Increased size for bin cards */}
-      <div style={{ padding: '40px', overflowX: 'auto', backgroundColor: '#f8f9fa' }}>
+      <div style={{ padding: '10px', overflowX: 'auto', backgroundColor: '#f8f9fa' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
           {bins.map((bin) => (
             <Card 
