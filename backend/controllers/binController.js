@@ -69,3 +69,26 @@ exports.getBinsByUserId = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// Get bins for all users
+exports.getBinsForAllUsers = async (req, res) => {
+  try {
+    const bins = await Bin.find()
+      .populate('user', 'userId firstName lastName') // Adjust fields as necessary
+      .select('binId qrCode percentage user'); // Select only the fields you need
+
+    // Map the bins to include userId, name (full name), binId, qr, and percentage
+    const result = bins.map(bin => ({
+      userId: bin.user.userId,
+      name: `${bin.user.firstName} ${bin.user.lastName}`, // Combine first and last name
+      binId: bin.binId,
+      qr: bin.qrCode,
+      percentage: bin.percentage
+    }));
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -22,4 +22,7 @@ router.delete('/:id', binController.deleteBin);
 // Get all bins by User ID
 router.get('/user/:userId', binController.getBinsByUserId);
 
+// Get bins for all users
+router.get('/bins/all', binController.getBinsForAllUsers);
+
 module.exports = router;
