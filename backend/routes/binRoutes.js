@@ -19,6 +19,7 @@ router.put('/:id', binController.updateBin);
 // Delete a bin by ID
 router.delete('/:id', binController.deleteBin);
 
+// Get all bins by User ID
 router.get('/user/:userId', binController.getBinsByUserId);
 
 module.exports = router;

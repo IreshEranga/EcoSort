@@ -30,6 +30,7 @@ import DriverHome from '../pages/Driver/DriverHome';
 
 
 
+
 import ViewDriverShedules from '../pages/Driver/ViewDriverShedules';
 
 
@@ -65,10 +66,6 @@ const AppRoutes = () => {
           />
 
 
-         
-
-
-         
 
 
 
