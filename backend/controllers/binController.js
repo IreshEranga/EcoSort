@@ -56,20 +56,14 @@ exports.deleteBin = async (req, res) => {
   }
 };
 
-
 // Get all bins by user ID
 exports.getBinsByUserId = async (req, res) => {
   try {
-    // Extract user ID from request parameters
-    const userId = req.params.userId; // Assuming userId is passed as a URL parameter
-
-    // Find all bins that belong to the user
-    const bins = await Bin.find({ user: userId }).populate('user', 'name email'); // Populate user fields as needed
-
+    const userId = req.params.userId;
+    const bins = await Bin.find({ user: userId }).populate('user', 'name email');
     if (bins.length === 0) {
       return res.status(404).json({ message: 'No bins found for this user' });
     }
-
     res.status(200).json(bins);
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -16,6 +16,7 @@ const binRoutes = require('./routes/binRoutes');
 
 
 const RouterRoutes = require('./routes/routeRoutes');
+const SpecialRequestRoutes = require('./routes/specialRequestRoutes');
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use('/api/admin/', adSupportRoutes);
 app.use('/api/driver', DriverRoutes);
 
 app.use('/api/bins', binRoutes);
+app.use('/api/special-requests', SpecialRequestRoutes);
 
 app.use('/router', RouterRoutes);
 
