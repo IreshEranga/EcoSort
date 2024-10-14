@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 //import SupportTicketForm from '../../components/User/SupportTicketForm';
 import NavbarComponent from '../../components/NavbarComponent'; 
 import Footer from '../../components/Footer/Footer';
-import './reportIssue.css';
+import '../Support/reportIssue.css';
 import axios from 'axios';
 
 const ReportIssue = () => {
@@ -64,16 +64,57 @@ const ReportIssue = () => {
     };
 
     return (
-        <div className='support-home'>
+        <div style={{
+            minHeight: '100vh',
+            margin: 0,
+            padding: 0
+        }}>
             {/* Navbar */}
             <NavbarComponent />
 
-            <div className='support-ticket-container'>
-                <h2>Report Your Issue</h2>
-                <form onSubmit={handleSubmit} className='support-ticket-form'>
+            <div style={{
+                width: '100%',
+                maxWidth: '500px',
+                padding: '20px',
+                textAlign: 'center',
+                backgroundColor: '#f9f9f9',
+                borderRadius: '8px',
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                margin: 'auto',
+            }}>
+                <h3 style={{
+                    width: '100%',
+                    height: '100%',
+                    textAlign: 'center',
+                    color: 'black',
+                    fontSize: '64px', 
+                    
+                    fontWeight: 500,
+                    textTransform: 'capitalize',
+                    letterSpacing: '2.56px',
+                    wordWrap: 'break-word'
+                }}>Report Your Issue</h3>
+
+                <form onSubmit={handleSubmit} style={{
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
                     <div>
-                        <label>Issue Type:</label>
-                        <select value={issueType} onChange={(e) => setIssueType(e.target.value)} required>
+                        <label style={{
+                            fontSize: '16px',
+                            marginBottom: '8px',
+                            color: '#555'
+                        }}>Issue Type:</label>
+
+                        <select value={issueType} onChange={(e) => setIssueType(e.target.value)} required style={{
+                            padding: '10px',
+                            fontSize: '14px',
+                            marginBottom: '15px',
+                            border: '1px solid #ccc',
+                            borderRadius: '5px',
+                            width: '100%',
+                            boxSizing: 'border-box'
+                        }}>
                             <option value="">Select an issue type</option>
                             <option value="Collection">Collection Issue</option>
                             <option value="Technical">Technical Issue</option>
@@ -82,18 +123,40 @@ const ReportIssue = () => {
                     </div>
                     <div>
                         <label>Description:</label>
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+                        <textarea style={{
+                            padding: '10px',
+                            fontSize: '14px',
+                            marginBottom: '15px',
+                            border: '1px solid #ccc',
+                            borderRadius: '5px',
+                            width: '100%',
+                            boxSizing: 'border-box'
+                        }} 
+                        value={description} 
+                        onChange={(e) => setDescription(e.target.value)} 
+                        required />
                     </div>
-                    <button type="submit" disabled={isSubmitting}>
+                    
+                    <button style={{
+                        padding: '10px',
+                        fontSize: '16px',
+                        backgroundColor: '#28a745',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer'
+                    }} 
+                    type="submit" 
+                    disabled={isSubmitting}>
                         {isSubmitting ? 'Submitting...' : 'Submit Ticket'}
                     </button>
                 </form>
-                {message && <p className="support-ticket-message">{message}</p>}
+                {message && <p style={{marginTop: '15px',textAlign: 'center',fontSize: '14px',color: '#1db667'}} >{message}</p>}
             </div>
 
         <div>
             <hr />
-        <h2>Your Submitted Tickets</h2>
+        <h2 style={{paddingLeft: '40px'}}>Your Submitted Tickets</h2>
             <table>
                 <thead>
                     <tr>
