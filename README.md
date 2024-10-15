@@ -43,14 +43,44 @@
 
 ## Contributors
 
-| Contributor | GitHub Profile |
-|-------------|----------------|
-| ![Contributor 1](https://avatars.githubusercontent.com/u/117840288?v=4) | [Contributor 1](https://github.com/IreshEranga) |
-| ![Contributor 2](https://avatars.githubusercontent.com/u/23456789?v=4) | [Contributor 2](https://github.com/contributor2) |
-| ![Contributor 3](https://avatars.githubusercontent.com/u/34567890?v=4) | [Contributor 3](https://github.com/contributor3) |
-| ![Contributor 4](https://avatars.githubusercontent.com/u/45678901?v=4) | [Contributor 4](https://github.com/contributor4) |
 
----
+<table>
+<tr>
+    <td align="center">
+        <a href="https://github.com/IreshEranga">
+            <img src="https://github.com/IreshEranga.png" width="100(px);" alt="IreshEranga"/>
+            <br />
+            <sub><b>Iresh Eranga</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/KaviniWickramasooriya">
+            <img src="https://github.com/KaviniWickramasooriya.png" width="100(px);" alt="kavini"/>
+            <br />
+            <sub><b>Kavini Wickramasooriya</b></sub>
+        </a>
+    </td>
+  
+<tr>
+
+   <tr>
+        <td align="center">
+        <a href="https://github.com/Kaushalya-wmds">
+            <img src="https://github.com/Kaushalya-wmds.png" width="100(px);" alt="sahan"/>
+            <br />
+            <sub><b>Shenori Kaushalya</b></sub>
+        </a>
+    </td>
+ <td align="center">
+        <a href="https://github.com/">
+            <img src="https://github.com/" width="100(px);" alt="Naduni"/>
+            <br />
+            <sub><b>Sathsara Naduni</b></sub>
+        </a>
+    </td>
+   </tr>
+</table>
+<!-- readme: contributors -end -->
 
 ## License
 
