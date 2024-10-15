@@ -82,6 +82,9 @@ function RouteShedule() {
           Schedule Dates
         </button>
 
+        <h1 style={{marginTop:'5px'}}>User Schedule For {formatDate(currentDateTime)}</h1>
+        <hr style={{color:'green'}}/>
+
         {/* Display Users and Their Bins Grouped by City */}
         <div>
           {Object.entries(groupedUsers).length > 0 ? (
@@ -89,43 +92,45 @@ function RouteShedule() {
               <div key={city}>
                 <h2>{city}</h2>
                 <table style={tableStyles}>
-                  <thead>
-                    <tr>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Email</th>
-                      <th>Mobile</th>
-                      <th>Address</th>
-                      <th>Waste Collection Date</th>
-                      <th>Bins</th>
+                  <thead >
+                    <tr style={{border:'1px solid black'}}>
+                      <th style={{border:'1px solid black'}}>User ID</th>
+                      <th style={{border:'1px solid black'}}>Name</th>
+                      {/* <th style={{border:'1px solid black'}}>Last Name</th> */}
+                      <th style={{border:'1px solid black'}}>Email</th>
+                      {/* <th style={{border:'1px solid black'}}>Mobile</th> */}
+                      <th style={{border:'1px solid black'}}>Address</th>
+                      {/* <th style={{border:'1px solid black'}}>Waste Collection Date</th> */}
+                      <th style={{border:'1px solid black'}}>Bins</th>
                     </tr>
                   </thead>
                   <tbody>
                     {users.map((user, index) => (
                       <tr key={user.userId} className={`table-row ${index % 2 === 0 ? 'rowEven' : 'rowOdd'}`}>
-                        <td>{user.name.split(' ')[0]}</td>
-                        <td>{user.name.split(' ')[1]}</td>
-                        <td>{user.email}</td>
-                        <td>{user.mobile}</td>
-                        <td>{user.address}</td>
-                        <td>{user.wasteCollectionDate}</td>
-                        <td>
+                        <td style={{border:'1px solid black'}}>{user.userId}</td>
+                        <td style={{border:'1px solid black'}}>{user.name}</td>
+                        {/* <td style={{border:'1px solid black'}}>{user.name.split(' ')[1]}</td> */}
+                        <td style={{border:'1px solid black'}}>{user.email}</td>
+                        {/* <td style={{border:'1px solid black'}}>{user.mobile}</td> */}
+                        <td style={{border:'1px solid black'}}>{user.address}</td>
+                        {/* <td style={{border:'1px solid black'}}>{user.wasteCollectionDate}</td> */}
+                        <td style={{border:'1px solid black'}}>
                           <table style={innerTableStyles}>
                             <thead>
-                              <tr>
-                                <th>Bin ID</th>
-                                <th>Type</th>
-                                <th>Percentage</th>
-                                <th>Status</th>
+                              <tr style={{border:'1px solid black'}}>
+                                <th style={{border:'1px solid black'}}>Bin ID</th>
+                                <th style={{border:'1px solid black'}}>Type</th>
+                                <th style={{border:'1px solid black'}}>Percentage</th>
+                                <th style={{border:'1px solid black'}}>Status</th>
                               </tr>
                             </thead>
                             <tbody>
                               {user.bins.map((bin, binIndex) => (
                                 <tr key={bin.binId} className={`table-row ${binIndex % 2 === 0 ? 'rowEven' : 'rowOdd'}`}>
-                                  <td>{bin.binId}</td>
-                                  <td>{bin.type}</td>
-                                  <td>{bin.percentage}%</td>
-                                  <td>{bin.status}</td>
+                                  <td style={{border:'1px solid black'}}>{bin.binId}</td>
+                                  <td style={{border:'1px solid black'}}>{bin.type}</td>
+                                  <td style={{border:'1px solid black'}}>{bin.percentage}%</td>
+                                  <td style={{border:'1px solid black'}}>{bin.status}</td>
                                 </tr>
                               ))}
                             </tbody>
@@ -195,12 +200,18 @@ const tableStyles = {
   width: '100%',
   borderCollapse: 'collapse',
   margin: '20px 0',
+  border: '1px solid black', // Add border
 };
 
 const innerTableStyles = {
   width: '100%',
   borderCollapse: 'collapse',
   marginTop: '10px',
+  border: '1px solid black', // Add border for inner table
+};
+
+const tableRowStyles = {
+  border: '1px solid black', // Add border for table rows
 };
 
 export default RouteShedule;
