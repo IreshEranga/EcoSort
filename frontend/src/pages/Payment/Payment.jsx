@@ -1,141 +1,169 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavbarComponent from '../../components/NavbarComponent'; 
 import Footer from '../../components/Footer/Footer';
-import axios from 'axios';
 
+import './Payment.css';
+import axios from 'axios'; // For making API requests
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
-const UserPayments = () => {
-    const [payments, setPayments] = useState([]);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [message, setMessage] = useState('');
-    const [isUploading, setIsUploading] = useState(false);
-    const [user, setUser] = useState(null);
+function PaymentsPage() {
+  const [payments, setpayments] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredpayments, setFilteredpayments] = useState([]);
 
-    useEffect(() => {
-        // Retrieve user data from localStorage
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (storedUser) {
-            setUser(storedUser);
-            fetchUserPayments(storedUser._id); // Fetch the user's payments on component mount
-        }
-    }, []);
-
-    const fetchUserPayments = async (userId) => {
-        try {
-            const response = await axios.get(`http://localhost:8000/api/payments/user/${userId}`);
-            setPayments(response.data);
-        } catch (error) {
-            console.error('Error fetching user payments:', error);
-        }
+  // Fetch payments from the backend
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/payments'); // Ensure this matches your backend route
+        setpayments(response.data);
+        setFilteredpayments(response.data); // Set filtered payments initially to all payments
+      } catch (error) {
+        console.error('Error fetching payments:', error);
+      }
     };
 
-    const handleFileChange = (e) => {
-        setSelectedFile(e.target.files[0]);
-    };
+    fetchPayments();
+  }, []);
 
-    const handleUploadReceipt = async (paymentId) => {
-        if (!selectedFile) {
-            setMessage('Please select a file to upload.');
-            return;
-        }
+  // Function to handle map navigation
+  const handleNavigateToMap = (latitude, longitude) => {
+    const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+    window.open(mapUrl, '_blank'); // Open in a new tab
+  };
 
-        setIsUploading(true);
-
-        const formData = new FormData();
-        formData.append('receipt', selectedFile);
-
-        try {
-            const response = await axios.post(`http://localhost:8000/api/payments/upload-receipt/${paymentId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-
-            setMessage(response.data.message || 'Receipt uploaded successfully!');
-            fetchUserPayments(user._id); // Refetch payments after uploading receipt
-            setSelectedFile(null);
-        } catch (error) {
-            setMessage('Error uploading receipt. Please try again.');
-        } finally {
-            setIsUploading(false);
-        }
-    };
-
-    return (
-        <div style={{ minHeight: '100vh', margin: 0, padding: 0 }}>
-            {/* Navbar */}
-            <NavbarComponent />
-
-            <div style={{
-                width: '100%',
-                maxWidth: '600px',
-                padding: '20px',
-                textAlign: 'center',
-                backgroundColor: '#f9f9f9',
-                borderRadius: '8px',
-                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-                margin: 'auto',
-            }}>
-                <h3 style={{
-                    width: '100%',
-                    height: '100%',
-                    textAlign: 'center',
-                    color: 'black',
-                    fontSize: '36px',
-                    fontWeight: 500,
-                    textTransform: 'capitalize',
-                    letterSpacing: '1.56px',
-                    wordWrap: 'break-word'
-                }}>Your Payments</h3>
-
-                <div>
-                    <table style={{ width: '100%', marginTop: '20px' }}>
-                        <thead>
-                            <tr>
-                                <th>Payment ID</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {payments.map(payment => (
-                                <tr key={payment._id}>
-                                    <td>{payment.requestId}</td>
-                                    <td>{payment.status}</td>
-                                    <td>
-                                        {payment.status === 'Pending' && (
-                                            <div>
-                                                <input type="file" onChange={handleFileChange} />
-                                                <button
-                                                    onClick={() => handleUploadReceipt(payment._id)}
-                                                    disabled={isUploading}
-                                                    style={{
-                                                        padding: '10px',
-                                                        fontSize: '14px',
-                                                        backgroundColor: '#007bff',
-                                                        color: '#fff',
-                                                        border: 'none',
-                                                        borderRadius: '5px',
-                                                        cursor: 'pointer',
-                                                        marginTop: '10px'
-                                                    }}
-                                                >
-                                                    {isUploading ? 'Uploading...' : 'Upload Receipt'}
-                                                </button>
-                                            </div>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                {message && <p style={{ marginTop: '15px', fontSize: '14px', color: '#28a745' }}>{message}</p>}
-            </div>
-
-            <Footer />
-        </div>
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+    
+    // Filter payments based on search term
+    const filtered = payments.filter(user => 
+      user.firstName.toLowerCase().includes(value) ||
+      user.lastName.toLowerCase().includes(value) ||
+      user.city.toLowerCase().includes(value) ||
+      user.type.toLowerCase().includes(value)
     );
-};
 
-export default UserPayments;
+    setFilteredpayments(filtered);
+  };
+
+  // Generate PDF Report
+  const generatePDF = () => {
+    const doc = new jsPDF();
+
+    // Set Title
+    doc.setFontSize(18);
+    doc.text('User Report', 14, 20);
+
+    // Set Column Titles
+    const headers = ['User ID', 'First Name', 'Last Name', 'Email', 'Mobile', 'Address', 'City', 'Type'];
+    const data = filteredpayments.map(user => [
+      user.userId,
+      user.firstName,
+      user.lastName,
+      user.email,
+      user.mobile,
+      user.address,
+      user.city,
+      user.type
+    ]);
+
+    // Add headers
+    doc.autoTable({
+      head: [headers],
+      body: data,
+      startY: 30,
+    });
+
+    // Save the PDF
+    doc.save('user_report.pdf');
+  };
+
+  return (
+ 
+      
+      <div className="user-home">
+      <NavbarComponent />
+      {/* Main Content */}
+      <div className="main-content">
+        <h1 className="topic" style={{ color: 'black' }}>payments</h1>
+        
+        <div style={{display:'flex', flexDirection:'row'}}>
+          {/* Search Bar */}
+            <input 
+              type="text" 
+              placeholder="Search by name, city, or type..." 
+              value={searchTerm} 
+              onChange={handleSearchChange} 
+              className="search-input"
+            />
+            {/* Report Generation Button */}
+            {filteredpayments.length > 0 && (
+              <div className="report-section">
+                <button className="btn btn-primary" onClick={generatePDF}>
+                  Download PDF Report
+                </button>
+              </div>
+            )}
+        </div>
+
+        {/* payments Table */}
+        <table className="payments-table">
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Address</th>
+              <th>City</th>
+              <th>Type</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredpayments.length > 0 ? (
+              filteredpayments.map((user) => (
+                <tr key={user.userId}>
+                  <td>{user.userId}</td>
+                  <td>{user.firstName}</td>
+                  <td>{user.lastName}</td>
+                  <td>{user.email}</td>
+                  <td>{user.mobile}</td>
+                  <td>{user.address}</td>
+                  <td>{user.city}</td>
+                  <td>{user.type}</td>
+                  <td>
+                    {user.location.latitude && user.location.longitude ? (
+                      <button 
+                        className="map-button" 
+                        onClick={() => handleNavigateToMap(user.location.latitude, user.location.longitude)}
+                      >
+                        View on Map
+                      </button>
+                    ) : (
+                      'Location not available'
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9">No payments found</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
+        
+      </div>
+      <Footer />
+
+    </div>
+  );
+}
+
+export default PaymentsPage;

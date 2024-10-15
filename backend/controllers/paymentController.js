@@ -41,6 +41,16 @@ exports.getPaymentsForUser = async (req, res) => {
     }
 };
 
+
+// Get all payments
+exports.getPayments = async (req, res) => {
+  try {
+      const payments = await Payment.find()
+      res.status(200).json(payments);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching payments.', error });
+  }
+};
 // Upload receipt for a payment (User)
 exports.uploadReceipt = async (req, res) => {
     try {
