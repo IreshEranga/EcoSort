@@ -1,42 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import './RouteShedule.css';
 
-
 function RouteShedule() {
-  const navigate = useNavigate(); // Initialize the navigate function
-  const [users, setUsers] = useState([]); // State to hold all users
-  const [groupedUsers, setGroupedUsers] = useState({}); // State to hold users grouped by city
+  const navigate = useNavigate(); 
+  const [users, setUsers] = useState([]); 
+  const [groupedUsers, setGroupedUsers] = useState({}); 
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
-  // Function to update date and time every second
+  // Update date and time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDateTime(new Date());
     }, 1000);
-
-    return () => clearInterval(timer); // Clean up the interval on component unmount
+    return () => clearInterval(timer);
   }, []);
 
-  // Fetch users from the API
+  // Fetch users and bins from the API
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/users');
+        const response = await fetch('http://localhost:8000/api/bins/bins/all');
         const data = await response.json();
-        setUsers(data); // Set users from API response
+        setUsers(data); 
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching users with bins:', error);
       }
     };
-
     fetchUsers();
   }, []);
 
   // Group users by city with today's waste collection date
   useEffect(() => {
-    const today = formatDate(currentDateTime).toLowerCase(); // Get today's date in the format used in the DB
+    const today = formatDate(currentDateTime).toLowerCase(); 
     const filteredUsers = users.filter(user => user.wasteCollectionDate && user.wasteCollectionDate.toLowerCase() === today);
 
     const grouped = filteredUsers.reduce((acc, user) => {
@@ -45,12 +42,12 @@ function RouteShedule() {
       return acc;
     }, {});
 
-    setGroupedUsers(grouped); // Set grouped users
-  }, [users, currentDateTime]); // Re-run when users or current date/time changes
+    setGroupedUsers(grouped); 
+  }, [users, currentDateTime]);
 
   // Format the current date and time
   const formatDate = (date) => {
-    const options = { weekday: 'long' }; // Only get the day of the week
+    const options = { weekday: 'long' }; 
     return date.toLocaleDateString(undefined, options);
   };
 
@@ -58,7 +55,7 @@ function RouteShedule() {
     return date.toLocaleTimeString();
   };
 
-  // Function to handle button click and navigate to another page
+  // Handle button clicks for navigation
   const handleNavigation = () => {
     navigate('/admindashboard/collection-routine/dateShedule');
   };
@@ -69,34 +66,23 @@ function RouteShedule() {
 
   return (
     <div className="admin-dashboard">
-      <AdminSidebar /> {/* Sidebar component */}
+      <AdminSidebar /> 
 
-      {/* Main Content */}
       <div className="main-content" style={{ backgroundColor: 'white' }}>
-        
-
-        {/* Display Current Date and Time */}
         <div className="date-time-container" style={dateTimeStyles}>
           <div className="current-date" style={dateStyles}>{formatDate(currentDateTime)}</div>
           <div className="current-time" style={timeStyles}>{formatTime(currentDateTime)}</div>
         </div>
 
-        {/* Button to navigate, positioned at the top right */}
-        <button 
-          onClick={handleNavigationRoutes} 
-          style={buttonStylesRoutes}
-        >
+        <button onClick={handleNavigationRoutes} style={buttonStylesRoutes}>
           Routes
         </button>
 
-        <button 
-          onClick={handleNavigation} 
-          style={buttonStyles}
-        >
+        <button onClick={handleNavigation} style={buttonStyles}>
           Schedule Dates
         </button>
 
-        {/* Display Users in Tables Grouped by City */}
+        {/* Display Users and Their Bins Grouped by City */}
         <div>
           {Object.entries(groupedUsers).length > 0 ? (
             Object.entries(groupedUsers).map(([city, users]) => (
@@ -110,20 +96,44 @@ function RouteShedule() {
                       <th>Email</th>
                       <th>Mobile</th>
                       <th>Address</th>
+                      <th>Waste Collection Date</th>
+                      <th>Bins</th>
                     </tr>
                   </thead>
                   <tbody>
                     {users.map((user, index) => (
-                      <tr key={user._id} className={`table-row ${index % 2 === 0 ? 'rowEven' : 'rowOdd'}`}>
-                        <td>{user.firstName}</td>
-                        <td>{user.lastName}</td>
+                      <tr key={user.userId} className={`table-row ${index % 2 === 0 ? 'rowEven' : 'rowOdd'}`}>
+                        <td>{user.name.split(' ')[0]}</td>
+                        <td>{user.name.split(' ')[1]}</td>
                         <td>{user.email}</td>
                         <td>{user.mobile}</td>
                         <td>{user.address}</td>
+                        <td>{user.wasteCollectionDate}</td>
+                        <td>
+                          <table style={innerTableStyles}>
+                            <thead>
+                              <tr>
+                                <th>Bin ID</th>
+                                <th>Type</th>
+                                <th>Percentage</th>
+                                <th>Status</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {user.bins.map((bin, binIndex) => (
+                                <tr key={bin.binId} className={`table-row ${binIndex % 2 === 0 ? 'rowEven' : 'rowOdd'}`}>
+                                  <td>{bin.binId}</td>
+                                  <td>{bin.type}</td>
+                                  <td>{bin.percentage}%</td>
+                                  <td>{bin.status}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
-
                 </table>
               </div>
             ))
@@ -136,7 +146,7 @@ function RouteShedule() {
   );
 }
 
-// CSS styles for the button and date/time display
+// CSS styles
 const buttonStyles = {
   position: 'absolute',
   top: '20px',
@@ -146,7 +156,7 @@ const buttonStyles = {
   color: 'white',
   border: 'none',
   borderRadius: '5px',
-  cursor: 'pointer'
+  cursor: 'pointer',
 };
 
 const buttonStylesRoutes = {
@@ -158,7 +168,7 @@ const buttonStylesRoutes = {
   color: 'white',
   border: 'none',
   borderRadius: '5px',
-  cursor: 'pointer'
+  cursor: 'pointer',
 };
 
 const dateTimeStyles = {
@@ -187,19 +197,10 @@ const tableStyles = {
   margin: '20px 0',
 };
 
-/*
-const rowEvenStyles = {
-  backgroundColor: '#f2f2f2', // Light grey for even rows
+const innerTableStyles = {
+  width: '100%',
+  borderCollapse: 'collapse',
+  marginTop: '10px',
 };
-
-const rowOddStyles = {
-  backgroundColor: '#ffffff', // White for odd rows
-};
-
-// Add hover effect
-const hoverStyles = {
-  backgroundColor: '#e0e0e0', // Light grey on hover
-};
-*/
 
 export default RouteShedule;
