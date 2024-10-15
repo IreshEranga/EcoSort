@@ -198,3 +198,22 @@ exports.getUsersDoorToDoor = async (req, res) => {
     res.status(500).json({ message: 'Error fetching users by door-to-door location', error });
   }
 };
+
+
+// Get users along with their bins and statuses
+// Get all users along with their bins
+exports.getAllUsersWithBins = async (req, res) => {
+  try {
+    // Fetch users and populate bins field
+    const users = await User.find().populate('bins');
+    
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: 'No users found' });
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users with bins', error });
+  }
+};
+
