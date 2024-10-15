@@ -1,167 +1,116 @@
 import React, { useEffect, useState } from 'react';
 import NavbarComponent from '../../components/NavbarComponent'; 
 import Footer from '../../components/Footer/Footer';
-
 import './Payment.css';
 import axios from 'axios'; // For making API requests
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 function PaymentsPage() {
-  const [payments, setpayments] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredpayments, setFilteredpayments] = useState([]);
+  const [filteredPayments, setFilteredPayments] = useState([]);
+  const [user, setUser] = useState(null);
+  const [dateTime, setDateTime] = useState(new Date());
+  const [receiptFile, setReceiptFile] = useState(null);
+  const [selectedPaymentId, setSelectedPaymentId] = useState(null);
+
+  useEffect(() => {
+    // Retrieve user data from localStorage
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
 
   // Fetch payments from the backend
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/payments'); // Ensure this matches your backend route
-        setpayments(response.data);
-        setFilteredpayments(response.data); // Set filtered payments initially to all payments
+        if (user && user._id) {
+          const response = await axios.get(`http://localhost:8000/api/payment/payments/${user._id}`);
+          setPayments(response.data);
+          setFilteredPayments(response.data);
+        } else {
+          console.error('No user _id found');
+        }
       } catch (error) {
         console.error('Error fetching payments:', error);
       }
     };
 
-    fetchPayments();
-  }, []);
+    if (user) {
+      fetchPayments();
+    }
+  }, [user]);
 
-  // Function to handle map navigation
-  const handleNavigateToMap = (latitude, longitude) => {
-    const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-    window.open(mapUrl, '_blank'); // Open in a new tab
+  // Handle file change
+  const handleFileChange = (event) => {
+    setReceiptFile(event.target.files[0]);
   };
 
-  // Handle search input change
-  const handleSearchChange = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearchTerm(value);
-    
-    // Filter payments based on search term
-    const filtered = payments.filter(user => 
-      user.firstName.toLowerCase().includes(value) ||
-      user.lastName.toLowerCase().includes(value) ||
-      user.city.toLowerCase().includes(value) ||
-      user.type.toLowerCase().includes(value)
-    );
+  // Submit the receipt
+  const handleReceiptSubmit = async (paymentId) => {
+    const formData = new FormData();
+    formData.append('receiptFile', receiptFile);
 
-    setFilteredpayments(filtered);
-  };
-
-  // Generate PDF Report
-  const generatePDF = () => {
-    const doc = new jsPDF();
-
-    // Set Title
-    doc.setFontSize(18);
-    doc.text('User Report', 14, 20);
-
-    // Set Column Titles
-    const headers = ['User ID', 'First Name', 'Last Name', 'Email', 'Mobile', 'Address', 'City', 'Type'];
-    const data = filteredpayments.map(user => [
-      user.userId,
-      user.firstName,
-      user.lastName,
-      user.email,
-      user.mobile,
-      user.address,
-      user.city,
-      user.type
-    ]);
-
-    // Add headers
-    doc.autoTable({
-      head: [headers],
-      body: data,
-      startY: 30,
-    });
-
-    // Save the PDF
-    doc.save('user_report.pdf');
+    try {
+      const response = await axios.post(`http://localhost:8000/api/payment/payments/${paymentId}/receipt`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(response.data);
+      // Optionally refetch payments or update the state to reflect the changes
+    } catch (error) {
+      console.error('Error uploading receipt:', error);
+    }
   };
 
   return (
- 
-      
-      <div className="user-home">
+    <div className="user-home">
       <NavbarComponent />
-      {/* Main Content */}
-      <div className="main-content">
-        <h1 className="topic" style={{ color: 'black' }}>payments</h1>
-        
-        <div style={{display:'flex', flexDirection:'row'}}>
-          {/* Search Bar */}
-            <input 
-              type="text" 
-              placeholder="Search by name, city, or type..." 
-              value={searchTerm} 
-              onChange={handleSearchChange} 
-              className="search-input"
-            />
-            {/* Report Generation Button */}
-            {filteredpayments.length > 0 && (
-              <div className="report-section">
-                <button className="btn btn-primary" onClick={generatePDF}>
-                  Download PDF Report
-                </button>
-              </div>
-            )}
-        </div>
-
-        {/* payments Table */}
-        <table className="payments-table">
+      <div>
+        <hr />
+        <h2 style={{ paddingLeft: '40px' }}>Your Payments</h2>
+        <table>
           <thead>
             <tr>
-              <th>User ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Mobile</th>
-              <th>Address</th>
-              <th>City</th>
-              <th>Type</th>
-              <th>Location</th>
+              <th>Request ID</th>
+              <th>Distance (km)</th>
+              <th>Transportation Charge (LKR)</th>
+              <th>Status</th>
+              <th>Owner Name</th>
+              <th>Weight (kg)</th>
+              <th>Payment ID</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredpayments.length > 0 ? (
-              filteredpayments.map((user) => (
-                <tr key={user.userId}>
-                  <td>{user.userId}</td>
-                  <td>{user.firstName}</td>
-                  <td>{user.lastName}</td>
-                  <td>{user.email}</td>
-                  <td>{user.mobile}</td>
-                  <td>{user.address}</td>
-                  <td>{user.city}</td>
-                  <td>{user.type}</td>
-                  <td>
-                    {user.location.latitude && user.location.longitude ? (
-                      <button 
-                        className="map-button" 
-                        onClick={() => handleNavigateToMap(user.location.latitude, user.location.longitude)}
-                      >
-                        View on Map
-                      </button>
-                    ) : (
-                      'Location not available'
-                    )}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="9">No payments found</td>
+            {payments.map(payment => (
+              <tr key={payment._id}>
+                <td>{payment.requestId}</td>
+                <td>{payment.distance}</td>
+                <td>{payment.transportationCharge}</td>
+                <td>{payment.status}</td>
+                <td>{payment.ownername}</td>
+                <td>{payment.weight}</td>
+                <td>{payment.paymentId}</td>
+                <td>
+                  {payment.status === 'Pending' && (
+                    <>
+                      <input type="file" onChange={handleFileChange} />
+                      <button onClick={() => handleReceiptSubmit(payment._id)}>Submit Receipt</button>
+                    </>
+                  )}
+                </td>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
-
-        
       </div>
-      <Footer />
 
+      <Footer />
     </div>
   );
 }

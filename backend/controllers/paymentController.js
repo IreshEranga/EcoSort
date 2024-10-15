@@ -38,13 +38,20 @@ exports.createPayment = async (req, res) => {
 
 // Get all payments for a user
 exports.getPaymentsForUser = async (req, res) => {
-    try {
-        const payments = await Payment.find({ owner: req.user._id });
-        res.status(200).json(payments);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching payments.', error });
-    }
+  try {
+    // Extract 'id' from req.params (since the route uses :id, not userId)
+    const { id } = req.params;
+    console.log("userId", id); // This will now log the correct user _id
+
+    // Assuming you are querying the database using the user's _id
+    const payments = await Payment.find({ owner: id }); // Assuming user field references the user in Payment model
+    
+    res.status(200).json(payments);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching payments.', error });
+  }
 };
+
 
 
 // Get all payments

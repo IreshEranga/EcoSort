@@ -10,7 +10,7 @@ const upload = multer({ dest: 'uploads/receipts/' });  // Multer configuration f
 router.post('/payments', createPayment);
 
 // Get payments for a specific user
-router.get('/payments/user', getPaymentsForUser);
+router.get('/payments/:id', getPaymentsForUser);
 router.get('/allpayments', getPayments);
 
 
