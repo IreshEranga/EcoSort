@@ -12,10 +12,17 @@ import SpecialRequestsPage from '../pages/Admin//SpecialRequests/SpecialRequests
 import ScheduleCollection from '../pages/SheduleWaste/ScheduleCollection';
 import ProtectedRoute from './ProtectedRoute';
 import Unauthorized from '../pages/Login/Unauthorized';
+import Payment from '../pages/Payment/Payment';
+
+
 import AdminDashBoard from '../pages/Admin/AdminDashBoard';
 import ReportIssue from '../pages/Support/ReportIssue';
 //import CollectionRouting from '../pages/SheduleWaste/CollectionRouting';
 import UsersPage from '../pages/Admin/UsersPage/UsersPage';
+import PaymentPage from '../pages/Admin/PaymentPage/PaymentPage';
+
+
+
 import RouteShedule from '../pages/Admin/WasteCollection/RouteShedule';
 import DateShedule from '../pages/Admin/WasteCollection/DateShedule';
 import Issues from '../pages/Admin/Support/SupportDashboard';
@@ -88,6 +95,11 @@ const AppRoutes = () => {
             element={<ProtectedRoute component={ReportIssue} allowedRoles={['User']} />} 
           />
 
+<Route 
+            path="/payments" 
+            element={<ProtectedRoute component={Payment} allowedRoles={['User']} />} 
+          />
+
       
 
           {/* Example protected route for admin */}
@@ -115,6 +127,13 @@ const AppRoutes = () => {
             path="admindashboard/drivers" 
             element={<ProtectedRoute component={DriversPage} allowedRoles={['admin']} />} 
           />
+
+<Route 
+            path="admindashboard/payments" 
+            element={<ProtectedRoute component={PaymentPage} allowedRoles={['admin']} />} 
+          />
+
+
           <Route 
             path="admindashboard/createRoute" 
             element={<ProtectedRoute component={CreateRoute} allowedRoles={['admin']} />} 
