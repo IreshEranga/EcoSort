@@ -65,7 +65,7 @@ const UserHome = () => {
       </section> */}
 
       {/* Main Content with Service Cards and Introduction */}
-      <section className="main-content">
+      <section className="main-contentUserHome">
         <div className="services-grid">
           <Link to="/waste" className="service-card waste-card">
             <div className="service-image waste-image"></div>

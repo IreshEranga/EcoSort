@@ -36,6 +36,9 @@ router.put('/users/:id/waste-collection-date', userController.updateWasteCollect
 router.get('/cities', userController.getCities);
 
 
+router.get('/usersbins', userController.getAllUsersWithBins);
+
+
 // Schedule collection
 router.post('/schedule', async (req, res) => {
     const { userId, wasteType, scheduledDate } = req.body;

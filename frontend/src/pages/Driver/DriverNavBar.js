@@ -35,6 +35,7 @@ function DriverNavBar() {
             <Nav.Link href="/driverHome" className="nav-link-custom">Home</Nav.Link>
             <Nav.Link href="/driverShedule" className="nav-link-custom">Schedules</Nav.Link>
             <Nav.Link href="/driver-support" className="nav-link-custom">Reports</Nav.Link>
+            <Nav.Link href="/driverbins" className="nav-link-custom">Bins</Nav.Link>
             <Nav.Link onClick={handleLogout} className="nav-link-custom logout-button" style={{width:'10%'}}>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>

@@ -8,6 +8,7 @@ import SignUp from '../pages/SignUp/SignUp';
 import UserHome from '../pages/UserHome/UserHome';
 import WasteManagement from '../pages/WasteManagement/WasteManagement';
 import WasteManagementPage from '../pages/Admin/WasteManagementPage/WasteManagementPage';
+import SpecialRequestsPage from '../pages/Admin//SpecialRequests/SpecialRequestsPage';
 import ScheduleCollection from '../pages/SheduleWaste/ScheduleCollection';
 import ProtectedRoute from './ProtectedRoute';
 import Unauthorized from '../pages/Login/Unauthorized';
@@ -24,7 +25,7 @@ import DisplayRoutes from '../pages/Admin/WasteCollection/DisplayRoutes';
 import ViewRoute from '../pages/Admin/WasteCollection/ViewRoute';
 import DriverHome from '../pages/Driver/DriverHome';
 import DriverSupport from '../pages/Driver/DriverReportIssue';
-
+import UpdateBins from '../pages/Driver/UpdateBins';
 
 
 
@@ -64,6 +65,10 @@ const AppRoutes = () => {
           <Route 
             path="/admindashboard/waste-management" 
             element={<ProtectedRoute component={WasteManagementPage} allowedRoles={['admin']} />} 
+          />
+          <Route 
+            path="/admindashboard/special-requests-management" 
+            element={<ProtectedRoute component={SpecialRequestsPage} allowedRoles={['admin']} />} 
           />
 
 
@@ -150,6 +155,11 @@ const AppRoutes = () => {
           <Route 
             path="/driver-support" 
             element={<ProtectedRoute component={DriverSupport} allowedRoles={['Driver']} />} 
+          />
+
+          <Route 
+            path="/driverbins" 
+            element={<ProtectedRoute component={UpdateBins} allowedRoles={['Driver']} />} 
           />
 
 

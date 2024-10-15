@@ -43,6 +43,10 @@ const userSchema = new mongoose.Schema({
     longitude: { type: Number, required: true }  // Longitude field
   },
   wasteCollectionDate: { type: String },
+  bins: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Bin'
+  }],
   role:{type : String, default : 'User'}
 }, { timestamps: true });
 

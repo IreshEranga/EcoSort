@@ -4,6 +4,9 @@
     padding: 0.75rem 2rem; /* More padding for a sleeker look */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
+.main-contentUserHome .services-grid{
+    margin-left: 150px;
+}
 
 .navbar-logo .logo {
     max-width: 50px;
@@ -180,21 +183,21 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .main-content {
+    .main-contentUserHome {
         grid-template-columns: 1fr; /* Stack content vertically on mobile */
         gap: 1rem;
     }
 
     .services-grid {
-        grid-template-columns: 1fr;
-        margin-left: -250px; /* Make services grid full width */
+        grid-template-columns: 1fr; /* Make services grid full width */
     }
 
     .intro-section {
         margin-top: 2rem; /* Space between service cards and intro on mobile */
     }
     .service-image {
-        height: 300px; /* Adjust image height for smaller screens */
+        height: 300px;
+        width: 300px; /* Adjust image height for smaller screens */
     }
 }
 
