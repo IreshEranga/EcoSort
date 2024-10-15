@@ -1,10 +1,15 @@
 const express = require('express');
-const { getAllTickets, updateTicketStatus, deleteCompletedTicket, updateTicketNote } = require('../controllers/adSupportController');
+const { getCitizenTickets, updateTicketStatus, deleteCitizenTicket, getDriverTickets, deleteDriverTicket } = require('../controllers/adSupportController');
 const router = express.Router();
 
-router.get('/tickets', getAllTickets);
+// Routes for Citizen Support Tickets
+router.get('/citizen-tickets', getCitizenTickets);
+router.delete('/citizen-tickets/:id', deleteCitizenTicket);
+
+// Routes for Driver Support Tickets
+router.get('/driver-tickets', getDriverTickets);
+router.delete('/driver-tickets/:id', deleteDriverTicket);
+
 router.put('/tickets/:id', updateTicketStatus);
-router.delete('/tickets/:id', deleteCompletedTicket);
-router.put('/tickets/:ticketId/note', updateTicketNote);
 
 module.exports = router;

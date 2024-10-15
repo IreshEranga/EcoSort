@@ -24,11 +24,20 @@ const supportSchema = new mongoose.Schema({
         type: String, // Field for storing admin's notes
         default: ''
     },
+    isEmergency: { 
+        type: Boolean, 
+        default: false 
+    },
+    role: {
+        type: String,
+        enum: ['User', 'Driver'],
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
     }
-});
+}, { timestamps: true } );
 
 const SupportTicket = mongoose.model('SupportTicket', supportSchema);
 module.exports = SupportTicket;
