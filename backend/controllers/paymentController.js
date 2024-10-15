@@ -2,6 +2,7 @@
 const Payment = require('../models/payment');
 const WasteManagement = require('../models/WasteManagement');
 const Receipt = require('../models/Receipt');
+const User= require('../models/user')
 
 // Create payment for requestId (Admin)
 exports.createPayment = async (req, res) => {
@@ -13,16 +14,20 @@ exports.createPayment = async (req, res) => {
         if (!waste) {
             return res.status(404).json({ message: 'Request ID not found.' });
         }
+        const ownerdetails=await User.findById(waste.owner)
+        const ownerName=ownerdetails.firstName+" "+ownerdetails.lastName
 
         const newPayment = new Payment({
-            requestId,
-            distance,
-            transportationCharge,
-            weight,
-            additionalCharges,
-            chargingModel,
-            owner: waste.owner
-        });
+          requestId,
+          distance,
+          transportationCharge,
+          weight,
+          additionalCharges,
+          owner: waste.owner,
+    ownername:ownerName
+
+      });
+      
 
         await newPayment.save();
         res.status(201).json(newPayment);

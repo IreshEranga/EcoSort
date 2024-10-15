@@ -35,6 +35,7 @@ const PaymentPage = () => {
     }
   };
 
+
   const handleSearchChange = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
@@ -54,7 +55,7 @@ const PaymentPage = () => {
     
     // Convert the necessary fields to integers before sending
     const dataToSubmit = {
-        requestId: parseInt(paymentData.requestId), // Convert requestId to an integer
+        requestId: paymentData.requestId, // Convert requestId to an integer
         distance: parseInt(paymentData.distance),   // Convert distance to an integer
         transportationCharge: parseInt(paymentData.transportationCharge), // Convert transportation charge to an integer
         weight: parseInt(paymentData.weight),       // Convert weight to an integer
@@ -223,6 +224,7 @@ const PaymentPage = () => {
           <thead>
             <tr>
               <th>Request ID</th>
+              <th>Owner</th>
               <th>Distance (km)</th>
               <th>Transport Charge</th>
               <th>Weight (kg)</th>
@@ -235,6 +237,7 @@ const PaymentPage = () => {
               filteredPayments.map((payment) => (
                 <tr key={payment._id}>
                   <td>{payment.requestId}</td>
+                  <td>{payment.ownername}</td>
                   <td>{payment.distance}</td>
                   <td>{payment.transportationCharge}</td>
                   <td>{payment.weight}</td>
