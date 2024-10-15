@@ -63,6 +63,39 @@ exports.getPayments = async (req, res) => {
       res.status(500).json({ message: 'Error fetching payments.', error });
   }
 };
+
+
+// Get all recipt
+// exports.getRecipt = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//       const recipt = await Receipt.find(id)
+//       res.status(200).json(recipt);
+//   } catch (error) {
+//       res.status(500).json({ message: 'Error fetching payments.', error });
+//   }
+// };
+
+exports.getReceipt = async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+    const receipt = await Receipt.findOne({ paymentId });
+    if (!receipt) {
+      return res.status(404).json({ message: 'Receipt not found' });
+    }
+    
+    // Since the receipt file is stored in MongoDB, we can send it directly
+    res.status(200).json({
+      _id: receipt._id,
+      paymentId: receipt.paymentId,
+      receiptFile: receipt.receiptFile,
+      status: receipt.status
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching receipt', error });
+  }
+};
+
 // Upload receipt for a payment (User)
 exports.uploadReceipt = async (req, res) => {
     try {
