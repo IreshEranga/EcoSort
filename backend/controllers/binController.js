@@ -99,8 +99,8 @@ exports.getBinsForAllUsers = async (req, res) => {
 exports.getBinsForAllUsers = async (req, res) => {
   try {
     const bins = await Bin.find()
-      .populate('user', 'userId firstName lastName location') // Adjust fields as necessary
-      .select('binId qrCode percentage user type'); // Select binType in addition to other fields
+      .populate('user', 'userId firstName lastName location ') // Adjust fields as necessary
+      .select('binId qrCode percentage user type status'); // Select binType in addition to other fields
 
     // Create an object to group bins by user
     const groupedBins = {};
@@ -113,7 +113,8 @@ exports.getBinsForAllUsers = async (req, res) => {
         binId: bin.binId,
         qr: bin.qrCode,
         percentage: bin.percentage,
-        type: bin.type // Add binType to the object
+        type: bin.type ,
+        status: bin.status
       };
 
       // Check if the user already exists in the groupedBins
