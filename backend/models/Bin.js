@@ -25,6 +25,14 @@ const binSchema = new mongoose.Schema({
   qrCode: {
     type: String, // Store QR code as a base64 string
   },
+  status:{
+    type: String,
+    default:'Not Collected',
+  },
+  Driver:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Driver',
+  }
 });
 
 // Middleware to auto-generate binId before saving
