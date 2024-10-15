@@ -25,7 +25,7 @@ import DisplayRoutes from '../pages/Admin/WasteCollection/DisplayRoutes';
 import ViewRoute from '../pages/Admin/WasteCollection/ViewRoute';
 import DriverHome from '../pages/Driver/DriverHome';
 import DriverSupport from '../pages/Driver/DriverReportIssue';
-
+import UpdateBins from '../pages/Driver/UpdateBins';
 
 
 
@@ -155,6 +155,11 @@ const AppRoutes = () => {
           <Route 
             path="/driver-support" 
             element={<ProtectedRoute component={DriverSupport} allowedRoles={['Driver']} />} 
+          />
+
+          <Route 
+            path="/driverbins" 
+            element={<ProtectedRoute component={UpdateBins} allowedRoles={['Driver']} />} 
           />
 
 
