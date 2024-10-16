@@ -86,7 +86,7 @@ const ReportIssue = () => {
             {/* Navbar */}
             <DriverNavBar />
 
-            <div class="row">
+            <div class="row" style={{paddingTop:'85px'}}>
 			    <h1>Report Issue</h1>
 	        </div>
 
