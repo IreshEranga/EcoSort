@@ -16,6 +16,8 @@ router.get('/:id', binController.getBinById);
 // Update a bin by ID
 router.put('/:id', binController.updateBin);
 
+router.put('/bins/:binId', binController.updateBinByBinId);
+
 // Delete a bin by ID
 router.delete('/:id', binController.deleteBin);
 
