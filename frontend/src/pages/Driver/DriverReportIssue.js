@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/Footer/Footer';
 import './reportIssue.css';
 import DriverNavBar from './DriverNavBar';
@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const ReportIssue = () => {
 
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     const [issueType, setIssueType] = useState('');
     const [description, setDescription] = useState('');

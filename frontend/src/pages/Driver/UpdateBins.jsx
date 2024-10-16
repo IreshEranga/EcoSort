@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DriverNavBar from './DriverNavBar';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Lottie from 'react-lottie';
@@ -8,7 +8,7 @@ import * as loadingAnimation from '../../assets/loadingAnimation.json'; // Impor
 
 function UpdateBins() {
   const Driver = JSON.parse(localStorage.getItem('driver'));
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [groupedUsers, setGroupedUsers] = useState({});
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
