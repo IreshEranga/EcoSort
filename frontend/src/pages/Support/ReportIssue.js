@@ -31,6 +31,7 @@ const ReportIssue = () => {
                 userId: user._id, // Use the logged-in user's ID
                 issueType,
                 description,
+                role: "User",
             });
             setMessage(response.data.message || 'Ticket submitted successfully!');
             setIssueType('');
@@ -64,94 +65,40 @@ const ReportIssue = () => {
     };
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            margin: 0,
-            padding: 0
-        }}>
+        <div className='support-home'>
             {/* Navbar */}
             <NavbarComponent />
 
-            <div style={{
-                width: '100%',
-                maxWidth: '500px',
-                padding: '20px',
-                textAlign: 'center',
-                backgroundColor: '#f9f9f9',
-                borderRadius: '8px',
-                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-                margin: 'auto',
-            }}>
-                <h3 style={{
-                    width: '100%',
-                    height: '100%',
-                    textAlign: 'center',
-                    color: 'black',
-                    fontSize: '64px', 
-                    
-                    fontWeight: 500,
-                    textTransform: 'capitalize',
-                    letterSpacing: '2.56px',
-                    wordWrap: 'break-word'
-                }}>Report Your Issue</h3>
+            <div className='support-ticket-container'>
+                <h3>Report Your Issue</h3>
 
-                <form onSubmit={handleSubmit} style={{
-                    display: 'flex',
-                    flexDirection: 'column'
-                }}>
+                <form onSubmit={handleSubmit} className='support-ticket-form'>
                     <div>
-                        <label style={{
-                            fontSize: '16px',
-                            marginBottom: '8px',
-                            color: '#555'
-                        }}>Issue Type:</label>
+                        <label>Issue Type:</label>
 
-                        <select value={issueType} onChange={(e) => setIssueType(e.target.value)} required style={{
-                            padding: '10px',
-                            fontSize: '14px',
-                            marginBottom: '15px',
-                            border: '1px solid #ccc',
-                            borderRadius: '5px',
-                            width: '100%',
-                            boxSizing: 'border-box'
-                        }}>
+                        <select value={issueType} onChange={(e) => setIssueType(e.target.value)} required>
                             <option value="">Select an issue type</option>
-                            <option value="Collection">Collection Issue</option>
+                            <option value="Collection">Waste Collection Issue</option>
+                            <option value="Bin">Bin Issue</option>
+                            <option value="Disposal">Improper Disposal</option>
                             <option value="Technical">Technical Issue</option>
-                            <option value="Routine">Routine Issue</option>
                         </select>
                     </div>
                     <div>
                         <label>Description:</label>
-                        <textarea style={{
-                            padding: '10px',
-                            fontSize: '14px',
-                            marginBottom: '15px',
-                            border: '1px solid #ccc',
-                            borderRadius: '5px',
-                            width: '100%',
-                            boxSizing: 'border-box'
-                        }} 
+                        <textarea 
                         value={description} 
                         onChange={(e) => setDescription(e.target.value)} 
                         required />
                     </div>
                     
-                    <button style={{
-                        padding: '10px',
-                        fontSize: '16px',
-                        backgroundColor: '#28a745',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer'
-                    }} 
+                    <button
                     type="submit" 
                     disabled={isSubmitting}>
                         {isSubmitting ? 'Submitting...' : 'Submit Ticket'}
                     </button>
                 </form>
-                {message && <p style={{marginTop: '15px',textAlign: 'center',fontSize: '14px',color: '#1db667'}} >{message}</p>}
+                {message && <p>{message}</p>}
             </div>
 
         <div>
@@ -185,6 +132,7 @@ const ReportIssue = () => {
                     ))}
                 </tbody>
             </table>
+            <p>**Completed support tickets will be removed by the admin</p>
         </div>
 
             <Footer/>

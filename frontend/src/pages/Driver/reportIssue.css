@@ -1,5 +1,18 @@
+body {
+    background-color: #ffffff;
+    padding-top: 85px;
+}
+
 .support-home {
     padding-top: 70px;
+}
+
+h1 {
+    font-family: 'Poppins', sans-serif, 'arial';
+    font-weight: 600;
+    font-size: 72px;
+    color: rgb(39, 175, 159);
+    text-align: center;
 }
 
 .ticketContainer {

@@ -15,6 +15,7 @@ const ReportIssue = () => {
     const [message, setMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [tickets, setTickets] = useState([]);
+    const [isEmergency, setIsEmergency] = useState(false); // New state for emergency
     const [user, setUser] = useState(null);
 
     useEffect(() => {
@@ -42,11 +43,14 @@ const ReportIssue = () => {
                 userId: user.id, // Ensure this is passed
                 issueType,
                 description,
+                isEmergency,
+                role: "Driver",
             });
             setMessage(response.data.message || 'Ticket submitted successfully!');
             setIssueType('');
             setDescription('');
             fetchUserTickets(user.id);
+            setIsEmergency(false);
         } catch (error) {
             console.error('Error submitting ticket:', error);
             setMessage(error.response?.data?.message || 'Error submitting ticket. Please try again.');
@@ -82,27 +86,43 @@ const ReportIssue = () => {
             {/* Navbar */}
             <DriverNavBar />
 
-            <div className='support-ticket-container'>
-                <h2>Report Your Issue</h2>
-                <form onSubmit={handleSubmit} className='support-ticket-form'>
-                    <div>
-                        <label>Issue Type:</label>
-                        <select value={issueType} onChange={(e) => setIssueType(e.target.value)} required>
-                            <option value="">Select an issue type</option>
-                            <option value="Collection">Collection Issue</option>
-                            <option value="Technical">Technical Issue</option>
-                            <option value="Routine">Routine Issue</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Description:</label>
-                        <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
-                    </div>
-                    <button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? 'Submitting...' : 'Submit Ticket'}
-                    </button>
+            <div class="row">
+			    <h1>Report Issue</h1>
+	        </div>
+
+            <div class="row">
+			    <h4 style={{textAlign: 'center'}}>We're here to help you!</h4>
+	        </div>
+
+            <div className="support-ticket-container">
+                <form onSubmit={handleSubmit} className="support-ticket-form">
+                <div>
+                    <label>Issue Type:</label>
+                    <select value={issueType} onChange={(e) => setIssueType(e.target.value)} required>
+                        <option value="">Select an issue type</option>
+                    <option value="Collection">Waste Collection Issue</option>
+                    <option value="Bin">Bin Issue</option>
+                    <option value="Disposal">Improper Disposal</option>
+                    <option value="Technical">Technical Issue</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Description:</label>
+                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+                </div>
+                <div className="emergency-container">
+                    <input 
+                        type="checkbox" 
+                        checked={isEmergency} 
+                        onChange={(e) => setIsEmergency(e.target.checked)} 
+                    />
+                    <label>Mark as Emergency</label>
+                </div>
+                <button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? 'Submitting...' : 'Submit Ticket'}
+                </button>
                 </form>
-                {message && <p className="support-ticket-message">{message}</p>}
+                    {message && <p className="support-ticket-message">{message}</p>}
             </div>
 
         <div>
@@ -115,6 +135,7 @@ const ReportIssue = () => {
                         <th>Issue Type</th>
                         <th>Description</th>
                         <th>Status</th>
+                        <th style={{color: 'red'}}>Emergency</th>
                         <th>Actions</th>
                         <th>Special Note</th>
                     </tr>
@@ -126,6 +147,9 @@ const ReportIssue = () => {
                             <td>{ticket.issueType}</td>
                             <td>{ticket.description}</td>
                             <td>{ticket.status}</td>
+                            <td style={{ color: ticket.isEmergency ? 'red' : 'black' }}>
+                                {ticket.isEmergency ? 'Yes' : 'No'}
+                            </td>
                             <td>
                                 {ticket.status === 'Received' && (
                                     <button onClick={() => deleteTicket(ticket._id)}>Delete</button>
@@ -136,6 +160,7 @@ const ReportIssue = () => {
                     ))}
                 </tbody>
             </table>
+            <p style={{marginLeft:50}}>**Completed support tickets will be removed by the admin</p>
         </div>
 
             <Footer/>
