@@ -14,7 +14,7 @@ function PaymentsPage() {
   const [dateTime, setDateTime] = useState(new Date());
   const [receiptFile, setReceiptFile] = useState(null);
   const [selectedPaymentId, setSelectedPaymentId] = useState(null);
-
+  const[postimage,setpostimage]= useState({myFile:""})
   useEffect(() => {
     // Retrieve user data from localStorage
     const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -45,27 +45,31 @@ function PaymentsPage() {
   }, [user]);
 
   // Handle file change
-  const handleFileChange = (event) => {
-    setReceiptFile(event.target.files[0]);
+  const handleFileChange = async (event) => {
+    const file =event.target.files[0];
+    const base64 = await convertTobase64(file) 
+    console.log(base64);
+    
+    setReceiptFile(base64);
   };
 
   // Submit the receipt
-  const handleReceiptSubmit = async (paymentId) => {
-    const formData = new FormData();
-    formData.append('receiptFile', receiptFile);
-
-    try {
-      const response = await axios.post(`http://localhost:8000/api/payment/payments/${paymentId}/receipt`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(response.data);
-      // Optionally refetch payments or update the state to reflect the changes
-    } catch (error) {
-      console.error('Error uploading receipt:', error);
-    }
-  };
+    const handleReceiptSubmit = async (paymentId) => {
+      try {
+        const response = await axios.post(`http://localhost:8000/api/payment/payments/${paymentId}/receipt`, {
+          receiptFile: receiptFile  // base64 string
+        }, {
+          headers: {
+            'Content-Type': 'application/json',  // Set content type as JSON
+          },
+        });
+        console.log(response.data);
+        // Optionally refetch payments or update the state to reflect the changes
+      } catch (error) {
+        console.error('Error uploading receipt:', error);
+      }
+    };
+    
 
   return (
     <div className="user-home">
@@ -103,6 +107,12 @@ function PaymentsPage() {
                       <button onClick={() => handleReceiptSubmit(payment._id)}>Submit Receipt</button>
                     </>
                   )}
+                  {payment.status === 'Declined' && (
+                    <>
+                      <input type="file" onChange={handleFileChange} />
+                      <button onClick={() => handleReceiptSubmit(payment._id)}>RE-Submit Receipt</button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
@@ -116,3 +126,17 @@ function PaymentsPage() {
 }
 
 export default PaymentsPage;
+
+
+function convertTobase64(file){
+  return new Promise((resolve, reject)=>{
+    const fileReader= new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.onload=()=>{
+      resolve(fileReader.result)
+    };
+    fileReader.onerror= (error)=>{
+      reject(error)
+    }
+  })
+}

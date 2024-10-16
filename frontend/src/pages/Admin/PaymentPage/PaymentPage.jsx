@@ -115,19 +115,30 @@ const PaymentPage = () => {
 
   const handleReviewReceipt = async (paymentId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/payment/payments/${paymentId}/receipt`);
-      setSelectedPayment(paymentId);
-      setReceiptData(response.data);
       setIsReviewModalVisible(true);
-    } catch (error) {
+      setSelectedPayment(paymentId);
+
+
+      const response = await axios.get(`http://localhost:8000/api/payment/payments/${paymentId}/receipt`);
+      setReceiptData(response.data.receiptFile);  // Base64 string
+  } catch (error) {
       console.error('Error fetching receipt:', error);
-      alert('Error fetching receipt');
-    }
-  };
+  }
+};
+  //   try {
+  //     const response = await axios.get(`http://localhost:8000/api/payment/payments/${paymentId}/receipt`);
+  //     setSelectedPayment(paymentId);
+  //     setReceiptData(response.data);
+  //     setIsReviewModalVisible(true);
+  //   } catch (error) {
+  //     console.error('Error fetching receipt:', error);
+  //     alert('Error fetching receipt');
+  //   }
+  // };
 
   const handleApproveReceipt = async () => {
     try {
-      await axios.post(`http://localhost:8000/api/payment/payments/${selectedPayment}/approve-receipt`);
+      await axios.post(`http://localhost:8000/api/payment/payments/${selectedPayment}/review`, { status: "Approved" });
       alert('Receipt approved');
       setIsReviewModalVisible(false);
       fetchPayments();
@@ -136,10 +147,10 @@ const PaymentPage = () => {
       alert('Error approving receipt');
     }
   };
-
+  
   const handleDeclineReceipt = async () => {
     try {
-      await axios.post(`http://localhost:8000/api/payment/payments/${selectedPayment}/decline-receipt`);
+      await axios.post(`http://localhost:8000/api/payment/payments/${selectedPayment}/review`, { status: "Declined" });
       alert('Receipt declined');
       setIsReviewModalVisible(false);
       fetchPayments();
@@ -148,35 +159,89 @@ const PaymentPage = () => {
       alert('Error declining receipt');
     }
   };
-
   return (
     <div className="admin-dashboard">
       <AdminSidebar />
 
       {isFormVisible && (
-        <div className="modal-overlay">
-          <div className="modal-content-payment">
-            <span className="close-modal" onClick={() => setIsFormVisible(false)}>&times;</span>
-            <form onSubmit={handleSubmit} className="payment-form">
-              {/* Form fields... */}
-            </form>
-          </div>
-        </div>
-      )}
+                <div className="modal-overlay">
+                    <div className="modal-content-payment">
+                        <span className="close-modal" onClick={() => setIsFormVisible(false)}>&times;</span>
+                        <form onSubmit={handleSubmit} className="payment-form">
+                            <h3>Make a Payment</h3>
+                            <div>
+                                <label>Request ID:</label>
+                                <input 
+                                    type="text" 
+                                    name="requestId"
+                                    value={paymentData.requestId} 
+                                    onChange={handleInputChange}
+                                    required 
+                                />
+                            </div>
+                            <div>
+                                <label>Distance (km):</label>
+                                <input 
+                                    type="number" 
+                                    name="distance"
+                                    value={paymentData.distance}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label>Transportation Charge:</label>
+                                <input 
+                                    type="number" 
+                                    name="transportationCharge"
+                                    value={paymentData.transportationCharge}
+                                    onChange={handleInputChange}
+                                    readOnly 
+                                />
+                            </div>
+                            <div>
+                                <label>Weight (kg):</label>
+                                <input 
+                                    type="number" 
+                                    name="weight"
+                                    value={paymentData.weight}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label>Additional Charges:</label>
+                                <input 
+                                    type="number" 
+                                    name="additionalCharges"
+                                    value={paymentData.additionalCharges}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <button type="submit">Submit Amount</button>
+                        </form>
+                    </div>
+                </div>
+            )}
 
 {isReviewModalVisible && receiptData && (
         <div className="modal-overlay">
           <div className="modal-content-payment">
             <span className="close-modal" onClick={() => setIsReviewModalVisible(false)}>&times;</span>
             <h3>Review Receipt</h3>
-            {receiptData.receiptFile ? (
+            {receiptData ? (
               <div>
-                <p>Receipt File: {receiptData.receiptFile}</p>
-                 <img src={`data:image/jpeg;base64,${receiptData.receiptFile}`} alt="Receipt" style={{ maxWidth: '100%', maxHeight: '400px' }} /> 
+                {/* <p>Receipt</p> */}
+                 {/* <img src={`data:image/jpeg;base64,${receiptData.receiptFile}`} alt="Receipt" style={{ maxWidth: '100%', maxHeight: '400px' }} />  */}
+
+                 {receiptData && (
+            <img src={receiptData} alt="Receipt"  style={{ maxWidth: '100%', maxHeight: '400px' }}/>
+        )}
               </div>
             ) : (
               <p>No receipt file available</p>
             )}
+            <br/>
             <div>
               <button onClick={handleApproveReceipt}>Approve</button>
               <button onClick={handleDeclineReceipt}>Decline</button>

@@ -76,61 +76,116 @@ exports.getPayments = async (req, res) => {
 //   }
 // };
 
+// exports.getReceipt = async (req, res) => {
+//   try {
+//     const { paymentId } = req.params;
+//     const receipt = await Receipt.findOne({ paymentId });
+//     if (!receipt) {
+//       return res.status(404).json({ message: 'Receipt not found' });
+//     }
+    
+//     // Since the receipt file is stored in MongoDB, we can send it directly
+//     res.status(200).json({
+//       _id: receipt._id,
+//       paymentId: receipt.paymentId,
+//       receiptFile: receipt.receiptFile,
+//       status: receipt.status
+//     });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching receipt', error });
+//   }
+// };
+
 exports.getReceipt = async (req, res) => {
   try {
-    const { paymentId } = req.params;
-    const receipt = await Receipt.findOne({ paymentId });
-    if (!receipt) {
-      return res.status(404).json({ message: 'Receipt not found' });
-    }
-    
-    // Since the receipt file is stored in MongoDB, we can send it directly
-    res.status(200).json({
-      _id: receipt._id,
-      paymentId: receipt.paymentId,
-      receiptFile: receipt.receiptFile,
-      status: receipt.status
-    });
+      const { paymentId } = req.params;
+      const receipt = await Receipt.findOne({ paymentId });
+      if (!receipt) {
+          return res.status(404).json({ message: 'Receipt not found' });
+      }
+
+      // Send the base64 string to the frontend
+      res.status(200).json({
+          _id: receipt._id,
+          paymentId: receipt.paymentId,
+          receiptFile: receipt.receiptFile,  // Base64 string
+          status: receipt.status
+      });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching receipt', error });
+      res.status(500).json({ message: 'Error fetching receipt', error });
   }
 };
 
+
 // Upload receipt for a payment (User)
-exports.uploadReceipt = async (req, res) => {
+  exports.uploadReceipt = async (req, res) => {
     try {
-        const { paymentId } = req.params;
-        const receiptFile = req.file.path;  // Assume the receipt is uploaded via multer
-        
-        const receipt = new Receipt({
-            paymentId,
-            receiptFile
-        });
-
-        await receipt.save();
-
-        // Update payment status
-        await Payment.findByIdAndUpdate(paymentId, { status: 'To Be Reviewed' });
-
-        res.status(200).json({ message: 'Receipt uploaded successfully.' });
+      const { paymentId } = req.params;
+      const { receiptFile } = req.body;  // Base64-encoded file
+  
+      if (!receiptFile) {
+        return res.status(400).json({ message: 'No receipt file provided.' });
+      }
+  
+      // Store the base64 string in the database
+      const receipt = new Receipt({
+        paymentId,
+        receiptFile  // Store the base64 string directly
+      });
+  
+      await receipt.save();
+  
+      // Update payment status
+      await Payment.findByIdAndUpdate(paymentId, { status: 'To Be Reviewed' });
+  
+      res.status(200).json({ message: 'Receipt uploaded successfully.' });
     } catch (error) {
-        res.status(500).json({ message: 'Error uploading receipt.', error });
+      res.status(500).json({ message: 'Error uploading receipt.', error });
     }
-};
+  };
+  
 
 // Review and update payment status (Admin)
 exports.reviewPayment = async (req, res) => {
-    try {
-        const { paymentId } = req.params;
-        const { status } = req.body;
+  try {
+      const { paymentId } = req.params;
+      const { status } = req.body;
+      console.log('Received status:', status);
 
-        if (!['Approved', 'Declined'].includes(status)) {
-            return res.status(400).json({ message: 'Invalid status.' });
-        }
+      if (!['Approved', 'Declined'].includes(status)) {
+          return res.status(400).json({ message: 'Invalid status.' });
+      }
 
-        await Payment.findByIdAndUpdate(paymentId, { status });
-        res.status(200).json({ message: 'Payment status updated successfully.' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error reviewing payment.', error });
-    }
+      await Payment.findByIdAndUpdate(paymentId, { status });
+
+      if (status === 'Declined') {
+          const receipt = await Receipt.findOneAndDelete({ paymentId });
+          if (!receipt) {
+              return res.status(404).json({ message: 'Receipt not found' });
+          }
+      }
+
+      res.status(200).json({ message: 'Payment status updated successfully.' });
+  } catch (error) {
+      console.error('Error reviewing payment:', error);
+      res.status(500).json({ message: 'Error reviewing payment.', error: error.message });
+  }
 };
+
+exports.deleteReceipt = async (req, res) => {
+  try {
+      const { paymentId } = req.params;
+      const receipt = await Receipt.findOneAndDelete({ paymentId });
+      if (!receipt) {
+          return res.status(404).json({ message: 'Receipt not found' });
+      }
+
+      // Optionally, you can also update the payment status
+      await Payment.findByIdAndUpdate(paymentId, { status: 'Pending' });
+
+      res.status(200).json({ message: 'Receipt deleted successfully.' });
+  } catch (error) {
+      res.status(500).json({ message: 'Error deleting receipt.', error });
+  }
+};
+
