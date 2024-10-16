@@ -64,21 +64,20 @@ function UpdateBins() {
         },
         body: JSON.stringify({ status: 'Collected' }),
       });
-      //toast.success(`Bin ${binId} status updated to Collected!`); 
       toast.success(`Bin ${binId} status updated to Collected!`, {
         position: "top-center",
-        autoClose: 5000, 
+        autoClose: 5000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      });// Success toast
+      });
       setTimeout(() => {
-        window.location.reload(); // Refresh page after successful update
+        window.location.reload(); 
       }, 1000);
     } catch (error) {
-      toast.error('Error updating bin status'); // Error toast
+      toast.error('Error updating bin status');
       console.error('Error updating bin status:', error);
     }
   };
@@ -99,14 +98,14 @@ function UpdateBins() {
     <div className='driver-home'>
       <DriverNavBar />
       <div className="driverContainer" style={{ marginTop: '150px' }}>
-        <div style={{display:'flex', gap:500}}>
+        <div className="title-search-container">
           <h1>Driver Update Bins</h1>
           <input
             type="text"
             placeholder="Search by binId, user Id, name, email, city, address"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={searchInputStyle}
+            className="search-input"
           />
         </div>
 
@@ -116,53 +115,50 @@ function UpdateBins() {
               users.length > 0 && (
                 <div key={city}>
                   <h2>{city}</h2>
-                  <br />
-                  <table style={tableStyles}>
+                  <table className="responsive-table">
                     <thead>
-                      <tr style={{ border: '1px solid black' }}>
-                        <th style={headerStyle}>User ID</th>
-                        <th style={headerStyle}>Name</th>
-                        <th style={headerStyle}>Email</th>
-                        <th style={headerStyle}>Address</th>
-                        <th style={headerStyle}>Bins</th>
+                      <tr>
+                        <th style={{backgroundColor:'darkcyan', color:'white'}}>User ID</th>
+                        <th style={{backgroundColor:'darkcyan', color:'white'}}>Name</th>
+                        <th style={{backgroundColor:'darkcyan', color:'white'}}>Email</th>
+                        <th style={{backgroundColor:'darkcyan', color:'white'}}>Address</th>
+                        <th style={{backgroundColor:'darkcyan', color:'white'}}>Bins</th>
                       </tr>
                     </thead>
                     <tbody>
                       {users.map((user, index) => (
-                        <tr key={user.userId} className={`table-row ${index % 2 === 0 ? 'rowEven' : 'rowOdd'}`}>
-                          <td style={cellStyle}>{user.userId}</td>
-                          <td style={cellStyle}>{user.name}</td>
-                          <td style={cellStyle}>{user.email}</td>
-                          <td style={cellStyle1}>{user.address}</td>
-                          <td style={cellStyle}>
-                            <table style={innerTableStyles}>
+                        <tr key={user.userId}>
+                          <td>{user.userId}</td>
+                          <td>{user.name}</td>
+                          <td>{user.email}</td>
+                          <td>{user.address}</td>
+                          <td>
+                            <table className="inner-table">
                               <thead>
-                                <tr>
-                                  <th style={innerHeaderStyle}>Bin ID</th>
-                                  <th style={innerHeaderStyle}>Type</th>
-                                  <th style={innerHeaderStyle}>Percentage</th>
-                                  <th style={innerHeaderStyle}>Status</th>
-                                  <th style={innerHeaderStyle}>Action</th>
+                                <tr onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#23f682'}>
+                                  <th style={{backgroundColor:'darkcyan', color:'white'}}>Bin ID</th>
+                                  <th style={{backgroundColor:'darkcyan', color:'white'}}>Type</th>
+                                  <th style={{backgroundColor:'darkcyan', color:'white'}}>Percentage</th>
+                                  <th style={{backgroundColor:'darkcyan', color:'white'}}>Status</th>
+                                  <th style={{backgroundColor:'darkcyan', color:'white'}}>Action</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {user.bins.map((bin, binIndex) => (
-                                  <tr
-                                    key={bin.binId}
-                                    className={`table-row ${binIndex % 2 === 0 ? 'rowEven' : 'rowOdd'}`}
+                                  <tr key={bin.binId}
+                                  className={`table-row ${binIndex % 2 === 0 ? 'rowEven' : 'rowOdd'}`}
                                     style={{ cursor: 'pointer' }}
                                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f8ff'}
-                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
-                                  >
-                                    <td style={cellStyle}>{bin.binId}</td>
-                                    <td style={cellStyle}>{bin.type}</td>
-                                    <td style={cellStyle}>{bin.percentage}%</td>
-                                    <td style={cellStyle}>{bin.status}</td>
-                                    <td style={cellStyle}>
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}>
+                                    <td>{bin.binId}</td>
+                                    <td>{bin.type}</td>
+                                    <td>{bin.percentage}%</td>
+                                    <td>{bin.status}</td>
+                                    <td>
                                       <button
                                         onClick={() => handleUpdateBinStatus(bin.binId)}
-                                        style={buttonStyleUpdateBin}
-                                        disabled={bin.status === 'Collected'} // Disable button if status is 'Collected'
+                                        disabled={bin.status === 'Collected'}
+                                        className="update-btn"
                                       >
                                         {bin.status === 'Collected' ? 'Collected' : 'Update to Collected'}
                                       </button>
@@ -189,56 +185,108 @@ function UpdateBins() {
   );
 }
 
-const tableStyles = {
-  width: '110%',
-  borderCollapse: 'collapse',
-  
-};
+// Styles using media queries for responsive design
+const styles = `
+  .driverContainer {
+    padding: 10px;
+  }
 
-const innerTableStyles = {
-  width: '90%',
-  borderCollapse: 'collapse',
-  padding:'10px',
-  marginTop:'20px',
-  marginLeft:'20px',
-};
+  .title-search-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 20px;
+  }
 
-const searchInputStyle = {
-  width: '400px',
-  padding: '5px',
-  marginBottom: '10px',
-  borderRadius: '4px',
-};
+  .search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 5px;
+    margin-top: 10px;
+    border-radius: 4px;
+  }
 
-const buttonStyleUpdateBin = {
-  backgroundColor: '#00ff84',
-  color: 'black',
-  padding: '5px 10px',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer',
-};
+  .responsive-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
 
-const headerStyle = {
-  border: '1px solid black',
-  backgroundColor: 'darkcyan',
-  color: 'white',
-};
+  .responsive-table th, .responsive-table td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+  }
 
-const innerHeaderStyle = {
-  border: '1px solid black',
-  backgroundColor: 'darkcyan',
-  color: 'white',
-};
+  .inner-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
 
-const cellStyle = {
-  border: '1px solid black',
-  padding: '5px',
-};
+  .inner-table th, .inner-table td {
+    border: 1px solid black;
+    padding: 5px;
+  }
 
-const cellStyle1 = {
-  border: '1px solid black',
-  padding: '5px',
-  width:'200px'
-};
+  .update-btn {
+    background-color: #00ff84;
+    color: black;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    .responsive-table, .inner-table {
+      font-size: 14px;
+    }
+
+    .responsive-table th, .responsive-table td, 
+    .inner-table th, .inner-table td {
+      padding: 6px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .title-search-container {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+    }
+
+    .responsive-table th, .responsive-table td {
+      display: block;
+      width: 100%;
+    }
+
+    .responsive-table th, .responsive-table td {
+      text-align: right;
+    }
+
+    .responsive-table th::after, 
+    .responsive-table td::after {
+      content: ": ";
+    }
+
+    .responsive-table th {
+      text-align: left;
+    }
+
+    .inner-table th, .inner-table td {
+      text-align: center;
+    }
+  }
+`;
+
+// Adding styles to the document head
+const styleSheet = document.createElement('style');
+styleSheet.type = 'text/css';
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
+
 export default UpdateBins;
