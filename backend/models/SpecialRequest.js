@@ -30,7 +30,7 @@ const specialRequestSchema = new mongoose.Schema({
   },
   status:{
     type:String, default:'Pending', 
-    enum: ['Pending', 'Accepted'],
+    enum: ['Pending', 'Accepted']
   },
   amount: {
     type: Number,

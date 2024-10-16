@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 //import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import NavbarComponent from '../../components/NavbarComponent';
 import { Button, Card, Form, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
@@ -25,6 +26,17 @@ function WasteManagement() {
   const [requestDate, setRequestDate] = useState('');
   const [requestTime, setRequestTime] = useState('');
   const [showCreateRequestForm, setShowCreateRequestForm] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredRequests, setFilteredRequests] = useState([]);
+
+  const cardStyle = {
+    margin: '10px',
+    backgroundColor: '#e9ecef',
+    border: '1px solid #007bff',
+    borderRadius: '10px',
+    width: window.innerWidth < 768 ? '150px' : '200px', // Adjust width for mobile view
+    minHeight: '150px' // Keep the same minHeight
+  };
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -152,6 +164,7 @@ function WasteManagement() {
         try {
           const response = await axios.get(`http://localhost:8000/api/special-requests/user/${user._id}`);
           setSpecialRequests(response.data);
+          setFilteredRequests(response.data); 
         } catch (error) {
           console.error('Error fetching special requests:', error);
         }
@@ -160,6 +173,21 @@ function WasteManagement() {
 
     fetchSpecialRequests();
   }, [user]);
+
+  // Handle search query change
+  const handleSearchChange = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+    
+    // Filter data based on search query
+    const filtered = specialRequests.filter(request => 
+      request.requestId.toString().toLowerCase().includes(query) ||
+      request.wasteType.toLowerCase().includes(query) ||
+      new Date(request.date).toLocaleDateString().includes(query)
+    );
+
+    setFilteredRequests(filtered); // Update filteredRequests
+  };
 
   // Handle create special request
   const handleCreateRequestSubmit = async (e) => {
@@ -188,6 +216,7 @@ function WasteManagement() {
         const fetchSpecialRequests = async () => {
           const response = await axios.get(`http://localhost:8000/api/special-requests/user/${user._id}`);
           setSpecialRequests(response.data);
+          setFilteredRequests(response.data);
         };
         fetchSpecialRequests();
       }
@@ -214,16 +243,17 @@ function WasteManagement() {
       try {
         const response = await axios.delete(`http://localhost:8000/api/special-requests/${id}`);
         if (response.status === 204) {
-          toast.success('Special request deleted successfully!'); // Show success toast
+          toast.success('Special request deleted successfully!');
           // Fetch updated special requests after deletion
           const fetchSpecialRequests = async () => {
             const response = await axios.get(`http://localhost:8000/api/special-requests/user/${user._id}`);
             setSpecialRequests(response.data);
+            setFilteredRequests(response.data);
           };
           fetchSpecialRequests();
         }
       } catch (err) {
-        toast.error('Failed to delete special request. Please try again.'); // Show error toast
+        toast.error('Failed to delete special request. Please try again.'); 
         console.error(err);
       }
     }
@@ -285,21 +315,11 @@ function WasteManagement() {
         </Container>
       )}
 
-      {/* Increased size for bin cards */}
+      {/* Bin Cards Section */}
       <div style={{ padding: '10px', overflowX: 'auto', backgroundColor: '#f8f9fa' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
           {bins.map((bin) => (
-            <Card 
-              key={bin._id} 
-              style={{ 
-                margin: '10px', 
-                backgroundColor: '#e9ecef', 
-                border: '1px solid #007bff', 
-                borderRadius: '10px', 
-                width: '200px',  // Adjusted width for larger cards
-                minHeight: '150px' // Adjusted minHeight for larger cards
-              }} 
-            >
+            <Card key={bin._id} style={cardStyle}>
               <Card.Body>
                 <Card.Title style={{ fontSize: '16px' }}>Bin ID: {bin.binId}</Card.Title>
                 <Card.Text style={{ fontSize: '14px' }}>
@@ -348,17 +368,43 @@ function WasteManagement() {
       {/* Special Requests Section */}
       <div style={{ padding: '20px', backgroundColor: '#f8f9fa', marginTop: '20px' }}>
         <h1 style={{ textAlign: 'center' }}>Special Requests</h1>
+
+        {/* Search Bar */}
+        <div 
+          style={{ 
+            marginBottom: '10px', 
+            marginTop: '30px', 
+            display: 'flex', 
+            justifyContent: 'center' 
+          }}
+        >
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search by Request ID, Waste Type, or Date"
+            style={{ 
+              padding: '10px', 
+              width: '100%', 
+              maxWidth: '500px', 
+              borderRadius: '10px', 
+              border: '1px solid #ccc', 
+              fontSize: '16px' 
+            }}
+          />
+
         {!showCreateRequestForm && (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Button
               variant="primary"
               onClick={() => setShowCreateRequestForm(true)}
-              style={{ alignContent: 'center' }}
+              style={{ alignContent: 'center', marginLeft:'20px' }}
             >
               Add New Request
             </Button>
           </div>
         )}
+        </div>
 
         {showCreateRequestForm && (
           <Container style={{ marginTop: '20px', backgroundColor: '#e9ecef', padding: '20px', borderRadius: '10px', maxWidth: '400px', position: 'relative' }}>
@@ -414,6 +460,7 @@ function WasteManagement() {
                       type="date" 
                       value={requestDate} 
                       onChange={(e) => setRequestDate(e.target.value)} 
+                      min={new Date().toISOString().split('T')[0]} // Restrict past dates
                       required
                     />
                   </Form.Group>
@@ -423,6 +470,8 @@ function WasteManagement() {
                       type="time" 
                       value={requestTime} 
                       onChange={(e) => setRequestTime(e.target.value)} 
+                      min={requestDate === new Date().toISOString().split('T')[0] ? new Date().toISOString().split('T')[1].slice(0, 5) : '06:00'} // Restrict past times if today
+                      max="18:00" // Restrict times to 6 PM
                       required
                     />
                   </Form.Group>
@@ -434,9 +483,9 @@ function WasteManagement() {
         )}
 
         {/* Special Request Cards with Edit and Delete Buttons */}
-        <div style={{ padding: '20px', overflowX: 'auto', backgroundColor: '#f8f9fa' }}>
+        <div style={{ padding: '10px', overflowX: 'auto', backgroundColor: '#f8f9fa' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {specialRequests.map((request) => (
+            {filteredRequests.map((request) => (
               <Card 
                 key={request._id} 
                 style={{ 
@@ -444,43 +493,56 @@ function WasteManagement() {
                   backgroundColor: '#e9ecef', 
                   border: '1px solid #007bff', 
                   borderRadius: '10px', 
-                  width: '250px',  // Adjusted width for larger cards
-                  minHeight: '200px' // Adjusted minHeight for larger cards
+                  width: '300px',  
+                  minHeight: '150px' 
                 }} 
               >
                 <Card.Body>
-                  <Card.Title style={{ fontSize: '16px' }}>Request ID: {request.requestId}</Card.Title>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Card.Title style={{ fontSize: '16px' }}>
+                      Request ID: {request.requestId}
+                    </Card.Title>
+                    <div>
+                      {/* Edit and Delete icons */}                
+                      <Button 
+                        variant="link" 
+                        onClick={() => handleEditRequest(request)} 
+                        style={{ color: '#28a745' }}
+                      >
+                        <AiOutlineEdit size={20} />
+                      </Button>
+                      <Button 
+                        variant="link" 
+                        onClick={() => handleDeleteRequest(request._id)} 
+                        style={{ color: '#dc3545', marginLeft: '10px'}}
+                      >
+                        <AiOutlineDelete size={20} />
+                      </Button>
+                    </div>
+                  </div>
                   <Card.Text style={{ fontSize: '14px' }}>
                     <strong>Waste Type:</strong> {request.wasteType}<br />
                     <strong>Quantity:</strong> {request.quantity}<br />
                     <strong>Description:</strong> {request.description}<br />
-                    <strong>Date:</strong> {request.date}<br />
+                    <strong>Date:</strong> {new Date(request.date).toLocaleDateString()}<br />
                     <strong>Time:</strong> {request.time}<br />
+                    <strong>Status:</strong> {request.status} 
+                    {request.status === 'Accepted' && (
+                      <span>
+                         ➡️ 
+                        <Link to="/payments" style={{ marginLeft: '5px', color: '#007bff', textDecoration: 'underline' }}>
+                           Payment
+                        </Link>
+                      </span>
+                    )}
                   </Card.Text>
-                  {/* Edit and Delete icons */}
-                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button 
-                      variant="link" 
-                      onClick={() => handleEditRequest(request)} 
-                      style={{ color: '#28a745' }}
-                    >
-                      <AiOutlineEdit size={20} />
-                    </Button>
-                    <Button 
-                      variant="link" 
-                      onClick={() => handleDeleteRequest(request._id)} 
-                      style={{ color: '#dc3545', marginLeft: '10px' }}
-                    >
-                      <AiOutlineDelete size={20} />
-                    </Button>
-                  </div>
                 </Card.Body>
               </Card>
             ))}
           </div>
         </div>
+        
       </div>
-
       <ToastContainer />
     </div>
   );
