@@ -119,18 +119,19 @@ function UpdateBins() {
                     <tbody>
                       {users.map((user, index) => (
                         <tr key={user.userId} className={`table-row ${index % 2 === 0 ? 'rowEven' : 'rowOdd'}`}>
-                          <td style={{border:'1px solid black'}}>{user.userId}</td>
-                          <td style={{border:'1px solid black'}}>{user.name}</td>
-                          <td style={{border:'1px solid black'}}>{user.email}</td>
-                          <td style={{border:'1px solid black'}}>{user.address}</td>
-                          <td style={{border:'1px solid black'}}>
+                          <td style={{border:'1px solid black', width:'20px'}}>{user.userId}</td>
+                          <td style={{border:'1px solid black',width:'200px'}}>{user.name}</td>
+                          <td style={{border:'1px solid black',width:'200px' }}>{user.email}</td>
+                          <td style={{border:'1px solid black'}} >{user.address}</td>
+                          <td style={{border:'1px solid black', width:'50%'}}>
                             <table style={innerTableStyles}>
                               <thead>
                                 <tr style={{border:'1px solid black'}}>
-                                  <th style={{border:'1px solid black'}}>Bin ID</th>
-                                  <th style={{border:'1px solid black'}}>Type</th>
-                                  <th style={{border:'1px solid black'}}>Percentage</th>
-                                  <th style={{border:'1px solid black'}}>Status</th>
+                                  <th style={{border:'1px solid black', backgroundColor:'darkcyan', color:'white'}}>Bin ID</th>
+                                  <th style={{border:'1px solid black',backgroundColor:'darkcyan', color:'white'}}>Type</th>
+                                  <th style={{border:'1px solid black',backgroundColor:'darkcyan', color:'white'}}>Percentage</th>
+                                  <th style={{border:'1px solid black',backgroundColor:'darkcyan', color:'white'}}>Status</th>
+                                  <th style={{border:'1px solid black',backgroundColor:'darkcyan', color:'white'}}>Action</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -140,6 +141,7 @@ function UpdateBins() {
                                     <td style={{border:'1px solid black'}}>{bin.type}</td>
                                     <td style={{border:'1px solid black'}}>{bin.percentage}%</td>
                                     <td style={{border:'1px solid black'}}>{bin.status}</td>
+                                    <td style={{border:'1px solid black'}}></td>
                                   </tr>
                                 ))}
                               </tbody>
