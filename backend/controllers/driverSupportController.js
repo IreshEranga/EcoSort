@@ -4,16 +4,18 @@ const Driver = require("../models/Driver");
 // Create a new driver support ticket
 const createDriverTicket = async (req, res) => {
     try {
-        const { userId, issueType, description } = req.body;
+        const { userId, issueType, description, isEmergency, role } = req.body;
         console.log('Request Body:', req.body);
         console.log('Received User ID:', userId);
-        console.log('Attempting to save ticket with the following data:', { userId, issueType, description });
+        console.log('Attempting to save ticket with the following data:', { userId, issueType, description,  isEmergency});
         // Assuming you have a SupportTicket model
         const savedTicket = await SupportTicket.create({
             userId: userId,
             issueType: issueType,
             description: description,
             status: "Received",
+            isEmergency: isEmergency || false,
+            role: role,
         });
 
         console.log('Saved Ticket:', savedTicket);
