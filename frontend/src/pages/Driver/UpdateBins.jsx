@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import DriverNavBar from './DriverNavBar';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function UpdateBins() {
   const Driver = JSON.parse(localStorage.getItem('driver'));
@@ -53,8 +55,6 @@ function UpdateBins() {
     return date.toLocaleDateString(undefined, options);
   };
 
-  
-
   const handleUpdateBinStatus = async (binId) => {
     try {
       await fetch(`http://localhost:8000/api/bins/bins/${binId}`, {
@@ -64,8 +64,21 @@ function UpdateBins() {
         },
         body: JSON.stringify({ status: 'Collected' }),
       });
-      alert(`Bin ${binId} status updated to Collected!`);
+      //toast.success(`Bin ${binId} status updated to Collected!`); 
+      toast.success(`Bin ${binId} status updated to Collected!`, {
+        position: "top-center",
+        autoClose: 5000, 
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });// Success toast
+      setTimeout(() => {
+        window.location.reload(); // Refresh page after successful update
+      }, 1000);
     } catch (error) {
+      toast.error('Error updating bin status'); // Error toast
       console.error('Error updating bin status:', error);
     }
   };
@@ -73,7 +86,8 @@ function UpdateBins() {
   const filteredGroupedUsers = Object.entries(groupedUsers).map(([city, users]) => [
     city,
     users.filter((user) =>
-      user.userID ||
+      user.bins.some((bin) => bin.binId.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      user.userId.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -85,14 +99,16 @@ function UpdateBins() {
     <div className='driver-home'>
       <DriverNavBar />
       <div className="driverContainer" style={{ marginTop: '150px' }}>
-        <h1>Driver Update Bins</h1>
-        <input
-          type="text"
-          placeholder="Search by user Id, name, email, city, address"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={searchInputStyle}
-        />
+        <div style={{display:'flex', gap:500}}>
+          <h1>Driver Update Bins</h1>
+          <input
+            type="text"
+            placeholder="Search by binId, user Id, name, email, city, address"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={searchInputStyle}
+          />
+        </div>
 
         <div>
           {filteredGroupedUsers.length > 0 ? (
@@ -104,29 +120,29 @@ function UpdateBins() {
                   <table style={tableStyles}>
                     <thead>
                       <tr style={{ border: '1px solid black' }}>
-                        <th style={{ border: '1px solid black', backgroundColor: 'darkcyan', color: 'white' }}>User ID</th>
-                        <th style={{ border: '1px solid black', backgroundColor: 'darkcyan', color: 'white' }}>Name</th>
-                        <th style={{ border: '1px solid black', backgroundColor: 'darkcyan', color: 'white' }}>Email</th>
-                        <th style={{ border: '1px solid black', backgroundColor: 'darkcyan', color: 'white' }}>Address</th>
-                        <th style={{ border: '1px solid black', backgroundColor: 'darkcyan', color: 'white' }}>Bins</th>
+                        <th style={headerStyle}>User ID</th>
+                        <th style={headerStyle}>Name</th>
+                        <th style={headerStyle}>Email</th>
+                        <th style={headerStyle}>Address</th>
+                        <th style={headerStyle}>Bins</th>
                       </tr>
                     </thead>
                     <tbody>
                       {users.map((user, index) => (
                         <tr key={user.userId} className={`table-row ${index % 2 === 0 ? 'rowEven' : 'rowOdd'}`}>
-                          <td style={{ border: '1px solid black', width: '20px' }}>{user.userId}</td>
-                          <td style={{ border: '1px solid black', width: '200px' }}>{user.name}</td>
-                          <td style={{ border: '1px solid black', width: '200px' }}>{user.email}</td>
-                          <td style={{ border: '1px solid black' }}>{user.address}</td>
-                          <td style={{ border: '1px solid black', width: '50%' }}>
+                          <td style={cellStyle}>{user.userId}</td>
+                          <td style={cellStyle}>{user.name}</td>
+                          <td style={cellStyle}>{user.email}</td>
+                          <td style={cellStyle1}>{user.address}</td>
+                          <td style={cellStyle}>
                             <table style={innerTableStyles}>
                               <thead>
-                                <tr style={{ border: '1px solid black' }}>
-                                  <th style={{ border: '1px solid black', backgroundColor: 'darkcyan', color: 'white' }}>Bin ID</th>
-                                  <th style={{ border: '1px solid black', backgroundColor: 'darkcyan', color: 'white' }}>Type</th>
-                                  <th style={{ border: '1px solid black', backgroundColor: 'darkcyan', color: 'white' }}>Percentage</th>
-                                  <th style={{ border: '1px solid black', backgroundColor: 'darkcyan', color: 'white' }}>Status</th>
-                                  <th style={{ border: '1px solid black', backgroundColor: 'darkcyan', color: 'white' }}>Action</th>
+                                <tr>
+                                  <th style={innerHeaderStyle}>Bin ID</th>
+                                  <th style={innerHeaderStyle}>Type</th>
+                                  <th style={innerHeaderStyle}>Percentage</th>
+                                  <th style={innerHeaderStyle}>Status</th>
+                                  <th style={innerHeaderStyle}>Action</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -138,16 +154,17 @@ function UpdateBins() {
                                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f8ff'}
                                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
                                   >
-                                    <td style={{ border: '1px solid black' }}>{bin.binId}</td>
-                                    <td style={{ border: '1px solid black' }}>{bin.type}</td>
-                                    <td style={{ border: '1px solid black' }}>{bin.percentage}%</td>
-                                    <td style={{ border: '1px solid black' }}>{bin.status}</td>
-                                    <td style={{ border: '1px solid black' }}>
+                                    <td style={cellStyle}>{bin.binId}</td>
+                                    <td style={cellStyle}>{bin.type}</td>
+                                    <td style={cellStyle}>{bin.percentage}%</td>
+                                    <td style={cellStyle}>{bin.status}</td>
+                                    <td style={cellStyle}>
                                       <button
                                         onClick={() => handleUpdateBinStatus(bin.binId)}
-                                        style={buttonStyle}
+                                        style={buttonStyleUpdateBin}
+                                        disabled={bin.status === 'Collected'} // Disable button if status is 'Collected'
                                       >
-                                        Update to Collected
+                                        {bin.status === 'Collected' ? 'Collected' : 'Update to Collected'}
                                       </button>
                                     </td>
                                   </tr>
@@ -167,18 +184,23 @@ function UpdateBins() {
           )}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }
 
 const tableStyles = {
-  width: '100%',
+  width: '110%',
   borderCollapse: 'collapse',
+  
 };
 
 const innerTableStyles = {
-  width: '100%',
+  width: '90%',
   borderCollapse: 'collapse',
+  padding:'10px',
+  marginTop:'20px',
+  marginLeft:'20px',
 };
 
 const searchInputStyle = {
@@ -188,13 +210,35 @@ const searchInputStyle = {
   borderRadius: '4px',
 };
 
-const buttonStyle = {
-  backgroundColor: 'darkcyan',
-  color: 'white',
+const buttonStyleUpdateBin = {
+  backgroundColor: '#00ff84',
+  color: 'black',
   padding: '5px 10px',
   border: 'none',
   borderRadius: '4px',
   cursor: 'pointer',
 };
 
+const headerStyle = {
+  border: '1px solid black',
+  backgroundColor: 'darkcyan',
+  color: 'white',
+};
+
+const innerHeaderStyle = {
+  border: '1px solid black',
+  backgroundColor: 'darkcyan',
+  color: 'white',
+};
+
+const cellStyle = {
+  border: '1px solid black',
+  padding: '5px',
+};
+
+const cellStyle1 = {
+  border: '1px solid black',
+  padding: '5px',
+  width:'200px'
+};
 export default UpdateBins;
