@@ -1,6 +1,6 @@
 // controllers/binController.js
 
-const Bin = require('../models/bin'); // Adjust the path as needed
+const Bin = require('../models/Bin'); // Adjust the path as needed
 
 // Create a new bin
 exports.createBin = async (req, res) => {
