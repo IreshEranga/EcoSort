@@ -43,9 +43,9 @@ const NavbarComponent = () => {
                     <Nav className="nav-items d-flex align-items-center">
                         <Nav.Link as={Link} to="/userHome" className="nav-link-custom">Home</Nav.Link>
                         <Nav.Link as={Link} to="/waste" className="nav-link-custom">Waste</Nav.Link>
+                        <Nav.Link as={Link} to="/payments" className="nav-link-custom">Payments</Nav.Link>
                         <Nav.Link as={Link} to="/CollectionRouting" className="nav-link-custom">Schedules</Nav.Link>
                         <Nav.Link as={Link} to="/report-issue" className="nav-link-custom">Issues</Nav.Link>
-                        <Nav.Link as={Link} to="/payments" className="nav-link-custom">Payments</Nav.Link>
                         <Nav.Link onClick={handleLogout} className="nav-link-custom login-button">Logout</Nav.Link>
 
                         {/* User profile icon */}
