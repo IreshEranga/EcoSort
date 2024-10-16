@@ -97,6 +97,7 @@ function UpdateBins() {
           onChange={(e) => setSearchTerm(e.target.value)}
           style={searchInputStyle}
         />
+       
 
         <div>
           {filteredGroupedUsers.length > 0 ? (
@@ -104,14 +105,15 @@ function UpdateBins() {
               users.length > 0 && (
                 <div key={city}>
                   <h2>{city}</h2>
+                  <br />
                   <table style={tableStyles}>
                     <thead>
-                      <tr style={{border:'1px solid black'}}>
-                        <th style={{border:'1px solid black'}}>User ID</th>
-                        <th style={{border:'1px solid black'}}>Name</th>
-                        <th style={{border:'1px solid black'}}>Email</th>
-                        <th style={{border:'1px solid black'}}>Address</th>
-                        <th style={{border:'1px solid black'}}>Bins</th>
+                      <tr style={{border:'1px solid black', }}>
+                        <th style={{border:'1px solid black', backgroundColor:'darkcyan', color:'white'}}>User ID</th>
+                        <th style={{border:'1px solid black',backgroundColor:'darkcyan', color:'white'}}>Name</th>
+                        <th style={{border:'1px solid black',backgroundColor:'darkcyan', color:'white'}}>Email</th>
+                        <th style={{border:'1px solid black',backgroundColor:'darkcyan', color:'white'}}>Address</th>
+                        <th style={{border:'1px solid black',backgroundColor:'darkcyan', color:'white'}}>Bins</th>
                       </tr>
                     </thead>
                     <tbody>
