@@ -3,6 +3,8 @@ import DriverNavBar from './DriverNavBar';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Lottie from 'react-lottie';
+import * as loadingAnimation from '../../assets/loadingAnimation.json'; // Import Lottie animation
 
 function UpdateBins() {
   const Driver = JSON.parse(localStorage.getItem('driver'));
@@ -11,6 +13,7 @@ function UpdateBins() {
   const [groupedUsers, setGroupedUsers] = useState({});
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -22,11 +25,14 @@ function UpdateBins() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true); // Set loading before fetching
         const response = await fetch('http://localhost:8000/api/bins/bins/all');
         const data = await response.json();
         setUsers(data);
+        setLoading(false); // Set loading to false after fetching
       } catch (error) {
         console.error('Error fetching users with bins:', error);
+        setLoading(false); // Set loading to false if there's an error
       }
     };
     fetchUsers();
@@ -74,7 +80,7 @@ function UpdateBins() {
         progress: undefined,
       });
       setTimeout(() => {
-        window.location.reload(); 
+        window.location.reload();
       }, 1000);
     } catch (error) {
       toast.error('Error updating bin status');
@@ -94,140 +100,123 @@ function UpdateBins() {
     ),
   ]);
 
+  // Lottie animation configuration
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingAnimation,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  };
+
   return (
     <div className='driver-home'>
       <DriverNavBar />
-      <div className="driverContainer" style={{ marginTop: '150px' }}>
-        <div className="title-search-container">
-          <h1>Driver Update Bins</h1>
-          <input
-            type="text"
-            placeholder="Search by binId, user Id, name, email, city, address"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
+      {loading ? ( // Display Lottie animation while loading
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+          <Lottie options={defaultOptions} height={200} width={200} />
         </div>
+      ) : (
+        <div className="driverContainer" style={{ marginTop: '150px' }}>
+          <div className="title-search-container">
+            <h1>Driver Update Bins</h1>
+            <input
+              type="text"
+              placeholder="Search by binId, user Id, name, email, city, address"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
 
-        <div>
-          {filteredGroupedUsers.length > 0 ? (
-            filteredGroupedUsers.map(([city, users]) => (
-              users.length > 0 && (
-                <div key={city}>
-                  <h2>{city}</h2>
-                  <table className="responsive-table">
-                    <thead>
-                      <tr>
-                        <th style={{backgroundColor:'darkcyan', color:'white'}}>User ID</th>
-                        <th style={{backgroundColor:'darkcyan', color:'white'}}>Name</th>
-                        <th style={{backgroundColor:'darkcyan', color:'white'}}>Email</th>
-                        <th style={{backgroundColor:'darkcyan', color:'white'}}>Address</th>
-                        <th style={{backgroundColor:'darkcyan', color:'white'}}>Bins</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {users.map((user, index) => (
-                        <tr key={user.userId}>
-                          <td>{user.userId}</td>
-                          <td>{user.name}</td>
-                          <td>{user.email}</td>
-                          <td>{user.address}</td>
-                          <td>
-                            <table className="inner-table">
-                              <thead>
-                                <tr onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#23f682'}>
-                                  <th style={{backgroundColor:'darkcyan', color:'white'}}>Bin ID</th>
-                                  <th style={{backgroundColor:'darkcyan', color:'white'}}>Type</th>
-                                  <th style={{backgroundColor:'darkcyan', color:'white'}}>Percentage</th>
-                                  <th style={{backgroundColor:'darkcyan', color:'white'}}>Status</th>
-                                  <th style={{backgroundColor:'darkcyan', color:'white'}}>Action</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {user.bins.map((bin, binIndex) => (
-                                  <tr key={bin.binId}
-                                  className={`table-row ${binIndex % 2 === 0 ? 'rowEven' : 'rowOdd'}`}
-                                    style={{ cursor: 'pointer' }}
-                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f8ff'}
-                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}>
-                                    <td>{bin.binId}</td>
-                                    <td>{bin.type}</td>
-                                    <td>{bin.percentage}%</td>
-                                    <td>{bin.status}</td>
-                                    <td>
-                                      <button
-                                        onClick={() => handleUpdateBinStatus(bin.binId)}
-                                        disabled={bin.status === 'Collected'}
-                                        className="update-btn"
-                                      >
-                                        {bin.status === 'Collected' ? 'Collected' : 'Update to Collected'}
-                                      </button>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </td>
+          <div>
+            {filteredGroupedUsers.length > 0 ? (
+              filteredGroupedUsers.map(([city, users]) => (
+                users.length > 0 && (
+                  <div key={city}>
+                    <h2>{city}</h2>
+                    <table className="responsive-table">
+                      <thead>
+                        <tr>
+                          <th style={{backgroundColor:'darkcyan', color:'white'}}>User ID</th>
+                          <th style={{backgroundColor:'darkcyan', color:'white'}}>Name</th>
+                          <th style={{backgroundColor:'darkcyan', color:'white'}}>Email</th>
+                          <th style={{backgroundColor:'darkcyan', color:'white'}}>Address</th>
+                          <th style={{backgroundColor:'darkcyan', color:'white'}}>Bins</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )
-            ))
-          ) : (
-            <p>No users scheduled for collection today.</p>
-          )}
+                      </thead>
+                      <tbody>
+                        {users.map((user, index) => (
+                          <tr key={user.userId} className="table-row">
+                            <td>{user.userId}</td>
+                            <td>{user.name}</td>
+                            <td>{user.email}</td>
+                            <td>{user.address}</td>
+                            <td>
+                              <table className="inner-table">
+                                <thead>
+                                  <tr>
+                                    <th style={{backgroundColor:'darkcyan', color:'white'}}>Bin ID</th>
+                                    <th style={{backgroundColor:'darkcyan', color:'white'}}>Type</th>
+                                    <th style={{backgroundColor:'darkcyan', color:'white'}}>Percentage</th>
+                                    <th style={{backgroundColor:'darkcyan', color:'white'}}>Status</th>
+                                    <th style={{backgroundColor:'darkcyan', color:'white'}}>Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {user.bins.map((bin, binIndex) => (
+                                    <tr key={bin.binId} className="table-row-inner">
+                                      <td>{bin.binId}</td>
+                                      <td>{bin.type}</td>
+                                      <td>{bin.percentage}%</td>
+                                      <td>{bin.status}</td>
+                                      <td>
+                                        <button
+                                          onClick={() => handleUpdateBinStatus(bin.binId)}
+                                          disabled={bin.status === 'Collected'}
+                                          className="update-btn"
+                                        >
+                                          {bin.status === 'Collected' ? 'Collected' : 'Update to Collected'}
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )
+              ))
+            ) : (
+              <p>No users scheduled for collection today.</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       <ToastContainer />
     </div>
   );
 }
 
-// Styles using media queries for responsive design
+// Styles for hover effects
 const styles = `
-  .driverContainer {
-    padding: 10px;
-  }
-
-  .title-search-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .search-input {
-    width: 100%;
-    max-width: 400px;
-    padding: 5px;
-    margin-top: 10px;
-    border-radius: 4px;
-  }
-
-  .responsive-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-
   .responsive-table th, .responsive-table td {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
   }
 
-  .inner-table {
-    width: 100%;
-    border-collapse: collapse;
+  .table-row:hover {
+    background-color: #dcfff5;
   }
-
-  .inner-table th, .inner-table td {
-    border: 1px solid black;
-    padding: 5px;
-  }
+    .table-row-inner:hover{
+    background-color: #d3f0fd;
+    }
 
   .update-btn {
     background-color: #00ff84;
@@ -238,48 +227,9 @@ const styles = `
     cursor: pointer;
   }
 
-  @media (max-width: 768px) {
-    .responsive-table, .inner-table {
-      font-size: 14px;
-    }
-
-    .responsive-table th, .responsive-table td, 
-    .inner-table th, .inner-table td {
-      padding: 6px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .title-search-container {
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .search-input {
-      width: 100%;
-    }
-
-    .responsive-table th, .responsive-table td {
-      display: block;
-      width: 100%;
-    }
-
-    .responsive-table th, .responsive-table td {
-      text-align: right;
-    }
-
-    .responsive-table th::after, 
-    .responsive-table td::after {
-      content: ": ";
-    }
-
-    .responsive-table th {
-      text-align: left;
-    }
-
-    .inner-table th, .inner-table td {
-      text-align: center;
-    }
+  .update-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 `;
 
