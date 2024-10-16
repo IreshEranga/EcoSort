@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';   
+import React, { useEffect, useState } from 'react';    
 import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import axios from 'axios';
 import jsPDF from 'jspdf';
@@ -6,25 +6,38 @@ import autoTable from 'jspdf-autotable';
 
 function SpecialRequestsPage() {
   const [specialRequests, setSpecialRequests] = useState([]);
+  const [pastRequests, setPastRequests] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredRequests, setFilteredRequests] = useState([]);
+  const [filteredPastRequests, setFilteredPastRequests] = useState([]);
 
   useEffect(() => {
     const fetchSpecialRequests = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/special-requests');
-        setSpecialRequests(response.data);
-        setFilteredRequests(response.data);
+        const currentRequests = response.data.filter(request => new Date(request.date) >= new Date());
+        setSpecialRequests(currentRequests);
+        setFilteredRequests(currentRequests);
       } catch (error) {
         console.error('Error fetching special requests:', error);
       }
     };
 
+    const fetchPastRequests = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/special-requests/past');
+        setPastRequests(response.data);
+        setFilteredPastRequests(response.data);
+      } catch (error) {
+        console.error('Error fetching past special requests:', error);
+      }
+    };
+
     fetchSpecialRequests();
+    fetchPastRequests();
   }, []);
 
   useEffect(() => {
-    // Filter requests based on the search query
     const filtered = specialRequests.filter(request =>
       request.user.userId.toString().includes(searchQuery) ||
       `${request.user.firstName} ${request.user.lastName}`.toLowerCase().includes(searchQuery) ||
@@ -32,7 +45,15 @@ function SpecialRequestsPage() {
       new Date(request.date).toLocaleDateString().toLowerCase().includes(searchQuery)
     );
     setFilteredRequests(filtered);
-  }, [searchQuery, specialRequests]);
+
+    const filteredPast = pastRequests.filter(request =>
+      request.user.userId.toString().includes(searchQuery) ||
+      `${request.user.firstName} ${request.user.lastName}`.toLowerCase().includes(searchQuery) ||
+      request.wasteType.toLowerCase().includes(searchQuery) ||
+      new Date(request.date).toLocaleDateString().toLowerCase().includes(searchQuery)
+    );
+    setFilteredPastRequests(filteredPast);
+  }, [searchQuery, specialRequests, pastRequests]);
 
   const handleCalculateAmount = async (requestId) => {
     try {
@@ -60,10 +81,10 @@ function SpecialRequestsPage() {
     }
   };
 
-  const downloadReport = () => {
+  const downloadCurrentReport = () => {
     const doc = new jsPDF();
     doc.setFontSize(12);
-    doc.text('Special Requests Report', 14, 20);
+    doc.text('Current Special Requests Report', 14, 20);
 
     autoTable(doc, {
       head: [['User ID', 'User Name', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Status', 'Amount']],
@@ -75,12 +96,33 @@ function SpecialRequestsPage() {
         request.description,
         new Date(request.date).toLocaleDateString(),
         request.time,
-        request.status,
         `$${request.amount}`
       ])
     });
 
-    doc.save('Special_Requests_Report.pdf');
+    doc.save('Current_Special_Requests_Report.pdf');
+  };
+
+  const downloadPastReport = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    doc.text('Past Special Requests Report', 14, 20);
+
+    autoTable(doc, {
+      head: [['User ID', 'User Name', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Status', 'Amount']],
+      body: filteredPastRequests.map(request => [
+        request.user.userId,
+        `${request.user.firstName} ${request.user.lastName}`,
+        request.wasteType,
+        request.quantity,
+        request.description,
+        new Date(request.date).toLocaleDateString(),
+        request.time,
+        `$${request.amount}`
+      ])
+    });
+
+    doc.save('Past_Special_Requests_Report.pdf');
   };
 
   const handleNavigateToMap = (latitude, longitude) => {
@@ -100,17 +142,22 @@ function SpecialRequestsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
             placeholder="Search by User ID, Name, Waste Type, or Date"
-            style={{ padding: '8px', width: '600px', borderRadius: '10px' }}
+            style={{ padding: '8px', width: '400px', borderRadius: '10px' }}
           />
-          <button onClick={downloadReport} style={{ marginLeft: '10px', padding: '8px', borderRadius: '10px' }}>
-            Download Report
+          <button onClick={downloadCurrentReport} style={{ marginLeft: '20px', padding: '8px', borderRadius: '10px' }}>
+            Download Current Report
+          </button>
+          <button onClick={downloadPastReport} style={{ marginLeft: '10px', padding: '8px', borderRadius: '10px' }}>
+            Download Past Report
           </button>
         </div>
 
-        <table className='special-requests-table' style={{ width: '100%', margin: '0 auto', borderCollapse: 'collapse', fontSize: '14px' }}>
+        {/* Current Requests Table */}
+        <h2>Current Special Requests</h2>
+        <table className='special-requests-table' style={{ width: '100%', margin: '0 auto', borderCollapse: 'collapse', fontSize: '14px', marginBottom: '20px', marginTop: '20px' }}>
           <thead>
             <tr>
-              {['User ID', 'User Name', 'Location', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Status', 'Action', 'Amount', 'Action'].map(header => (
+              {['User ID', 'User Name', 'Location', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Payment Action', 'Amount', 'Payment Status', 'Status', 'Action'].map(header => (
                 <th key={header} style={{ border: '1px solid #ddd', padding: '6px' }}>{header}</th>
               ))}
             </tr>
@@ -138,20 +185,50 @@ function SpecialRequestsPage() {
                 <td style={{ border: '1px solid #ddd', padding: '6px', width: '300px' }}>{request.description}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{new Date(request.date).toLocaleDateString()}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.time}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>
+                  <button onClick={() => handleCalculateAmount(request._id)} style={{ borderRadius: '10px' }}>
+                    Calculate
+                  </button>
+                </td>
+                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>${request.amount}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.paymentStatus}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.status}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>
                   <button 
                     onClick={() => handleUpdateStatus(request._id)} 
-                    disabled={request.status === 'Accepted'}
-                    style={{borderRadius:'10px', width:'85px', backgroundColor: request.status === 'Accepted' ? '#ccc' : '#4CAF50', color: 'white'}}
+                    disabled={request.status === 'Accepted' || request.paymentStatus === 'Pending'} // Disabled when paymentStatus is Pending
+                    style={{borderRadius:'10px', width:'85px', backgroundColor: (request.status === 'Accepted' || request.paymentStatus === 'Pending') ? '#ccc' : '#4CAF50', color: 'white'}}
                   >
                     {request.status === 'Accepted' ? 'Accepted' : 'Accept'}
                   </button>
                 </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Past Requests Table */}
+        <h2>Past Special Requests</h2>
+        <table className='special-requests-table' style={{ width: '100%', margin: '0 auto', borderCollapse: 'collapse', fontSize: '14px', marginTop: '20px' }}>
+          <thead>
+            <tr>
+              {['User ID', 'User Name', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Collection Status', 'Amount'].map(header => (
+                <th key={header} style={{ border: '1px solid #ddd', padding: '6px' }}>{header}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filteredPastRequests.map(request => (
+              <tr key={request._id}>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.user.userId}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{`${request.user.firstName} ${request.user.lastName}`}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.wasteType}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center', width:'80px' }}>{request.quantity}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px', width: '300px' }}>{request.description}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{new Date(request.date).toLocaleDateString()}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.time}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.collectStatus}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>${request.amount}</td>
-                <td style={{ border: '1px solid #ddd', padding: '6px' }}>
-                  <button onClick={() => handleCalculateAmount(request._id)} style={{borderRadius:'10px'}}>Calculate Amount</button>
-                </td>
               </tr>
             ))}
           </tbody>

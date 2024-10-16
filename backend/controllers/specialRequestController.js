@@ -22,6 +22,23 @@ exports.getAllSpecialRequests = async (req, res) => {
   }
 };
 
+// Get past special requests (date is earlier than today)
+exports.getPastSpecialRequests = async (req, res) => {
+  try {
+    const today = new Date();
+    const pastRequests = await SpecialRequest.find({ date: { $lt: today } })
+      .populate('user', 'firstName lastName email userId location');
+      
+    if (pastRequests.length === 0) {
+      return res.status(404).json({ message: 'No past special requests found' });
+    }
+    
+    res.status(200).json(pastRequests);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Get special requests by user ID
 exports.getSpecialRequestsByUserId = async (req, res) => {
   try {
@@ -95,5 +112,30 @@ exports.updateSpecialRequestStatus = async (req, res) => {
     res.status(200).json(updatedRequest);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+// Count all special requests
+exports.countAllSpecialRequests = async (req, res) => {
+  try {
+    const count = await SpecialRequest.countDocuments();
+    res.status(200).json({ totalRequests: count });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete completed special requests
+exports.deleteCompletedSpecialRequests = async (req, res) => {
+  try {
+    const result = await SpecialRequest.deleteMany({ collectStatus: 'Complete' });
+    
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'No completed special requests found to delete' });
+    }
+
+    res.status(200).json({ message: `${result.deletedCount} completed special requests deleted successfully` });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

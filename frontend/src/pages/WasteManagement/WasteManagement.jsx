@@ -526,7 +526,8 @@ function WasteManagement() {
                     <strong>Description:</strong> {request.description}<br />
                     <strong>Date:</strong> {new Date(request.date).toLocaleDateString()}<br />
                     <strong>Time:</strong> {request.time}<br />
-                    <strong>Status:</strong> {request.status} 
+                    <strong>Payment Status:</strong> {request.paymentStatus}<br />
+                    <strong>Status:</strong> {request.status}<br />
                     {request.status === 'Accepted' && (
                       <span>
                          ➡️ 
@@ -535,6 +536,7 @@ function WasteManagement() {
                         </Link>
                       </span>
                     )}
+                    <strong>Collection Status:</strong> {request.collectStatus}<br />
                   </Card.Text>
                 </Card.Body>
               </Card>
