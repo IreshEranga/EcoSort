@@ -206,7 +206,7 @@ function PaymentsPage() {
                             setIsModalOpen(true);
                           }}
                         >
-                          Submit Receipt
+                         {(payment.status === 'Pending')? "Submit Receipt" :"RE-Submit Receipt"}
                         </button>
                       ) : (
                         <span className="no-actions">No actions</span>
@@ -222,7 +222,7 @@ function PaymentsPage() {
 
       {isModalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{backgroundColor: "white"}}>
+          <div className="modal-content" style={{backgroundColor: "white" }}>
             <div className="modal-header">
               <h3>Upload Payment Receipt</h3>
               <button className="close-btn" onClick={() => {
