@@ -253,68 +253,69 @@ const PaymentPage = () => {
       <div className="main-content" style={{ backgroundColor: '#ffffff' }}>
         <h1 className="topic" style={{ color: 'black' }}>Payments</h1>
 
-        <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '20px' }}>
-          <input
-            type="text"
-            placeholder="Search by request ID or status..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="search-input"
-          />
-          <div className="buttons-section">
-            {filteredPayments.length > 0 && (
-              <button className="btn btn-primary" onClick={generatePDF}>
-                Download PDF Report
-              </button>
-            )}
-          </div>
-          <div className="add-payment-btn-wrapper-top">
-            <button className="add-payment-btn" onClick={() => setIsFormVisible(!isFormVisible)}>
-              {isFormVisible ? 'Close Payment Form' : 'Add Payment'}
-            </button>
-          </div>
-        </div>
+        <div className="search-and-buttons">
+  <input
+    type="text"
+    placeholder="Search by request ID or status..."
+    value={searchTerm}
+    onChange={handleSearchChange}
+    className="search-input"
+  />
+  <div className="buttons-section">
+    {filteredPayments.length > 0 && (
+      <button className="btn btn-primary" onClick={generatePDF}>
+        Download PDF Report
+      </button>
+    )}
+    <button className="add-payment-btn" onClick={() => setIsFormVisible(!isFormVisible)}>
+      {isFormVisible ? 'Close Payment Form' : 'Add Payment'}
+    </button>
+  </div>
+</div>
 
-        <table className="users-table">
-          <thead>
-            <tr>
-              <th>Request ID</th>
-              <th>Owner</th>
-              <th>Distance (km)</th>
-              <th>Transport Charge</th>
-              <th>Weight (kg)</th>
-              <th>Additional Charges</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredPayments.length > 0 ? (
-              filteredPayments.map((payment) => (
-                <tr key={payment._id}>
-                  <td>{payment.requestId}</td>
-                  <td>{payment.ownername}</td>
-                  <td>{payment.distance}</td>
-                  <td>{payment.transportationCharge}</td>
-                  <td>{payment.weight}</td>
-                  <td>{payment.additionalCharges || 'N/A'}</td>
-                  <td>{payment.status}</td>
-                  <td>
-                    {payment.status === 'To Be Reviewed' && (
-                      <button onClick={() => handleReviewReceipt(payment._id)}>
-                        Review Receipt
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="8">No payments found</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+<div className="table-responsive">
+  <table className="users-table">
+    <thead>
+      <tr>
+        <th>Request ID</th>
+        <th>Owner</th>
+        <th>Distance (km)</th>
+        <th>Transport Charge</th>
+        <th>Weight (kg)</th>
+        <th>Additional Charges</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {filteredPayments.length > 0 ? (
+        filteredPayments.map((payment) => (
+          <tr key={payment._id}>
+            <td data-label="Request ID">{payment.requestId}</td>
+            <td data-label="Owner">{payment.ownername}</td>
+            <td data-label="Distance (km)">{payment.distance}</td>
+            <td data-label="Transport Charge">{payment.transportationCharge}</td>
+            <td data-label="Weight (kg)">{payment.weight}</td>
+            <td data-label="Additional Charges">{payment.additionalCharges || 'N/A'}</td>
+            <td data-label="Status">{payment.status}</td>
+            <td data-label="Action">
+              {payment.status === 'To Be Reviewed' && (
+                <button onClick={() => handleReviewReceipt(payment._id)}>
+                  Review Receipt
+                </button>
+              )}
+              {payment.status === 'Approved' && (<h4>Done</h4>)}
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="8">No payments found</td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
       </div>
     </div>
   );

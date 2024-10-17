@@ -1,3 +1,4 @@
+/* Base styles */
 .payment-container {
   margin: 20px;
   margin-top: 40px;
@@ -10,12 +11,16 @@
 }
 
 .add-payment-btn {
-  background-color: #007bff;
+  background-color: #4CAF50;
   color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.add-payment-btn:hover {
+  background-color: #45a049;
 }
 
 .payment-form {
@@ -28,80 +33,6 @@
   border-radius: 10px;
 }
 
-.payment-form div {
-  margin-bottom: 10px;
-}
-
-.payment-form label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.payment-form input,
-.payment-form select {
-  width: 100%;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-}
-
-.payment-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.payment-table th,
-.payment-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-.payment-table th {
-  background-color: #f4f4f4;
-}
-
-/* Modal Overlay */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Black overlay with transparency */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  padding-top: 5%; /* Adjusts the modal vertically to center it more */
-}
-
-/* Modal Content */
-.modal-content-payment {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
-  width: 90%;
-  max-width: 400px; /* Make the modal smaller */
-  z-index: 1001;
-  max-height: 80vh; /* Ensure it doesn't exceed viewport height */
-  /* overflow-y: auto; Scroll if content overflows */
-}
-
-/* Close Button */
-.close-modal {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* Optional Styling for Form Inputs */
 .payment-form div {
   margin-bottom: 15px;
 }
@@ -132,22 +63,224 @@
   background-color: #0056b3;
 }
 
-
-.add-payment-btn-wrapper-top {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
-.add-payment-btn {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
+.users-table th,
+.users-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.users-table th {
+  background-color: #f4f4f4;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding-top: 5%;
+}
+
+.modal-content-payment {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  z-index: 1001;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  font-weight: bold;
   cursor: pointer;
 }
 
-.add-payment-btn:hover {
-  background-color: #45a049;
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .admin-dashboard {
+    flex-direction: column;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+
+  .topic {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+
+  .search-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .buttons-section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .buttons-section button,
+  .add-payment-btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .add-payment-btn-wrapper-top {
+    position: static;
+    margin-bottom: 10px;
+  }
+
+  .modal-content-payment {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .payment-form {
+    padding: 15px;
+  }
+}
+
+/* Table responsiveness */
+@media screen and (max-width: 600px) {
+  .users-table {
+    border: 0;
+  }
+
+  .users-table thead {
+    display: none;
+  }
+
+  .users-table tr {
+    margin-bottom: 10px;
+    display: block;
+    border-bottom: 2px solid #ddd;
+  }
+
+  .users-table td {
+    display: block;
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .users-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .users-table td:last-child {
+    border-bottom: 0;
+  }
+}
+
+/* ... (keep the existing styles) ... */
+
+/* Enhanced Table responsiveness */
+@media screen and (max-width: 768px) {
+  .users-table {
+    border: none;
+    background-color: transparent;
+  }
+
+  .users-table thead {
+    display: none;
+  }
+
+  .users-table, .users-table tbody, .users-table tr, .users-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .users-table tr {
+    margin-bottom: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 10px;
+  }
+
+  .users-table td {
+    text-align: right;
+    padding: 8px;
+    position: relative;
+    border-bottom: 1px solid #eee;
+  }
+
+  .users-table td:last-child {
+    border-bottom: none;
+  }
+
+  .users-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 8px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+    color: #555;
+  }
+
+  .users-table td:not(:last-child)::after {
+    content: "";
+    display: block;
+    margin-top: 10px;
+  }
+
+  .users-table button {
+    display: inline-block;
+    width: auto;
+    padding: 6px 12px;
+    margin-top: 10px;
+  }
+}
+
+/* Additional responsive adjustments */
+@media screen and (max-width: 480px) {
+  .search-and-buttons {
+    flex-direction: column;
+  }
+
+  .search-input, .buttons-section button, .add-payment-btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .modal-content-payment {
+    width: 95%;
+    padding: 10px;
+  }
 }
