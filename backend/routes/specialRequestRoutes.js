@@ -15,7 +15,10 @@ router.get('/past', specialRequestController.getPastSpecialRequests);
 router.get('/user/:userId', specialRequestController.getSpecialRequestsByUserId);
 
 // Update special request by ID (e.g., for admin to update status or amount)
-router.put('/:id', specialRequestController.updateSpecialRequest);
+router.put('/:id', specialRequestController.updateSpecialRequestStatus);
+
+// Update special request collect status
+router.patch('/:id', specialRequestController.updateSpecialRequest);
 
 // Delete special request by ID
 router.delete('/:id', specialRequestController.deleteSpecialRequest);

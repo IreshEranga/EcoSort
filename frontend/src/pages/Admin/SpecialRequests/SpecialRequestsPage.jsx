@@ -3,6 +3,7 @@ import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import AssignDriverModal from './AssignDriverModal';
 
 function SpecialRequestsPage() {
   const [specialRequests, setSpecialRequests] = useState([]);
@@ -10,6 +11,8 @@ function SpecialRequestsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredRequests, setFilteredRequests] = useState([]);
   const [filteredPastRequests, setFilteredPastRequests] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null); // Initialize with null or default value
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchSpecialRequests = async () => {
@@ -130,6 +133,11 @@ function SpecialRequestsPage() {
     window.open(mapUrl, '_blank');
   };
 
+  const handleAssignDriver = (request) => {
+    setSelectedRequest(request);
+    setIsModalOpen(true);
+  };
+  
   return (
     <div className='admin-dashboard'>
       <AdminSidebar />
@@ -157,7 +165,7 @@ function SpecialRequestsPage() {
         <table className='special-requests-table' style={{ width: '100%', margin: '0 auto', borderCollapse: 'collapse', fontSize: '14px', marginBottom: '20px', marginTop: '20px' }}>
           <thead>
             <tr>
-              {['User ID', 'User Name', 'Location', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Payment Action', 'Amount', 'Payment Status', 'Status', 'Action'].map(header => (
+              {['User ID', 'User Name', 'Location', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Payment Action', 'Amount', 'Payment Status', 'Status', 'Action', 'Driver'].map(header => (
                 <th key={header} style={{ border: '1px solid #ddd', padding: '6px' }}>{header}</th>
               ))}
             </tr>
@@ -202,6 +210,15 @@ function SpecialRequestsPage() {
                     {request.status === 'Accepted' ? 'Accepted' : 'Accept'}
                   </button>
                 </td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>
+                  <button 
+                    onClick={() => handleAssignDriver(request)}  
+                    disabled={request.status === 'Pending'}
+                    style={{borderRadius:'10px', width:'85px', backgroundColor: (request.status === 'Pending') ? '#ccc' : '#4CAF50', color: 'white'}}
+                  >
+                    {request.status === 'Assigned' ? 'Assigned' : 'Assign Driver'}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -233,6 +250,15 @@ function SpecialRequestsPage() {
             ))}
           </tbody>
         </table>
+
+        <AssignDriverModal 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+          specialRequestId={selectedRequest ? selectedRequest._id : null} 
+          date={selectedRequest ? selectedRequest.date : null} 
+          city={selectedRequest ? selectedRequest.user.city : null} 
+        />
+
       </div>
     </div>
   );
