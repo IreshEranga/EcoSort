@@ -4,7 +4,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import axios from 'axios';
 import './PaymentPage.css';
-
+import { useLocation } from 'react-router-dom';
 const PaymentPage = () => {
   const [payments, setPayments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,9 +21,19 @@ const PaymentPage = () => {
     additionalCharges: ''
   });
 
+
+  const location = useLocation();
   useEffect(() => {
     fetchPayments();
-  }, []);
+
+    const searchParams = new URLSearchParams(location.search);
+    const requestId = searchParams.get('requestId');
+    if (requestId) {
+      setPaymentData(prevData => ({ ...prevData, requestId }));
+      setIsFormVisible(true);
+    }
+  }, [location]);
+
 
   const fetchPayments = async () => {
     try {
@@ -160,25 +170,26 @@ const PaymentPage = () => {
     }
   };
   return (
-    <div className="admin-dashboard">
-      <AdminSidebar />
-
-      {isFormVisible && (
-                <div className="modal-overlay">
-                    <div className="modal-content-payment">
-                        <span className="close-modal" onClick={() => setIsFormVisible(false)}>&times;</span>
-                        <form onSubmit={handleSubmit} className="payment-form">
-                            <h3>Make a Payment</h3>
-                            <div>
-                                <label>Request ID:</label>
-                                <input 
-                                    type="text" 
-                                    name="requestId"
-                                    value={paymentData.requestId} 
-                                    onChange={handleInputChange}
-                                    required 
-                                />
-                            </div>
+      <div className="admin-dashboard">
+        <AdminSidebar />
+  
+        {isFormVisible && (
+          <div className="modal-overlay">
+            <div className="modal-content-payment">
+              <span className="close-modal" onClick={() => setIsFormVisible(false)}>&times;</span>
+              <form onSubmit={handleSubmit} className="payment-form">
+                <h3>Make a Payment</h3>
+                <div>
+                  <label>Request ID:</label>
+                  <input 
+                    type="text" 
+                    name="requestId"
+                    value={paymentData.requestId} 
+                    onChange={handleInputChange}
+                    required 
+                    readOnly
+                  />
+                </div>
                             <div>
                                 <label>Distance (km):</label>
                                 <input 

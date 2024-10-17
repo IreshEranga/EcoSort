@@ -3,11 +3,14 @@ import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useNavigate } from 'react-router-dom';
 
 function SpecialRequestsPage() {
   const [specialRequests, setSpecialRequests] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredRequests, setFilteredRequests] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSpecialRequests = async () => {
@@ -34,7 +37,7 @@ function SpecialRequestsPage() {
     setFilteredRequests(filtered);
   }, [searchQuery, specialRequests]);
 
-  const handleCalculateAmount = async (requestId) => {
+  const handleCalculateAmount = async (requestId,reqID) => {
     try {
       const response = await axios.put(`http://localhost:8000/api/special-requests/${requestId}/calculate`);
       setFilteredRequests(prevRequests =>
@@ -42,6 +45,7 @@ function SpecialRequestsPage() {
           request._id === requestId ? { ...request, amount: response.data.amount } : request
         )
       );
+      navigate(`/admindashboard/payments?requestId=${reqID}`);
     } catch (error) {
       console.error('Error calculating amount:', error);
     }
@@ -146,7 +150,7 @@ function SpecialRequestsPage() {
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>${request.amount}</td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  <button onClick={() => handleCalculateAmount(request._id)}>Calculate Amount</button>
+                  <button onClick={() => handleCalculateAmount(request._id,request.requestId)}>Calculate Amount</button>
                 </td>
               </tr>
             ))}

@@ -1,6 +1,7 @@
 // controllers/paymentController.js
 const Payment = require('../models/payment');
 const WasteManagement = require('../models/WasteManagement');
+const SpecialRequest = require('../models/SpecialRequest');
 const Receipt = require('../models/Receipt');
 const User= require('../models/user')
 
@@ -9,33 +10,34 @@ exports.createPayment = async (req, res) => {
     try {
         const { requestId, distance, transportationCharge, weight, additionalCharges, chargingModel } = req.body;
 
-        // Find owner from WasteManagement using requestId
-        const waste = await WasteManagement.findOne({ requestId });
-        if (!waste) {
+        // Find the special request and populate the user details
+        const specialReq = await SpecialRequest.findOne({ requestId }).populate('user');
+        if (!specialReq) {
             return res.status(404).json({ message: 'Request ID not found.' });
         }
-        const ownerdetails=await User.findById(waste.owner)
-        const ownerName=ownerdetails.firstName+" "+ownerdetails.lastName
+
+        const ownerDetails = specialReq.user;
+        console.log(ownerDetails);
+        
+        const ownerName = `${ownerDetails.firstName} ${ownerDetails.lastName}`;
+        console.log(ownerName);
 
         const newPayment = new Payment({
-          requestId,
-          distance,
-          transportationCharge,
-          weight,
-          additionalCharges,
-          owner: waste.owner,
-    ownername:ownerName
-
-      });
-      
+            requestId,
+            distance,
+            transportationCharge,
+            weight,
+            additionalCharges,
+            owner: ownerDetails._id,
+            ownername: ownerName
+        });
 
         await newPayment.save();
         res.status(201).json(newPayment);
     } catch (error) {
-        res.status(500).json({ message: 'Error creating payment.', error });
+        res.status(500).json({ message: 'Error creating payment.', error: error.message });
     }
 };
-
 // Get all payments for a user
 exports.getPaymentsForUser = async (req, res) => {
   try {
