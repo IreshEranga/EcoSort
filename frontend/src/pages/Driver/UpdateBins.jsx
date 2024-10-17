@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import DriverNavBar from './DriverNavBar';
-//import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Lottie from 'react-lottie';
 import * as loadingAnimation from '../../assets/loadingAnimation.json'; // Import Lottie animation
 
 function UpdateBins() {
-  const Driver = JSON.parse(localStorage.getItem('driver'));
-  //const navigate = useNavigate();
+  const Driver = useMemo(() => JSON.parse(localStorage.getItem('driver')), []); // Memoize Driver object
   const [users, setUsers] = useState([]);
   const [groupedUsers, setGroupedUsers] = useState({});
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -54,7 +52,7 @@ function UpdateBins() {
     }, {});
 
     setGroupedUsers(grouped);
-  }, [users, currentDateTime]);
+  }, [users, currentDateTime, Driver.city]); // Add Driver.city as a dependency
 
   const formatDate = (date) => {
     const options = { weekday: 'long' };
