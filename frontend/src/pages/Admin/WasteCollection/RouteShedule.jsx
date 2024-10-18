@@ -4,7 +4,7 @@ import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import './RouteShedule.css';
 import jsPDF from 'jspdf'; // Import jsPDF for PDF generation
 import 'jspdf-autotable'; // Import autoTable for table generation
-import watermarkImage from '../../../assets/ECOSORT.png';
+
 
 function RouteShedule() {
   
