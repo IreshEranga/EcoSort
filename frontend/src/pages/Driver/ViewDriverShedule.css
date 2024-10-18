@@ -19,6 +19,18 @@
     padding: 0;
   }
   
+  .special-request-list{
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .special-request-item{
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
   .route-item {
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -42,8 +54,25 @@
 
   }
 
+  .map-container {
+    width: 100%;
+    height: 400px; /* Ensure height is set properly */
+    position: relative; /* Make sure the position is relative or absolute */
+  }
+  
   .mark-completed-btn:hover{
     background-color: lightgreen;
+  }
+
+  .mark-spreq{
+   text-align: center;
+  } 
+
+  .routebtns{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    text-align: center;
   }
   
   @media (max-width: 600px) {
@@ -66,5 +95,19 @@
     .route-item {
       padding: 15px;
     }
+
+    .mark-spreq{
+      display: flex;
+      flex-direction: column;
+      column-gap: 100px;
+      text-align: center;
+      
+    }
+
+    .routebtns{
+      width: 40%;
+      margin-left: 80px;
+    }
+    
   }
   
