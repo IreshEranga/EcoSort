@@ -15,7 +15,7 @@ function SpecialRequestsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredRequests, setFilteredRequests] = useState([]);
   const [filteredPastRequests, setFilteredPastRequests] = useState([]);
-  const [selectedRequest, setSelectedRequest] = useState(null); // Initialize with null or default value
+  const [selectedRequest, setSelectedRequest] = useState(null); 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -172,7 +172,7 @@ function SpecialRequestsPage() {
         <table className='special-requests-table' style={{ width: '100%', margin: '0 auto', borderCollapse: 'collapse', fontSize: '14px', marginBottom: '20px', marginTop: '20px' }}>
           <thead>
             <tr>
-              {['User ID', 'User Name', 'Location', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Payment Action', 'Amount', 'Payment Status', 'Status', 'Action', 'Driver'].map(header => (
+              {['User ID', 'User Name', 'Location', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Amount','Payment Action','Payment Status', 'Status', 'Action', 'Driver'].map(header => (
                 <th key={header} style={{ border: '1px solid #ddd', padding: '6px' }}>{header}</th>
               ))}
             </tr>
@@ -200,17 +200,17 @@ function SpecialRequestsPage() {
                 <td style={{ border: '1px solid #ddd', padding: '6px', width: '300px' }}>{request.description}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{new Date(request.date).toLocaleDateString()}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.time}</td>
-                <td style={{ border: '1px solid #ddd', padding: '6px' }}>
+                {/* <td style={{ border: '1px solid #ddd', padding: '6px' }}>
                   <button onClick={() => handleCalculateAmount(request._id)} style={{ borderRadius: '10px' }}>
                     Calculate
                   </button>
-                </td>
+                </td> */}
 
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>${request.amount}</td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                   <button onClick={() => handleCalculateAmount(request._id,request.requestId)}>Calculate Amount</button>
-
-                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>${request.amount}</td>
+                     </td> 
+                {/* <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>${request.amount}</td> */}
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.paymentStatus}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.status}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>
