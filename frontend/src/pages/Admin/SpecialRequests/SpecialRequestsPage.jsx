@@ -64,7 +64,7 @@ function SpecialRequestsPage() {
     setFilteredPastRequests(filteredPast);
   }, [searchQuery, specialRequests, pastRequests]);
 
-  const handleCalculateAmount = async (requestId, reqID) => {
+  const handleCalculateAmount = async (requestId, reqID,originalREQUESTID) => {
     try {
       const response = await axios.put(`http://localhost:8000/api/special-requests/${requestId}/calculate`);
       setFilteredRequests(prevRequests =>
@@ -72,7 +72,7 @@ function SpecialRequestsPage() {
           request._id === requestId ? { ...request, amount: response.data.amount } : request
         )
       );
-      navigate(`/admindashboard/payments?requestId=${reqID}`);
+      navigate(`/admindashboard/payments?requestId=${originalREQUESTID}`);
     } catch (error) {
       console.error('Error calculating amount:', error);
     }
@@ -212,7 +212,7 @@ function SpecialRequestsPage() {
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>
                   <button
                     disabled={request.paymentStatus === 'Done'}
-                    onClick={() => handleCalculateAmount(request._id,request.user.userId)} 
+                    onClick={() => handleCalculateAmount(request._id,request.user.userId,request.requestId)} 
                     style={{ borderRadius: '10px', width:'90px', backgroundColor: (request.status === 'Done') ? '#ccc' : '#00BFFF', color: 'white' }}>
                       {request.paymentStatus === 'Done' ? 'Calculated' : 'Calculate'}
                   </button>
