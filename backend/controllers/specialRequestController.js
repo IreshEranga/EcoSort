@@ -37,7 +37,8 @@ exports.getPastSpecialRequests = async (req, res) => {
   try {
     const pastRequests = await SpecialRequest.find({
       collectStatus: 'Completed'
-    }).populate('user', 'firstName lastName email userId location');
+    }).populate('user', 'firstName lastName email userId location')
+    .populate('assignedDriver');
     
     if (pastRequests.length === 0) {
       return res.status(404).json({ message: 'No past special requests found' });
