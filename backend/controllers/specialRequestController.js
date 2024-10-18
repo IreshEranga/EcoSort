@@ -20,7 +20,7 @@ exports.getAllSpecialRequests = async (req, res) => {
     const requests = await SpecialRequest.find({
       collectStatus: { $in: ['Not Complete', 'Assigned'] }
     }).populate('user', 'firstName lastName email userId location city')
-    .populate('assignedDriver', 'name');
+    .populate('assignedDriver');
 
     if (requests.length === 0) {
       return res.status(404).json({ message: 'No current special requests found' });

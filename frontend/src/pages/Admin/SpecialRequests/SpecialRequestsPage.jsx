@@ -206,9 +206,17 @@ function SpecialRequestsPage() {
     window.open(mapUrl, '_blank');
   };
 
-  const  handleAssignDriver  = ( request ) => {
-    setSelectedRequest ( request );
-    setIsModalOpen ( true );
+  const  handleAssignDriver  =  async ( request ) => {
+    try {
+      const  response  =  await  axios . get ( `http://localhost: 8000/api/driver/drivers/available/${ request.user.city }` );
+      console . log ( request . user . city ) ;
+      setAvailableDrivers ( response . data ); // Set the available drivers for the modal
+      setSelectedRequest ( request );
+      console . log ( "Selected reqest " , request ) // Set the selected request for which driver is to be assigned
+      setIsModalOpen ( true ); // Open the modal
+    } catch ( error ) {
+      console . error ( 'Error fetching available drivers:' , error );
+    }
   };
 
   return (
@@ -278,7 +286,7 @@ function SpecialRequestsPage() {
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>   
                 <button
                   disabled={request.paymentStatus === 'Done' || request.status === 'Pending' || request.amount !== 0} // Added condition for amount !== 0
-                  onClick={() => handleCalculateAmount(request._id, request.user.userId)}
+                  onClick={() =>  handleCalculateAmount ( request . _id , request . user . userId , request . requestId ) } 
                   style={{
                     borderRadius: '10px',
                     width: '90px',
@@ -294,10 +302,11 @@ function SpecialRequestsPage() {
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>   
                   <button 
                     onClick={() => handleAssignDriver(request)}   
-                    disabled={request.paymentStatus === 'Pending'}
-                    style={{ borderRadius: '10px', width: '70px', backgroundColor: (request.paymentStatus === 'Pending') ? '#ccc' : '#00BFFF', color: 'white' }} 
+                    disabled={request.paymentStatus === 'Pending' || request.collectStatus !== 'Not Complete'}
+                    style={{ borderRadius: '10px', width: '70px', backgroundColor: (request.paymentStatus === 'Pending' || request.collectStatus !== 'Not Complete') ? '#ccc' : '#00BFFF', color: 'white' }} 
                   >
-                    {request.status === 'Assigned' ? 'Assigned' : 'Assign Driver'}
+                    {/*{request.status === 'Assigned' ? 'Assigned' : 'Assign Driver'}*/}
+                    { request . collectStatus === 'Assigned' && request . assignedDriver ? request . assignedDriver . name : 'Assign Driver' }
                   </button>
                 </td>
               </tr>
