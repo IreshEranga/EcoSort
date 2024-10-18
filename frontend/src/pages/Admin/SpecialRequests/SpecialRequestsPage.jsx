@@ -3,7 +3,11 @@ import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+
+import { useNavigate } from 'react-router-dom';
+
 import AssignDriverModal from './AssignDriverModal';
+
 
 function SpecialRequestsPage() {
   const [specialRequests, setSpecialRequests] = useState([]);
@@ -13,6 +17,8 @@ function SpecialRequestsPage() {
   const [filteredPastRequests, setFilteredPastRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null); // Initialize with null or default value
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSpecialRequests = async () => {
@@ -58,7 +64,7 @@ function SpecialRequestsPage() {
     setFilteredPastRequests(filteredPast);
   }, [searchQuery, specialRequests, pastRequests]);
 
-  const handleCalculateAmount = async (requestId) => {
+  const handleCalculateAmount = async (requestId,reqID) => {
     try {
       const response = await axios.put(`http://localhost:8000/api/special-requests/${requestId}/calculate`);
       setFilteredRequests(prevRequests =>
@@ -66,6 +72,7 @@ function SpecialRequestsPage() {
           request._id === requestId ? { ...request, amount: response.data.amount } : request
         )
       );
+      navigate(`/admindashboard/payments?requestId=${reqID}`);
     } catch (error) {
       console.error('Error calculating amount:', error);
     }
@@ -198,6 +205,11 @@ function SpecialRequestsPage() {
                     Calculate
                   </button>
                 </td>
+
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>${request.amount}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                  <button onClick={() => handleCalculateAmount(request._id,request.requestId)}>Calculate Amount</button>
+
                 <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>${request.amount}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.paymentStatus}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.status}</td>
@@ -218,6 +230,7 @@ function SpecialRequestsPage() {
                   >
                     {request.status === 'Assigned' ? 'Assigned' : 'Assign Driver'}
                   </button>
+
                 </td>
               </tr>
             ))}

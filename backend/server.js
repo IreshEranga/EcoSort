@@ -12,6 +12,9 @@ const UserRoutes = require('./routes/userRoutes');
 const supportRoutes = require('./routes/supportRoutes');
 const adSupportRoutes = require('./routes/adSupportRoutes');
 const DriverRoutes = require('./routes/driverRoutes');
+const PaymentRoutes = require('./routes/paymentRoutes');
+const WasteRoutes = require('./routes/waste');
+
 const binRoutes = require('./routes/binRoutes');
 const driverSupportRoutes = require('./routes/driverSupportRoutes');
 
@@ -34,6 +37,10 @@ app.use('/api', UserRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/admin/', adSupportRoutes);
 app.use('/api/driver', DriverRoutes);
+app.use('/api/payment', PaymentRoutes);
+app.use('/api/waste', WasteRoutes);
+
+
 app.use('/api/driverSupport', driverSupportRoutes);
 app.use('/api/bins', binRoutes);
 app.use('/api/special-requests', SpecialRequestRoutes);
