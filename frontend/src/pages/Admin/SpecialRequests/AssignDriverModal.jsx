@@ -94,7 +94,7 @@ export default AssignDriverModal;
 
 */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
 import './AssignDriverModal.css';

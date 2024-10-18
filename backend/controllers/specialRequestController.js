@@ -14,29 +14,35 @@ exports.createSpecialRequest = async (req, res) => {
   }
 };
 
-// Get all special requests
+// Get all special requests where collectStatus is 'Not Complete' or 'Assigned'
 exports.getAllSpecialRequests = async (req, res) => {
   try {
-    const requests = await SpecialRequest.find()
-      .populate('user', 'firstName lastName email userId location city')
-      .populate('assignedDriver');
+    const requests = await SpecialRequest.find({
+      collectStatus: { $in: ['Not Complete', 'Assigned'] }
+    }).populate('user', 'firstName lastName email userId location city')
+    .populate('assignedDriver', 'name');
+
+    if (requests.length === 0) {
+      return res.status(404).json({ message: 'No current special requests found' });
+    }
+
     res.status(200).json(requests);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Get past special requests (date is earlier than today)
+// Get past special requests where collectStatus is 'Completed'
 exports.getPastSpecialRequests = async (req, res) => {
   try {
-    const today = new Date();
-    const pastRequests = await SpecialRequest.find({ date: { $lt: today } })
-      .populate('user', 'firstName lastName email userId location');
-      
+    const pastRequests = await SpecialRequest.find({
+      collectStatus: 'Completed'
+    }).populate('user', 'firstName lastName email userId location');
+    
     if (pastRequests.length === 0) {
       return res.status(404).json({ message: 'No past special requests found' });
     }
-    
+
     res.status(200).json(pastRequests);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -80,11 +86,21 @@ exports.updateSpecialRequest = async (req, res) => {
   }
 };
 
-// Delete special request by ID
+// Delete special request by ID 
 exports.deleteSpecialRequest = async (req, res) => {
   try {
+    const request = await SpecialRequest.findById(req.params.id);
+    if (!request) {
+      return res.status(404).json({ message: 'Special request not found' });
+    }
+
+    // Check if paymentStatus is 'Done' or status is 'Accepted'
+    if (request.paymentStatus === 'Done' || request.status === 'Accepted') {
+      return res.status(400).json({ message: 'You can only delete requests with payment status "Pending" and request status "Pending".' });
+    }
+
+    // Proceed to delete the request
     const deletedRequest = await SpecialRequest.findByIdAndDelete(req.params.id);
-    if (!deletedRequest) return res.status(404).json({ message: 'Special request not found' });
     res.status(204).send(); // No content
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -124,18 +140,20 @@ exports.updateSpecialRequestStatus = async (req, res) => {
   }
 };
 
-// Count all special requests
+// Count only current special requests
 exports.countAllSpecialRequests = async (req, res) => {
   try {
-    const count = await SpecialRequest.countDocuments();
-    res.status(200).json({ totalRequests: count });
+    const count = await SpecialRequest.countDocuments({
+      collectStatus: { $in: ['Not Complete', 'Assigned'] }
+    });
+    res.status(200).json({ totalCurrentRequests: count });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 // Delete completed special requests
-exports.deleteCompletedSpecialRequests = async (req, res) => {
+/*exports.deleteCompletedSpecialRequests = async (req, res) => {
   try {
     const result = await SpecialRequest.deleteMany({ collectStatus: 'Complete' });
     
@@ -147,9 +165,7 @@ exports.deleteCompletedSpecialRequests = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
-
-
+};*/
 
 // Assign a driver to a special request
 exports.assignDriverToSpecialRequest = async (req, res) => {
@@ -179,7 +195,6 @@ exports.assignDriverToSpecialRequest = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 
 exports.assignDriverSpecialRequest = async (req, res) => {
   try {
@@ -216,5 +231,3 @@ exports.assignDriverSpecialRequest = async (req, res) => {
     res.status(500).json({ message: 'Internal server error', error });
   }
 };
-
-
