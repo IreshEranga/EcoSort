@@ -6,6 +6,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ClipLoader } from 'react-spinners';
 
 const cities = [
   'Colombo', 'Kandy', 'Galle', 'Jaffna', 'Negombo', 
@@ -30,16 +31,21 @@ function UsersPage() {
     status: 'available'
   });
   const [selectedDriverId, setSelectedDriverId] = useState(null); // Track selected driver for update
+  const [isLoading, setIsLoading] = useState(false); 
 
   // Fetch users from the backend
   useEffect(() => {
     const fetchUsers = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get('http://localhost:8000/api/driver/drivers');
         setUsers(response.data);
-        setFilteredUsers(response.data); // Set filtered users initially to all users
+        setFilteredUsers(response.data); 
+        isLoading(false);
+        // Set filtered users initially to all users
       } catch (error) {
         console.error('Error fetching users:', error);
+        setIsLoading(false);
       }
     };
 
@@ -73,6 +79,7 @@ function UsersPage() {
   // Handle driver form submission for adding or updating
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     if (isUpdate) {
       // Update existing driver
       try {
@@ -86,6 +93,8 @@ function UsersPage() {
       } catch (error) {
         console.error('Error updating driver:', error);
         toast.error('Error updating driver.');
+      }finally {
+        setIsLoading(false); // End loading
       }
     } else {
       // Add new driver
@@ -100,12 +109,15 @@ function UsersPage() {
       } catch (error) {
         console.error('Error adding driver:', error);
         toast.error('Error adding driver.');
+      }finally {
+        setIsLoading(false); // End loading
       }
     }
   };
 
   // Handle delete driver
   const handleDeleteDriver = async (driverId) => {
+    setIsLoading(true);
     try {
       await axios.delete(`http://localhost:8000/api/driver/drivers/${driverId}`);
       const response = await axios.get('http://localhost:8000/api/driver/drivers');
@@ -115,6 +127,8 @@ function UsersPage() {
     } catch (error) {
       console.error('Error deleting driver:', error);
       toast.error('Error deleting driver.');
+    }finally {
+      setIsLoading(false); // End loading
     }
   };
 
@@ -178,6 +192,17 @@ function UsersPage() {
       
       <div className="main-content" style={{ backgroundColor: '#ffffff' }}>
         <h1 className="topic" style={{ color: 'black' }}>Drivers</h1>
+
+        {/* Loading Animation */}
+        {isLoading && (
+          <div className="loading-spinner" style={{display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
+            height:'100vh'
+          }}>
+            <ClipLoader color="#00BFFF" loading={isLoading} size={100}  />
+          </div>
+        )}
 
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: '20px' }}>
           <input
