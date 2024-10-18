@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+/*import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaTimes } from 'react-icons/fa'; 
 
@@ -85,6 +85,75 @@ const AssignDriverModal = ({ isOpen, onClose, specialRequestId, date, city }) =>
           ))}
         </select>
         <button onClick={handleAssignDriver} style={{marginLeft:'10px', borderRadius:'10px'}}>Assign Driver</button>
+      </div>
+    </div>
+  );
+};
+
+export default AssignDriverModal;
+
+*/
+
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { FaTimes } from 'react-icons/fa';
+import './AssignDriverModal.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
+
+const AssignDriverModal = ({ isOpen, onClose, request, drivers }) => {
+  const [selectedDriver, setSelectedDriver] = useState('');
+
+  const handleAssignDriver = async () => {
+    console.log({ driverId: selectedDriver });
+
+    if (selectedDriver) {
+      try {
+        const response = await axios.put(`http://localhost:8000/api/special-requests/special-requests/${request._id}/assign-driver`, {
+          driverId: selectedDriver,
+        });
+        console.log('Driver assigned:', response.data);
+        toast.success('Driver assigned successfully!');
+        setTimeout(() => {
+          onClose(); // Close the modal after the timeout
+        }, 5000);
+      } catch (error) {
+        console.error('Error assigning driver:', error);
+        toast.error('Error assigning driver, please try again.');
+      }
+    } else {
+      
+      toast.warn('Please select a driver before assigning.');
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay-assignDriver">
+      <ToastContainer />
+      <div className="modal-content-assignDriver">
+        <button className="close-button" onClick={onClose}>
+          <FaTimes />
+        </button>
+        <h2>Assign Driver for Request ID: {request.user.userId}</h2>
+        <label htmlFor="driver-select">Select a Driver:</label>
+        <select
+          id="driver-select"
+          value={selectedDriver}
+          onChange={(e) => setSelectedDriver(e.target.value)}
+          style={{ padding: '8px', borderRadius: '5px', marginBottom: '20px', width: '100%' }}
+        >
+          <option value="">--Select Driver--</option>
+          {drivers.map(driver => (
+            <option key={driver._id} value={driver._id}>
+              {driver.name} ({driver.email})
+            </option>
+          ))}
+        </select>
+        <button onClick={handleAssignDriver} style={{ padding: '8px', borderRadius: '5px', backgroundColor: '#4CAF50', color: '#fff', border: 'none', cursor: 'pointer' }}>
+          Assign Driver
+        </button>
       </div>
     </div>
   );
