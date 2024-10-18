@@ -24,18 +24,21 @@ const transporter = nodemailer.createTransport({
 exports.createPayment = async (req, res) => {
     try {
         const { requestId, distance, transportationCharge, weight, additionalCharges, chargingModel } = req.body;
+      console.log(requestId);
+      
 
         // Find the special request and populate the user details
         const specialReq = await SpecialRequest.findOne({ requestId }).populate('user');
+
         if (!specialReq) {
             return res.status(404).json({ message: 'Request ID not found.' });
         }
 
         const ownerDetails = specialReq.user;
-        console.log(ownerDetails);
+        // console.log(ownerDetails);
         
         const ownerName = `${ownerDetails.firstName} ${ownerDetails.lastName}`;
-        console.log(ownerName);
+        // console.log(ownerName);
 
 
 
