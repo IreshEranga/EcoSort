@@ -145,7 +145,8 @@ function SpecialRequestsPage() {
       const response = await axios.get(`http://localhost:8000/api/driver/drivers/available/${request.user.city}`);
       console.log(request.user.city);
       setAvailableDrivers(response.data); // Set the available drivers for the modal
-      setSelectedRequest(request); // Set the selected request for which driver is to be assigned
+      setSelectedRequest(request);
+      console.log("Selected reqest ",request) // Set the selected request for which driver is to be assigned
       setIsModalOpen(true); // Open the modal
     } catch (error) {
       console.error('Error fetching available drivers:', error);
