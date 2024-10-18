@@ -26,16 +26,16 @@ router.delete('/:id', specialRequestController.deleteSpecialRequest);
 // Admin calculates the amount for a special request
 router.put('/:id/calculate', specialRequestController.calculateAmount);
 
-// Route to count all special requests
-router.get('/count', specialRequestController.countAllSpecialRequests);
+// Route to count all current special requests
+router.get('/count-current', specialRequestController.countAllSpecialRequests);
 
 // Route for deleting completed special requests
-router.delete('/special-requests/delete-completed', specialRequestController.deleteCompletedSpecialRequests);
-
+//router.delete('/special-requests/delete-completed', specialRequestController.deleteCompletedSpecialRequests);
 
 // Assign a driver to a special request
-
 router.put('/special-requests/:id/assign-driver', specialRequestController.assignDriverToSpecialRequest);
 
+// Assign a driver to a special request
 router.post('/assign-driver-special-request', specialRequestController.assignDriverSpecialRequest);
+
 module.exports = router;

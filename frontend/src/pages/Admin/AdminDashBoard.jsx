@@ -62,15 +62,15 @@ export default function AdminDashBoard() {
     fetchRoutes();
   }, []);
 
-  // Fetch special request count from the backend
+  // Fetch current special request count from the backend
   useEffect(() => {
     const fetchSpecialRequestCount = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/special-requests/count'); // Your backend route
-        const { totalRequests } = response.data; // Assuming API returns { totalRequests: count }
-        setSpecialRequestCount(totalRequests); // Set the special request count
+        const response = await axios.get('http://localhost:8000/api/special-requests/count-current'); // Your new backend route
+        const { totalCurrentRequests } = response.data; // Adjusted to match the new API response
+        setSpecialRequestCount(totalCurrentRequests); // Set the current special request count
       } catch (error) {
-        console.error('Error fetching special requests:', error);
+        console.error('Error fetching current special requests:', error);
       }
     };
 
@@ -106,7 +106,7 @@ export default function AdminDashBoard() {
 
           {/* Special Request Count Card */}
           <div className="user-count-card">
-            <h2>Total Special Requests 🗑️</h2>
+            <h2>Current Special Requests 🗑️</h2>
             <p>{specialRequestCount}</p>
           </div>
        </div>

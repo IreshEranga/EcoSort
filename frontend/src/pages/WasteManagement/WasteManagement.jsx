@@ -6,7 +6,7 @@ import { Button, Card, Form, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify'; // Import both toast and ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
-import { AiOutlineClose, AiOutlineEdit, AiOutlineDelete  } from 'react-icons/ai'; // Import close icon from react-icons
+import { AiOutlineClose, AiOutlineDelete  } from 'react-icons/ai'; // Import close icon from react-icons
 
 
 function WasteManagement() {
@@ -23,8 +23,8 @@ function WasteManagement() {
   const [requestWasteType, setRequestWasteType] = useState('');
   const [requestQuantity, setRequestQuantity] = useState('');
   const [requestDescription, setRequestDescription] = useState('');
-  const [requestDate, setRequestDate] = useState('');
-  const [requestTime, setRequestTime] = useState('');
+  //const [requestDate, setRequestDate] = useState('');
+  //const [requestTime, setRequestTime] = useState('');
   const [showCreateRequestForm, setShowCreateRequestForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredRequests, setFilteredRequests] = useState([]);
@@ -56,7 +56,6 @@ function WasteManagement() {
         }
       }
     };
-
     fetchBins();
   }, [user]);
 
@@ -170,7 +169,6 @@ function WasteManagement() {
         }
       }
     };
-
     fetchSpecialRequests();
   }, [user]);
 
@@ -182,65 +180,67 @@ function WasteManagement() {
     // Filter data based on search query
     const filtered = specialRequests.filter(request => 
       request.requestId.toString().toLowerCase().includes(query) ||
-      request.wasteType.toLowerCase().includes(query) ||
-      new Date(request.date).toLocaleDateString().includes(query)
+      request.wasteType.toLowerCase().includes(query)
+      //new Date(request.date).toLocaleDateString().includes(query)
     );
 
-    setFilteredRequests(filtered); // Update filteredRequests
+    setFilteredRequests(filtered); 
   };
 
-  // Handle create special request
   const handleCreateRequestSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post('http://localhost:8000/api/special-requests', {
         user: user._id,
         wasteType: requestWasteType,
         quantity: requestQuantity,
         description: requestDescription,
-        date: requestDate,
-        time: requestTime,
+        //date: requestDate,
+        //time: requestTime,
       });
-
+  
       if (response.status === 201) {
-        toast.success('Special request created successfully!'); 
+        toast.success('Special request created successfully!');
+        
+        // Clear form fields
         setRequestWasteType('');
         setRequestQuantity('');
         setRequestDescription('');
-        setRequestDate('');
-        setRequestTime('');
+        //setRequestDate('');
+        //setRequestTime('');
+  
+        // Hide the form after submission
         setShowCreateRequestForm(false);
-        
-        // Fetch updated special requests
-        const fetchSpecialRequests = async () => {
-          const response = await axios.get(`http://localhost:8000/api/special-requests/user/${user._id}`);
-          setSpecialRequests(response.data);
-          setFilteredRequests(response.data);
-        };
-        fetchSpecialRequests();
       }
     } catch (err) {
-      toast.error('Failed to create special request. Please try again.'); 
-      console.error(err);
+      // Log the error for debugging
+      console.error('Error creating special request:', err);
+  
+      // Check if there's a response from the server
+      if (err.response && err.response.data && err.response.data.message) {
+        toast.error(`Failed to create special request. ${err.response.data.message}`);
+      } else {
+        toast.error('Failed to create special request. Please try again.');
+      }
     }
   };
-
-  // Define handleEditRequest
-  const handleEditRequest = (request) => {
-    // Set state to the request that needs to be edited
-    setRequestWasteType(request.wasteType);
-    setRequestQuantity(request.quantity);
-    setRequestDescription(request.description);
-    setRequestDate(request.date);
-    setRequestTime(request.time);
-    setShowCreateRequestForm(true); // Show the request form to edit
-  };
-
+  
   // Define handleDeleteRequest
   const handleDeleteRequest = async (id) => {
     if (window.confirm("Are you sure you want to delete this request?")) {
       try {
+        // Fetch the request details before deleting
+        const requestResponse = await axios.get(`http://localhost:8000/api/special-requests/user/${user._id}`);
+        const request = requestResponse.data;
+
+        // Check if paymentStatus is 'Done' or status is 'Accepted'
+        if (request.paymentStatus === 'Done' || request.status === 'Accepted') {
+          toast.error('You can only delete requests with payment status "Pending" and request status "Pending".');
+          return;
+        }
+
+        // Proceed to delete if conditions are met
         const response = await axios.delete(`http://localhost:8000/api/special-requests/${id}`);
         if (response.status === 204) {
           toast.success('Special request deleted successfully!');
@@ -253,7 +253,8 @@ function WasteManagement() {
           fetchSpecialRequests();
         }
       } catch (err) {
-        toast.error('Failed to delete special request. Please try again.'); 
+        // Display error message if deletion fails
+        toast.error('Failed to delete special request. Please try again.');
         console.error(err);
       }
     }
@@ -324,7 +325,7 @@ function WasteManagement() {
                 <Card.Title style={{ fontSize: '16px' }}>Bin ID: {bin.binId}</Card.Title>
                 <Card.Text style={{ fontSize: '14px' }}>
                   <strong>Type:</strong> {bin.type}<br />
-                  <strong>Percentage:</strong> {bin.percentage}<br />
+                  <strong>Percentage:</strong> {bin.percentage}%<br />
                 </Card.Text>
                 <Card.Img variant="bottom" src={bin.qrCode} alt={`QR Code for ${bin.binId}`} style={{ width: '100%', height: 'auto' }} />
                 <Button variant="success" onClick={() => handleEditBin(bin)} className="mt-2" size="sm">Edit</Button>
@@ -350,7 +351,7 @@ function WasteManagement() {
               {error && <div style={{ color: 'red' }}>{error}</div>}
               <Form onSubmit={handleUpdateBin}>
                 <Form.Group controlId="formBinPercentage">
-                  <Form.Label>Bin Percentage</Form.Label>
+                  <Form.Label>Bin Percentage(%)</Form.Label>
                   <Form.Control 
                     type="number" 
                     value={binPercentage} 
@@ -382,7 +383,7 @@ function WasteManagement() {
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
-            placeholder="Search by Request ID, Waste Type, or Date"
+            placeholder="Search by Request ID or Waste Type"
             style={{ 
               padding: '10px', 
               width: '100%', 
@@ -410,7 +411,7 @@ function WasteManagement() {
           <Container style={{ marginTop: '20px', backgroundColor: '#e9ecef', padding: '20px', borderRadius: '10px', maxWidth: '400px', position: 'relative' }}>
             <Button 
               variant="link" 
-              onClick={() => { setShowCreateRequestForm(false); setRequestWasteType(''); setRequestQuantity(''); setRequestDescription(''); setRequestDate(''); setRequestTime(''); }} 
+              onClick={() => { setShowCreateRequestForm(false); setRequestWasteType(''); setRequestQuantity(''); setRequestDescription(''); }}//setRequestDate(''); setRequestTime(''); }} 
               style={{ position: 'absolute', top: '10px', right: '10px', color: '#dc3545' }}
             >
               <AiOutlineClose size={20} />
@@ -435,8 +436,9 @@ function WasteManagement() {
                       <option value="Other">Other</option>
                     </Form.Control>
                   </Form.Group>
+
                   <Form.Group controlId="formRequestQuantity">
-                    <Form.Label>Quantity</Form.Label>
+                    <Form.Label>Quantity (kg)</Form.Label>
                     <Form.Control 
                       type="text" 
                       value={requestQuantity} 
@@ -444,6 +446,7 @@ function WasteManagement() {
                       required
                     />
                   </Form.Group>
+
                   <Form.Group controlId="formRequestDescription">
                     <Form.Label>Description</Form.Label>
                     <Form.Control 
@@ -454,7 +457,8 @@ function WasteManagement() {
                       required
                     />
                   </Form.Group>
-                  <Form.Group controlId="formRequestDate">
+
+                  {/*<Form.Group controlId="formRequestDate">
                     <Form.Label>Date</Form.Label>
                     <Form.Control 
                       type="date" 
@@ -464,17 +468,25 @@ function WasteManagement() {
                       required
                     />
                   </Form.Group>
+
                   <Form.Group controlId="formRequestTime">
                     <Form.Label>Time</Form.Label>
                     <Form.Control 
                       type="time" 
                       value={requestTime} 
                       onChange={(e) => setRequestTime(e.target.value)} 
-                      min={requestDate === new Date().toISOString().split('T')[0] ? new Date().toISOString().split('T')[1].slice(0, 5) : '06:00'} // Restrict past times if today
-                      max="18:00" // Restrict times to 6 PM
+                      min={
+                        requestDate === new Date().toISOString().split('T')[0] 
+                        ? new Date().toISOString().slice(11, 16) > '08:00' 
+                          ? new Date().toISOString().slice(11, 16) 
+                          : '08:00' // Restrict past times if today and before 8 AM
+                        : '08:00'
+                      } 
+                      max="16:00" // Restrict times to 4 PM
                       required
                     />
-                  </Form.Group>
+                  </Form.Group>*/}
+                  
                   <Button variant="primary" type="submit" className="mt-3">Create Request</Button>
                 </Form>
               </Col>
@@ -502,15 +514,7 @@ function WasteManagement() {
                     <Card.Title style={{ fontSize: '16px' }}>
                       Request ID: {request.requestId}
                     </Card.Title>
-                    <div>
-                      {/* Edit and Delete icons */}                
-                      <Button 
-                        variant="link" 
-                        onClick={() => handleEditRequest(request)} 
-                        style={{ color: '#28a745' }}
-                      >
-                        <AiOutlineEdit size={20} />
-                      </Button>
+                    <div>            
                       <Button 
                         variant="link" 
                         onClick={() => handleDeleteRequest(request._id)} 
@@ -522,21 +526,20 @@ function WasteManagement() {
                   </div>
                   <Card.Text style={{ fontSize: '14px' }}>
                     <strong>Waste Type:</strong> {request.wasteType}<br />
-                    <strong>Quantity:</strong> {request.quantity}<br />
+                    <strong>Quantity(kg):</strong> {request.quantity}<br />
                     <strong>Description:</strong> {request.description}<br />
-                    <strong>Date:</strong> {new Date(request.date).toLocaleDateString()}<br />
-                    <strong>Time:</strong> {request.time}<br />
-                    <strong>Payment Status:</strong> {request.paymentStatus}<br />
-                    <strong>Status:</strong> {request.status}<br />
-                    {request.status === 'Accepted' && (
+                    {/*<strong>Date:</strong> {new Date(request.date).toLocaleDateString()}<br />
+                    <strong>Time:</strong> {request.time}<br />*/}
+                    <strong>Status:</strong> {request.status}
+                    {request.status === 'Accepted' ||  request.payementStatus === 'Pending' && (
                       <span>
-                         ➡️ 
                         <Link to="/payments" style={{ marginLeft: '5px', color: '#007bff', textDecoration: 'underline' }}>
                            Payment
                         </Link>
                       </span>
-                    )}
-                    <strong>Collection Status:</strong> {request.collectStatus}<br />
+                    )}<br/>
+                    <strong>Payment Status:</strong> {request.paymentStatus}<br />                
+                    <strong>Collection Status:</strong> {request.collectStatus}
                   </Card.Text>
                 </Card.Body>
               </Card>

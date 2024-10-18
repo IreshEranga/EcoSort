@@ -9,7 +9,7 @@ const specialRequestSchema = new mongoose.Schema({
   },
   wasteType: {
     type: String,
-    enum: ['Organic', 'Paper', 'Plastic', 'Electric', 'Other'],
+    enum: ['Organic', 'Paper', 'Plastic', 'Electronic', 'Other'],
     required: true
   },
   quantity: {
@@ -21,12 +21,10 @@ const specialRequestSchema = new mongoose.Schema({
     required: true
   },
   date: {
-    type: Date,
-    required: true
+    type: Date
   },
   time: {
-    type: String, // e.g. '08:00 AM'
-    required: true
+    type: String
   },
   status:{
     type:String, default:'Pending', 
