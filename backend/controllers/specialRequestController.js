@@ -144,3 +144,28 @@ exports.deleteCompletedSpecialRequests = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Assign a driver to a special request
+exports.assignDriverToSpecialRequest = async (req, res) => {
+  const { driverId } = req.body; // Get the driver ID from the request body
+
+  try {
+    // Find the special request by ID
+    const updatedRequest = await SpecialRequest.findByIdAndUpdate(
+      req.params.id, // Get the special request ID from the request parameters
+      { assignedDriver: driverId }, // Update the assignedDriver field
+      { new: true, runValidators: true } // Return the updated document with validation
+    );
+
+    // Check if the request was found and updated
+    if (!updatedRequest) {
+      return res.status(404).json({ message: 'Special request not found' });
+    }
+
+    // Respond with the updated request
+    res.status(200).json(updatedRequest);
+  } catch (error) {
+    // Handle errors, including validation errors
+    res.status(400).json({ message: error.message });
+  }
+};
