@@ -3,6 +3,9 @@ import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+
+import { useNavigate } from 'react-router-dom';
+
 import AssignDriverModal from './AssignDriverModal';
 
 function SpecialRequestsPage() {
@@ -11,8 +14,11 @@ function SpecialRequestsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredRequests, setFilteredRequests] = useState([]);
   const [filteredPastRequests, setFilteredPastRequests] = useState([]);
-  const [selectedRequest, setSelectedRequest] = useState(null); // Initialize with null or default value
+  const [selectedRequest, setSelectedRequest] = useState(null); 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [availableDrivers, setAvailableDrivers] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSpecialRequests = async () => {
@@ -58,7 +64,7 @@ function SpecialRequestsPage() {
     setFilteredPastRequests(filteredPast);
   }, [searchQuery, specialRequests, pastRequests]);
 
-  const handleCalculateAmount = async (requestId) => {
+  const handleCalculateAmount = async (requestId, reqID) => {
     try {
       const response = await axios.put(`http://localhost:8000/api/special-requests/${requestId}/calculate`);
       setFilteredRequests(prevRequests =>
@@ -66,6 +72,7 @@ function SpecialRequestsPage() {
           request._id === requestId ? { ...request, amount: response.data.amount } : request
         )
       );
+      navigate(`/admindashboard/payments?requestId=${reqID}`);
     } catch (error) {
       console.error('Error calculating amount:', error);
     }
@@ -133,11 +140,18 @@ function SpecialRequestsPage() {
     window.open(mapUrl, '_blank');
   };
 
-  const handleAssignDriver = (request) => {
-    setSelectedRequest(request);
-    setIsModalOpen(true);
+  const handleAssignDriver = async (request) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/driver/drivers/available/${request.user.city}`);
+      console.log(request.user.city);
+      setAvailableDrivers(response.data); // Set the available drivers for the modal
+      setSelectedRequest(request); // Set the selected request for which driver is to be assigned
+      setIsModalOpen(true); // Open the modal
+    } catch (error) {
+      console.error('Error fetching available drivers:', error);
+    }
   };
-  
+
   return (
     <div className='admin-dashboard'>
       <AdminSidebar />
@@ -165,7 +179,7 @@ function SpecialRequestsPage() {
         <table className='special-requests-table' style={{ width: '100%', margin: '0 auto', borderCollapse: 'collapse', fontSize: '14px', marginBottom: '20px', marginTop: '20px' }}>
           <thead>
             <tr>
-              {['User ID', 'User Name', 'Location', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Payment Action', 'Amount', 'Payment Status', 'Status', 'Action', 'Driver'].map(header => (
+              {['User ID', 'User Name', 'Location', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Amount','Payment Action','Payment Status', 'Status', 'Action', 'Driver'].map(header => (
                 <th key={header} style={{ border: '1px solid #ddd', padding: '6px' }}>{header}</th>
               ))}
             </tr>
@@ -190,33 +204,35 @@ function SpecialRequestsPage() {
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.wasteType}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center', width:'80px' }}>{request.quantity}</td>
-                <td style={{ border: '1px solid #ddd', padding: '6px', width: '300px' }}>{request.description}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.description}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{new Date(request.date).toLocaleDateString()}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.time}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>${request.amount}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>
-                  <button onClick={() => handleCalculateAmount(request._id)} style={{ borderRadius: '10px' }}>
-                    Calculate
+                  <button 
+                    className="pay-button"
+                    onClick={() => handleCalculateAmount(request._id,request.user.userId)} 
+                    style={{width:'75px'}}
+                  >
+                    Pay
                   </button>
                 </td>
-                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>${request.amount}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.paymentStatus}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.status}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>
                   <button 
                     onClick={() => handleUpdateStatus(request._id)} 
-                    disabled={request.status === 'Accepted' || request.paymentStatus === 'Pending'} // Disabled when paymentStatus is Pending
-                    style={{borderRadius:'10px', width:'85px', backgroundColor: (request.status === 'Accepted' || request.paymentStatus === 'Pending') ? '#ccc' : '#4CAF50', color: 'white'}}
+                    style={{ marginRight: '10px', padding: '5px', borderRadius: '5px', backgroundColor: '#4CAF50', color: '#fff', border: 'none', cursor: 'pointer' }}
                   >
-                    {request.status === 'Accepted' ? 'Accepted' : 'Accept'}
+                    Accept
                   </button>
                 </td>
-                <td style={{ border: '1px solid #ddd', padding: '6px' }}>
+                <td>
                   <button 
-                    onClick={() => handleAssignDriver(request)}  
-                    disabled={request.status === 'Pending'}
-                    style={{borderRadius:'10px', width:'85px', backgroundColor: (request.status === 'Pending') ? '#ccc' : '#4CAF50', color: 'white'}}
+                    onClick={() => handleAssignDriver(request)} 
+                    style={{ padding: '5px', borderRadius: '5px', backgroundColor: '#00BFFF', color: '#fff', border: 'none', cursor: 'pointer' }}
                   >
-                    {request.status === 'Assigned' ? 'Assigned' : 'Assign Driver'}
+                    Assign Driver
                   </button>
                 </td>
               </tr>
@@ -226,10 +242,10 @@ function SpecialRequestsPage() {
 
         {/* Past Requests Table */}
         <h2>Past Special Requests</h2>
-        <table className='special-requests-table' style={{ width: '100%', margin: '0 auto', borderCollapse: 'collapse', fontSize: '14px', marginTop: '20px' }}>
+        <table className='special-requests-table' style={{ width: '100%', margin: '0 auto', borderCollapse: 'collapse', fontSize: '14px', marginBottom: '20px', marginTop: '20px' }}>
           <thead>
             <tr>
-              {['User ID', 'User Name', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Collection Status', 'Amount'].map(header => (
+              {['User ID', 'User Name', 'Location', 'Waste Type', 'Quantity', 'Description', 'Date', 'Time', 'Amount', 'Status', 'Action', 'Driver'].map(header => (
                 <th key={header} style={{ border: '1px solid #ddd', padding: '6px' }}>{header}</th>
               ))}
             </tr>
@@ -239,26 +255,54 @@ function SpecialRequestsPage() {
               <tr key={request._id}>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.user.userId}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{`${request.user.firstName} ${request.user.lastName}`}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>
+                  {request.user.location ? (
+                    <button 
+                      className="map-button" 
+                      onClick={() => handleNavigateToMap(request.user.location.latitude, request.user.location.longitude)}
+                      style={{width:'75px'}}
+                    >
+                      View on Map
+                    </button>
+                  ) : (
+                    'Location not available'
+                  )}
+                </td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.wasteType}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center', width:'80px' }}>{request.quantity}</td>
-                <td style={{ border: '1px solid #ddd', padding: '6px', width: '300px' }}>{request.description}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.description}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{new Date(request.date).toLocaleDateString()}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.time}</td>
-                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.collectStatus}</td>
-                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>${request.amount}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>${request.amount}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.status}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>
+                  <button 
+                    onClick={() => handleUpdateStatus(request._id)} 
+                    style={{ marginRight: '10px', padding: '5px', borderRadius: '5px', backgroundColor: '#4CAF50', color: '#fff', border: 'none', cursor: 'pointer' }}
+                  >
+                    Accept
+                  </button>
+                </td>
+                <td>
+                  <button 
+                    onClick={() => handleAssignDriver(request)} 
+                    style={{ padding: '5px', borderRadius: '5px', backgroundColor: '#00BFFF', color: '#fff', border: 'none', cursor: 'pointer' }}
+                  >
+                    Assign Driver
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
 
-        <AssignDriverModal 
-          isOpen={isModalOpen} 
-          onClose={() => setIsModalOpen(false)} 
-          specialRequestId={selectedRequest ? selectedRequest._id : null} 
-          date={selectedRequest ? selectedRequest.date : null} 
-          city={selectedRequest ? selectedRequest.user.city : null} 
+        {/* Assign Driver Modal */}
+        <AssignDriverModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          request={selectedRequest}
+          drivers={availableDrivers}
         />
-
       </div>
     </div>
   );
