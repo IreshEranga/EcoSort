@@ -126,7 +126,8 @@ const AssignDriverModal = ({ isOpen, onClose, request, drivers }) => {
         console.log('Driver status updated:', updateStatusResponse.data);
         toast.success('Driver status updated to "onRide".');
         setTimeout(() => {
-          onClose(); // Close the modal after the timeout
+          onClose();
+          window.location.reload();  // Close the modal after the timeout
         }, 5000);
       } catch (error) {
         console.error('Error assigning driver:', error);
