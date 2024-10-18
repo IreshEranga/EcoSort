@@ -18,7 +18,8 @@ exports.createSpecialRequest = async (req, res) => {
 exports.getAllSpecialRequests = async (req, res) => {
   try {
     const requests = await SpecialRequest.find()
-      .populate('user', 'firstName lastName email userId location city');
+      .populate('user', 'firstName lastName email userId location city')
+      .populate('assignedDriver');
     res.status(200).json(requests);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -158,7 +159,9 @@ exports.assignDriverToSpecialRequest = async (req, res) => {
     // Find the special request by ID
     const updatedRequest = await SpecialRequest.findByIdAndUpdate(
       req.params.id, // Get the special request ID from the request parameters
-      { assignedDriver: driverId }, // Update the assignedDriver field
+      { assignedDriver: driverId ,
+        collectStatus:'Assigned'
+      }, // Update the assignedDriver field
       { new: true, runValidators: true } // Return the updated document with validation
     );
 
