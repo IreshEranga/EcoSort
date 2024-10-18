@@ -10,8 +10,10 @@ const AssignDriverModal = ({ isOpen, onClose, specialRequestId, date, city }) =>
     if (isOpen && city && date) { // Check if city and date are present
       const fetchAvailableDrivers = async () => {
         try {
-          const response = await axios.get(`http://localhost:8000/api/drivers/available/${city}/${date}`);
+          console.log("city",city);
+          const response = await axios.get(`http://localhost:8000/api/driver/drivers/available/${city}`);
           setDrivers(response.data);
+          console.log(drivers);
         } catch (error) {
           console.error('Error fetching drivers:', error);
         }
