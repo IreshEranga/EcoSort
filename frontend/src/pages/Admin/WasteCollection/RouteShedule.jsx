@@ -4,7 +4,7 @@ import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import './RouteShedule.css';
 import jsPDF from 'jspdf'; // Import jsPDF for PDF generation
 import 'jspdf-autotable'; // Import autoTable for table generation
-
+import { ClipLoader } from 'react-spinners';
 
 function RouteShedule() {
   
@@ -13,6 +13,8 @@ function RouteShedule() {
   const [groupedUsers, setGroupedUsers] = useState({}); 
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState(""); // Add search term state
+  const [isLoading, setIsLoading] = useState(false); 
+
 
   // Update date and time every second
   useEffect(() => {
@@ -25,12 +27,15 @@ function RouteShedule() {
   // Fetch users and bins from the API
   useEffect(() => {
     const fetchUsers = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch('http://localhost:8000/api/bins/bins/all');
         const data = await response.json();
         setUsers(data); 
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching users with bins:', error);
+        setIsLoading(false);
       }
     };
     fetchUsers();
@@ -285,6 +290,17 @@ const handleDownloadPDF = () => {
 
         <h1 style={{ marginTop: '5px' }}>User Schedule For {formatDate(currentDateTime)}</h1>
         <hr style={{ color: 'green' }} />
+
+        {/* Loading Animation */}
+        {isLoading && (
+          <div className="loading-spinner" style={{display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
+            height:'100vh'
+          }}>
+            <ClipLoader color="#00BFFF" loading={isLoading} size={100}  />
+          </div>
+        )}
 
         {/* Search Bar */}
         <input

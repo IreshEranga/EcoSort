@@ -7,6 +7,9 @@ import { toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import { ClipLoader } from 'react-spinners';
+
+
 
 function DisplayRoutes() {
   const [routes, setRoutes] = useState([]);
@@ -16,6 +19,7 @@ function DisplayRoutes() {
   const [availableDrivers, setAvailableDrivers] = useState([]);
   const [selectedDriver, setSelectedDriver] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
   const navigate = useNavigate();
 
   // Get the current day of the week
@@ -27,20 +31,23 @@ function DisplayRoutes() {
 
   // Fetch routes function
   const fetchRoutes = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get('http://localhost:8000/router/routes');
       const today = getCurrentDay();
       const filteredRoutes = response.data.filter(route => route.date === today);
       setRoutes(filteredRoutes);
       setFilteredRoutes(filteredRoutes);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching routes:', error);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchRoutes(); // Fetch routes on component mount
-  });
+  },[]);
 
   // Handle search query change
   const handleSearchChange = (e) => {
@@ -187,6 +194,17 @@ function DisplayRoutes() {
         </button>
 
         <h1> Routes for {getCurrentDay()}</h1>
+
+        {/* Loading Animation */}
+        {isLoading && (
+          <div className="loading-spinner" style={{display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
+            height:'100vh'
+          }}>
+            <ClipLoader color="#00BFFF" loading={isLoading} size={100}  />
+          </div>
+        )}
 
         <input
           type="text"
