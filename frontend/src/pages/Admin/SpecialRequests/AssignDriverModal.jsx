@@ -107,6 +107,7 @@ const AssignDriverModal = ({ isOpen, onClose, request, drivers }) => {
   const handleAssignDriver = async () => {
     console.log({ driverId: selectedDriver });
 
+
     if (selectedDriver) {
       try {
         const response = await axios.put(`http://localhost:8000/api/special-requests/special-requests/${request._id}/assign-driver`, {
