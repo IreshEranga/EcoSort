@@ -1,4 +1,7 @@
 const SpecialRequest = require('../models/SpecialRequest');
+const sendEmailToDriver = require('../util/sendEmailToDriver');
+const Driver = require('../models/Driver');
+
 
 // Create a special request
 exports.createSpecialRequest = async (req, res) => {
@@ -161,7 +164,9 @@ exports.assignDriverToSpecialRequest = async (req, res) => {
     if (!updatedRequest) {
       return res.status(404).json({ message: 'Special request not found' });
     }
-
+// Send email notification to driver
+    const driver = await Driver.findById(driverId); // Fetch driver details
+    await sendEmailToDriver(driver.email, updatedRequest.requestId, driver.name);
     // Respond with the updated request
     res.status(200).json(updatedRequest);
   } catch (error) {
