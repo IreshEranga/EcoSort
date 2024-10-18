@@ -15,7 +15,7 @@ exports.createSpecialRequest = async (req, res) => {
 exports.getAllSpecialRequests = async (req, res) => {
   try {
     const requests = await SpecialRequest.find()
-      .populate('user', 'firstName lastName email userId location');
+      .populate('user', 'firstName lastName email userId location city');
     res.status(200).json(requests);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -55,19 +55,24 @@ exports.getSpecialRequestsByUserId = async (req, res) => {
   }
 };
 
-// Update special request by ID
+// Update special request collect status
 exports.updateSpecialRequest = async (req, res) => {
+  const { collectStatus } = req.body;
+
   try {
     const updatedRequest = await SpecialRequest.findByIdAndUpdate(
       req.params.id,
-      req.body,
-      { new: true, runValidators: true }
+      { collectStatus },
+      { new: true } // Return the updated document
     );
     
-    if (!updatedRequest) return res.status(404).json({ message: 'Special request not found' });
+    if (!updatedRequest) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+    
     res.status(200).json(updatedRequest);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 

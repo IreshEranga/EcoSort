@@ -47,7 +47,7 @@ const specialRequestSchema = new mongoose.Schema({
   },
   collectStatus:{
     type:String, default:'Not Complete', 
-    enum: ['Completed', 'Not Complete'],
+    enum: ['Completed', 'Assigned', 'Not Complete'],
   }
 }, { timestamps: true });
 

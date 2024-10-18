@@ -166,6 +166,21 @@ exports.getAvailableDriversByCity = async (req, res) => {
   }
 };
 
+// Get available drivers by city and date
+exports.getAvailableDriversByCityAndDate = async (req, res) => {
+  try {
+    const { city, date } = req.params;
+    const availableDrivers = await Driver.find({
+      city,
+      status: 'available',
+      // Add any additional date filtering logic here if needed
+    });
+    res.status(200).json(availableDrivers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Handle driver assignment to a route (this can be a new function)
 exports.assignDriverToRoute = async (req, res) => {
   try {
