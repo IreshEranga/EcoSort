@@ -1,3 +1,8 @@
+body {
+    background-color: #ffffff;
+    /* padding-top: 85px; */
+}
+
 .support-home {
     min-height: 100vh;
     margin: 0;

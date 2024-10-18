@@ -1,6 +1,6 @@
 // controllers/binController.js
 
-const Bin = require('../models/bin'); // Adjust the path as needed
+const Bin = require('../models/Bin'); // Adjust the path as needed
 
 // Create a new bin
 exports.createBin = async (req, res) => {
@@ -40,6 +40,27 @@ exports.updateBin = async (req, res) => {
     const updatedBin = await Bin.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!updatedBin) return res.status(404).json({ message: 'Bin not found' });
     res.status(200).json(updatedBin);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+exports.updateBinByBinId = async (req, res) => {
+  try {
+    // Find the bin by binId (not the _id, but your custom binId field)
+    const { binId } = req.params;
+
+    const updatedBin = await Bin.findOneAndUpdate(
+      { binId: binId }, // Search by binId field
+      req.body, // Update data from request body
+      { new: true, runValidators: true } // Return the updated document and run validators
+    );
+
+    if (!updatedBin) {
+      return res.status(404).json({ message: 'Bin not found' });
+    }
+
+    res.status(200).json(updatedBin); // Return updated bin data
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

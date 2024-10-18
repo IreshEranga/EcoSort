@@ -45,6 +45,7 @@ function WasteManagementPage() {
     // Filter data based on search query
     const filtered = binsData.filter(user => (
       user.userId.toString().includes(query) ||
+      user.name.toLowerCase().includes(query) ||
       user.bins.some(bin =>
         bin.binId.toString().includes(query) ||
         bin.type.toLowerCase().includes(query)
@@ -86,24 +87,24 @@ function WasteManagementPage() {
     <div className='admin-dashboard'>
       <AdminSidebar />
       <div className="main-content">
-        <h1>Waste Management</h1>
+        <h1 style={{textAlign:'center'}}>Waste Management</h1>
 
         {/* Search Bar */}
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '10px', marginTop:'30px' }}>
           <input
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
             placeholder="Search by User ID, Bin ID, or Bin Type"
-            style={{ padding: '8px', width: '300px' }}
+            style={{ padding: '8px', width: '500px', borderRadius:'10px' }}
           />
-          <button onClick={downloadReport} style={{ marginLeft: '10px', padding: '8px' }}>
+          <button onClick={downloadReport} style={{ marginLeft: '20px', padding: '8px', borderRadius:'10px'  }}>
             Download Report
           </button>
         </div>
         <br />
 
-        <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+        <table style={{ borderCollapse: 'collapse', width: '100%'}}>
           <thead>
             <tr>
               <th style={{ border: '1px solid #ddd', padding: '8px' }}>User ID</th>
@@ -156,11 +157,11 @@ function WasteManagementPage() {
                       'Location not available'
                     )}
                   </td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{binsMap.Organic.length > 0 ? binsMap.Organic.map(formatBinDetails) : 'N/A'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{binsMap.Paper.length > 0 ? binsMap.Paper.map(formatBinDetails) : 'N/A'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{binsMap.Plastic.length > 0 ? binsMap.Plastic.map(formatBinDetails) : 'N/A'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{binsMap.Electronic.length > 0 ? binsMap.Electronic.map(formatBinDetails) : 'N/A'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{binsMap.Other.length > 0 ? binsMap.Other.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px', fontSize:'12px' }}>{binsMap.Organic.length > 0 ? binsMap.Organic.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px', fontSize:'12px' }}>{binsMap.Paper.length > 0 ? binsMap.Paper.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px', fontSize:'12px' }}>{binsMap.Plastic.length > 0 ? binsMap.Plastic.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px', fontSize:'12px' }}>{binsMap.Electronic.length > 0 ? binsMap.Electronic.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '8px', fontSize:'12px' }}>{binsMap.Other.length > 0 ? binsMap.Other.map(formatBinDetails) : 'N/A'}</td>
                 </tr>
               );
             })}
