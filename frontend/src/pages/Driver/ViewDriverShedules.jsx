@@ -900,7 +900,7 @@ function ViewDriverSchedules() {
         const allRoutes = response.data;
 
         const filteredRoutes = allRoutes.filter(route =>
-          route.assignedDriver && route.assignedDriver._id === DriverId && route.date === today && route.status !== 'Completed'
+          route.assignedDriver && route.assignedDriver._id === DriverId && route.date === today /*&& route.status !== 'Completed'*/
         );
 
         setRoutes(filteredRoutes);
