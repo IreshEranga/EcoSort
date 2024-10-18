@@ -226,18 +226,40 @@ function SpecialRequestsPage() {
                     disabled={request.status === 'Accepted' || request.paymentStatus === 'Pending'} 
                     style={{borderRadius:'10px', width:'85px', backgroundColor: (request.status === 'Accepted' || request.paymentStatus === 'Pending') ? '#ccc' : '#4CAF50', color: 'white'}}
                   >
-                    {request.status === 'Accepted' ? 'Accepted' : 'Accept'}
+                    {request.status === 'Accepted' || request.status === 'Assigned' ? 'Accepted' : 'Accept'}
                   </button>
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>
                   <button 
                     onClick={() => handleAssignDriver(request)}  
-                    disabled={request.status === 'Pending'}
-                    style={{borderRadius:'10px', width:'70px', backgroundColor: (request.status === 'Pending') ? '#ccc' : '#00BFFF', color: 'white'}}
+                    disabled={request.status === 'Pending' || request.collectStatus === 'Assigned'}
+                    style={{borderRadius:'10px', width:'70px', backgroundColor: (request.status === 'Pending') ? '#ccc' : '#00BFFF', color: 'white', width:'80px'}}
                   >
-                    {request.status === 'Assigned' ? 'Assigned' : 'Assign Driver'}
+                    {/* {request.collectStatus === 'Assigned' ? 'Assigned' : 'Assign Driver'} */}
+                    {request.collectStatus === 'Assigned' && request.assignedDriver 
+      ? request.assignedDriver.name 
+      : 'Assign Driver'}
                   </button>
                 </td>
+              {/* <td style={{ border: '1px solid #ddd', padding: '6px' }}>
+                {request.assignedDriver ? (
+                  <span>{`${request.assignedDriver.name}`}</span>
+                ) : (
+                  <button 
+                    onClick={() => handleAssignDriver(request)}  
+                    disabled={request.status === 'Pending'}
+                    style={{
+                      borderRadius: '10px', 
+                      width: '70px', 
+                      backgroundColor: (request.status === 'Pending') ? '#ccc' : '#00BFFF', 
+                      color: 'white'
+                    }}
+                  >
+                    Assign Driver
+                  </button>
+                )}
+              </td> */}
+
               </tr>
             ))}
           </tbody>
