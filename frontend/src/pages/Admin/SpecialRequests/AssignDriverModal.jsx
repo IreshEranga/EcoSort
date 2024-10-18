@@ -113,8 +113,18 @@ const AssignDriverModal = ({ isOpen, onClose, request, drivers }) => {
         const response = await axios.put(`http://localhost:8000/api/special-requests/special-requests/${request._id}/assign-driver`, {
           driverId: selectedDriver,
         });
+        // const response = await axios.post(`http://localhost:8000/api/special-requests/assign-driver-special-request`, {
+        //   driverId: selectedDriver,
+        // });
         console.log('Driver assigned:', response.data);
         toast.success('Driver assigned successfully!');
+
+        const updateStatusResponse = await axios.put(`http://localhost:8000/api/driver/drivers/${selectedDriver}`, {
+          status: 'onRide',
+        });
+
+        console.log('Driver status updated:', updateStatusResponse.data);
+        toast.success('Driver status updated to "onRide".');
         setTimeout(() => {
           onClose(); // Close the modal after the timeout
         }, 5000);
