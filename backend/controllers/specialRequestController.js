@@ -148,6 +148,8 @@ exports.deleteCompletedSpecialRequests = async (req, res) => {
   }
 };
 
+
+
 // Assign a driver to a special request
 exports.assignDriverToSpecialRequest = async (req, res) => {
   const { driverId } = req.body; // Get the driver ID from the request body
@@ -174,3 +176,42 @@ exports.assignDriverToSpecialRequest = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+
+exports.assignDriverSpecialRequest = async (req, res) => {
+  try {
+    const { specialRequestId, driverId } = req.body;
+
+    // Find the special request by ID
+    const specialRequest = await SpecialRequest.findById(specialRequestId).populate('user');
+    if (!specialRequest) {
+      return res.status(404).json({ message: 'Special Request not found' });
+    }
+
+    // Find the driver by ID
+    const driver = await Driver.findById(driverId);
+    if (!driver) {
+      return res.status(404).json({ message: 'Driver not found' });
+    }
+
+    // Assign the driver to the special request
+    specialRequest.assignedDriver = driverId;
+    specialRequest.status = 'Assigned'; // Optionally update request status
+    await specialRequest.save();
+
+    // Update the driver's status and assign route (user location)
+    driver.status = 'onRide';
+    driver.assignedRoutes.push(specialRequest.user._id); // Assuming the user location acts as the assigned route
+    await driver.save();
+
+    // Send email notification to the driver
+    //await sendAssignmentEmail(driver.email, driver.name, specialRequest.description);
+
+    res.status(200).json({ message: 'Driver assigned to the special request successfully!' });
+  } catch (error) {
+    console.error('Error assigning driver to special request:', error);
+    res.status(500).json({ message: 'Internal server error', error });
+  }
+};
+
+

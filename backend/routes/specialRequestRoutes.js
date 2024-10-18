@@ -34,7 +34,8 @@ router.delete('/special-requests/delete-completed', specialRequestController.del
 
 
 // Assign a driver to a special request
+
 router.put('/special-requests/:id/assign-driver', specialRequestController.assignDriverToSpecialRequest);
 
-
+router.post('/assign-driver-special-request', specialRequestController.assignDriverSpecialRequest);
 module.exports = router;
