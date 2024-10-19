@@ -16,7 +16,7 @@ exports.createBin = async (req, res) => {
 // Get all bins
 exports.getAllBins = async (req, res) => {
   try {
-    const bins = await Bin.find().populate('user', 'name email location'); // Adjust fields as necessary
+    const bins = await Bin.find().populate('user', 'name email location wasteCollectionDate'); // Adjust fields as necessary
     res.status(200).json(bins);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -26,7 +26,7 @@ exports.getAllBins = async (req, res) => {
 // Get a bin by ID
 exports.getBinById = async (req, res) => {
   try {
-    const bin = await Bin.findById(req.params.id).populate('user', 'name email location');
+    const bin = await Bin.findById(req.params.id).populate('user', 'name email location wasteCollectionDate');
     if (!bin) return res.status(404).json({ message: 'Bin not found' });
     res.status(200).json(bin);
   } catch (error) {

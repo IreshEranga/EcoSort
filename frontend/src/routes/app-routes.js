@@ -2,10 +2,13 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home from '../components/Home';
+import About from '../components/Home/About';
+import Features from '../components/Home/Features';
 import Login from '../pages/Login/Login';
 import UserHomePage from '../pages/UserHome/UserHomePage';
 import SignUp from '../pages/SignUp/SignUp';
 import UserHome from '../pages/UserHome/UserHome';
+
 import WasteManagement from '../pages/WasteManagement/WasteManagement';
 import WasteManagementPage from '../pages/Admin/WasteManagementPage/WasteManagementPage';
 import SpecialRequestsPage from '../pages/Admin//SpecialRequests/SpecialRequestsPage';
@@ -45,12 +48,15 @@ import ViewDriverShedules from '../pages/Driver/ViewDriverShedules';
 
 
 
+
 const AppRoutes = () => {
   return (
     <>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
