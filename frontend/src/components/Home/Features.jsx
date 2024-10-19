@@ -8,7 +8,7 @@ const Features = () => {
     <div className="features-page">
       <Navbar />
       <div className="features-header">
-        <h1>EcoSort User Features</h1>
+        <h1>EcoSort Features</h1>
         <p>Discover the innovative features that make waste management simple and efficient.</p>
       </div>
       <div className="features-list">
