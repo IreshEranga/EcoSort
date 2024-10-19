@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import Navbar from './Navbar';
+import { Link } from 'react-router-dom';
 import './home.css';
 
 const Home = () => {
@@ -13,9 +14,18 @@ const Home = () => {
                     <h1 className="main-title" style={{fontFamily:'revert-layer'}}>Eco-Sort</h1>
                     <p className="subtitle">Revolutionizing Waste Management</p>
                     <p className="subtitle">A smarter, cleaner future for our cities</p>
-                    <Button variant="outline-light" className="cta-button">Join the Movement</Button>
                 </Container>
             </header>
+
+            <section className="cta-section text-center">
+                <Container>
+                    <h2>Be Part of the Change</h2>
+                    <p>Contribute to a sustainable future with Eco-Sort.</p>
+                    <Link to="/login">
+                        <Button variant="success" className="cta-button-large">Get Started</Button>
+                    </Link>
+                </Container>
+            </section>
 
             <section className="features-section text-center">
                 <Container>
@@ -37,14 +47,6 @@ const Home = () => {
                             <p>Comprehensive analytics to enhance waste management strategies.</p>
                         </Col>
                     </Row>
-                </Container>
-            </section>
-
-            <section className="cta-section text-center">
-                <Container>
-                    <h2>Be Part of the Change</h2>
-                    <p>Contribute to a sustainable future with Eco-Sort.</p>
-                    <Button variant="success" className="cta-button-large">Get Started</Button>
                 </Container>
             </section>
 

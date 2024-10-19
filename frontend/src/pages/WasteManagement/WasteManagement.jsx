@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import NavbarComponent from '../../components/NavbarComponent';
 import { Button, Card, Form, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+import Footer from '../../components/Footer/Footer';
 import { toast, ToastContainer } from 'react-toastify'; // Import both toast and ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
 import { AiOutlineClose, AiOutlineDelete  } from 'react-icons/ai'; // Import close icon from react-icons
+import './WasteManagement.css';
 
 
 function WasteManagement() {
@@ -265,13 +267,14 @@ function WasteManagement() {
       <NavbarComponent />
 
       {/* Bin Section */}
-      <div className="user-header" style={{ backgroundColor: '#f4f4f4', padding: '20px' }}>
-        <h1>Waste Management</h1>
+      <div className="user-header" style={{ backgroundColor: '#f4f4f4', padding: '20px', marginTop:'50px' }}>
+        <h1>Waste Bins Management</h1>
+        <h5>Collection Date: {user ? user.wasteCollectionDate : 'N/A'}</h5>
         {!showCreateBinForm && (
           <Button 
             variant="primary" 
             onClick={() => setShowCreateBinForm(true)} 
-            style={{ margin: '10px' }}
+            style={{ margin: '5px' }}
           >
             Add New Bin
           </Button>
@@ -549,6 +552,7 @@ function WasteManagement() {
         
       </div>
       <ToastContainer />
+      <Footer/>
     </div>
   );
 }
