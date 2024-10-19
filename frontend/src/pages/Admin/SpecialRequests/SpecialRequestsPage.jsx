@@ -280,7 +280,7 @@ function SpecialRequestsPage() {
                     disabled={request.paymentStatus === 'Done' || request.status === 'Pending' || request.amount !== 0} // Added condition for amount !== 0
                     onClick={() => handleCalculateAmount(request._id,request.user.userId,request.requestId)} 
                     style={{ borderRadius: '10px', width:'90px', backgroundColor: ( request . paymentStatus === 'Done' || request . status === 'Pending' || request . amount !== 0 ) ? '#ccc' : '#00BFFF', color: 'white' }}>
-                      {request.paymentStatus === 'Done' || request.status === 'Pending' || request.amount !== 0 ? 'Calculated' : 'Calculate'}
+                      {request.paymentStatus === 'Done' || request.amount !== 0 ? 'Calculated' : 'Calculate'}
                   </button>
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>{request.amount}</td>
