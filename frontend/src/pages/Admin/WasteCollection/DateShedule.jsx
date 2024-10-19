@@ -3,6 +3,7 @@ import axios from 'axios';
 import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import UpdateDateModal from './UpdateDateModal';
 import './DateShedule.css';
+import ClipLoader from 'react-spinners/ClipLoader'; 
 
 
 
@@ -12,6 +13,7 @@ function DateShedule() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch the list of cities
   const fetchCities = async () => {
@@ -36,12 +38,14 @@ function DateShedule() {
 
   // Memoized version of fetchAllUsers to avoid recreation on each render
   const fetchAllUsers = useCallback(async () => {
+    setIsLoading(true);
     const usersByCityData = {};
     for (const city of cities) {
       const cityUsers = await fetchUsersByCity(city);
       Object.assign(usersByCityData, cityUsers);
     }
     setUsersByCity(usersByCityData);
+    setIsLoading(false);
   }, [cities]); // Only re-create if cities change
 
   useEffect(() => {
@@ -101,6 +105,18 @@ function DateShedule() {
       {/* Main Content */}
       <div className="main-content">
         <h1 style={{ fontWeight: 'bold' }}>Schedule Date</h1>
+
+
+        {/* Loading Animation */}
+        {isLoading && (
+          <div className="loading-spinner" style={{display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
+            height:'100vh'
+          }}>
+            <ClipLoader color="#00BFFF" loading={isLoading} size={100}  />
+          </div>
+        )}
             
         {/* Search Bar */}
         <input
