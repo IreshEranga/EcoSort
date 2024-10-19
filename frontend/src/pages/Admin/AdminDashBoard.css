@@ -107,6 +107,14 @@
   }
   
 
-  .user-count-card:hover {
+  .user-count-card:hover,
+  .route-chart:hover {
     box-shadow: 0 4px 8px 0 rgba(51, 177, 231, 0.2), 0 6px 20px 0 rgba(87, 235, 99, 0.63);
+  }
+
+
+  .route-chart{
+    border: 1px solid #ced4da; /* Border color */
+    border-radius: 8px;
+    margin-left: 50px;
   }
