@@ -236,7 +236,7 @@ function WasteManagement() {
 
         // Check if paymentStatus is 'Done' or status is 'Accepted'
         if (request.paymentStatus === 'Done' || request.status === 'Accepted') {
-          toast.error('You can only delete requests with payment status "Pending" and request status "Pending".');
+          toast.warn('You can only delete requests with payment status "Pending" and request status "Pending".');
           return;
         }
 
@@ -530,15 +530,15 @@ function WasteManagement() {
                     <strong>Description:</strong> {request.description}<br />
                     {/*<strong>Date:</strong> {new Date(request.date).toLocaleDateString()}<br />
                     <strong>Time:</strong> {request.time}<br />*/}
-                    <strong>Status:</strong> {request.status}
-                    {request.status === 'Accepted' ||  request.payementStatus === 'Pending' && (
+                    <strong>Status:</strong> {request.status}<br />                    
+                    <strong>Payment Status:</strong> {request.paymentStatus}
+                    {request.status === 'Accepted' && request.paymentStatus === 'Pending' && (
                       <span>
                         <Link to="/payments" style={{ marginLeft: '5px', color: '#007bff', textDecoration: 'underline' }}>
-                           Payment
+                          Payment
                         </Link>
                       </span>
-                    )}<br/>
-                    <strong>Payment Status:</strong> {request.paymentStatus}<br />                
+                    )}<br/>               
                     <strong>Collection Status:</strong> {request.collectStatus}
                   </Card.Text>
                 </Card.Body>
