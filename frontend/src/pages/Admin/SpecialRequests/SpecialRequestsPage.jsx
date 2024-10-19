@@ -3,10 +3,9 @@ import AdminSidebar from '../../../components/Admin/AdminSidebar';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
 import { useNavigate } from 'react-router-dom';
-
 import AssignDriverModal from './AssignDriverModal';
+
 
 function SpecialRequestsPage() {
   const [specialRequests, setSpecialRequests] = useState([]);
@@ -17,7 +16,6 @@ function SpecialRequestsPage() {
   const [selectedRequest, setSelectedRequest] = useState(null); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [availableDrivers, setAvailableDrivers] = useState([]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,7 +43,6 @@ function SpecialRequestsPage() {
         console.error('Error fetching past special requests:', error);
       }
     };
-  
     fetchSpecialRequests();
     fetchPastRequests();
   }, []);
@@ -53,8 +50,10 @@ function SpecialRequestsPage() {
   useEffect(() => {
     const filtered = specialRequests.filter(request =>
       request.user.userId.toString().includes(searchQuery) ||
+      request.requestId.toString (). includes ( searchQuery ) ||
       `${request.user.firstName} ${request.user.lastName}`.toLowerCase().includes(searchQuery) ||
-      request.wasteType.toLowerCase().includes(searchQuery) 
+      request.wasteType.toLowerCase().includes(searchQuery) ||
+      request.collectStatus.toLowerCase().includes(searchQuery) // Search based on collectStatus
     );
     setFilteredRequests(filtered);
 
@@ -62,6 +61,7 @@ function SpecialRequestsPage() {
       request.collectStatus === 'Completed' && // Ensure only past requests with collectStatus 'Completed'
       (
         request.user.userId.toString().includes(searchQuery) ||
+        request.requestId.toString (). includes ( searchQuery ) ||
         `${request.user.firstName} ${request.user.lastName}`.toLowerCase().includes(searchQuery) ||
         request.wasteType.toLowerCase().includes(searchQuery) ||
         request.collectStatus.toLowerCase().includes(searchQuery) // Search based on collectStatus
@@ -100,10 +100,19 @@ function SpecialRequestsPage() {
   const downloadCurrentReport = () => {
     const doc = new jsPDF();
     doc.setFontSize(12);
-    doc.text('Current Special Requests Report', 14, 20);
-
+  
+    // Calculate the center position
+    const pageWidth = doc.internal.pageSize.width;
+    const title = 'Current Special Requests Report';
+    const textWidth = doc.getTextWidth(title);
+    const xPos = (pageWidth - textWidth) / 2;
+  
+    // Title (centered)
+    doc.text(title, xPos, 20);
+  
+    // Table with header
     autoTable(doc, {
-      head: [['User ID', 'User Name', 'Waste Type', 'Quantity', 'Description', 'Status', 'Amount']],
+      head: [['User ID', 'User Name', 'Waste Type', 'Quantity (kg)', 'Description', 'Status', 'Amount (Rs.)', 'Payment Status', 'Collect Status']],
       body: filteredRequests.map(request => [
         request.user.userId,
         `${request.user.firstName} ${request.user.lastName}`,
@@ -111,37 +120,78 @@ function SpecialRequestsPage() {
         request.quantity,
         request.description,
         request.status,
-        
-        `$${request.amount}`
-      ])
+        `${request.amount}`,
+        request.paymentStatus,
+        request.collectStatus,
+      ]),
+      margin: { top: 30 },
+      didDrawPage: (data) => {
+        // Add header for each page
+        doc.setFontSize(10);
+        doc.setTextColor(40);
+        doc.text('EcoSort Waste Management - Current Special Requests', data.settings.margin.left, 10);
+      },
     });
-
+  
+    // Add footer at the bottom of the page
+    const pageCount = doc.internal.getNumberOfPages();
+    doc.setFontSize(10);
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.text(`EcoSort_Waste_Management`, 14, doc.internal.pageSize.height - 10); // Footer on the left bottom
+      doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 10); // Page numbers on the right bottom
+    }
+  
+    // Save the PDF
     doc.save('Current_Special_Requests_Report.pdf');
-  };
-
+  };  
+  
   const downloadPastReport = () => {
     const doc = new jsPDF();
     doc.setFontSize(12);
-    doc.text('Past Special Requests Report', 14, 20);
-
+  
+    // Calculate the center position for the title
+    const pageWidth = doc.internal.pageSize.width;
+    const title = 'Past Special Requests Report';
+    const textWidth = doc.getTextWidth(title);
+    const xPos = (pageWidth - textWidth) / 2;
+  
+    // Title (centered)
+    doc.text(title, xPos, 20);
+  
+    // Table with header
     autoTable(doc, {
-      head: [['User ID', 'User Name', 'Waste Type', 'Quantity', 'Description' ,'Status', 'Amount', 'Driver']],
+      head: [['User ID', 'User Name', 'Waste Type', 'Quantity (kg)', 'Description', 'Amount (Rs.)', 'Collect Status']],
       body: filteredPastRequests.map(request => [
         request.user.userId,
         `${request.user.firstName} ${request.user.lastName}`,
         request.wasteType,
         request.quantity,
         request.description,
-        request.status,
-        
-       
-        `$${request.amount}`,
-        request.assignedDriver.name
-      ])
+        `${request.amount}`,
+        request.collectStatus,
+      ]),
+      margin: { top: 30 },
+      didDrawPage: (data) => {
+        // Add header for each page
+        doc.setFontSize(10);
+        doc.setTextColor(40);
+        doc.text('EcoSort Waste Management - Past Special Requests', data.settings.margin.left, 10);
+      },
     });
-
+  
+    // Add footer at the bottom of the page
+    const pageCount = doc.internal.getNumberOfPages();
+    doc.setFontSize(10);
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.text(`EcoSort_Waste_Management`, 14, doc.internal.pageSize.height - 10); // Footer on the left bottom
+      doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 10); // Page numbers on the right bottom
+    }
+  
+    // Save the PDF
     doc.save('Past_Special_Requests_Report.pdf');
-  };
+  };  
 
   const handleNavigateToMap = (latitude, longitude) => {
     const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
@@ -172,8 +222,8 @@ function SpecialRequestsPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
-            placeholder="Search by User ID, Name or Waste Type"
-            style={{ padding: '8px', width: '400px', borderRadius: '10px' }}
+            placeholder="Search by Request ID, User ID, Name or Waste Type"
+            style={{ padding: '8px', width: '500px', borderRadius: '10px' }}
           />
           <button onClick={downloadCurrentReport} style={{ marginLeft: '20px', padding: '8px', borderRadius: '10px' }}>
             Download Current Report
@@ -188,8 +238,8 @@ function SpecialRequestsPage() {
         <table className='special-requests-table' style={{ width: '100%', margin: '0 auto', borderCollapse: 'collapse', fontSize: '14px', marginBottom: '20px', marginTop: '20px' }}>
           <thead>
             <tr>
-              {['Request ID', 'User ID', 'User Name', 'Location', 'Waste Type', 'Quantity', 'Description',  'Payment Action', 'Amount', 'Payment Status', 'Status', 'Action', 'Driver'].map(header => (
-                <th key={header} style={{ border: '1px solid #ddd', padding: '5px' }}>{header}</th>
+              {['Request ID', 'User ID', 'User Name', 'Location', 'Waste Type', 'Quantity (kg)', 'Description', 'Action', 'Status', 'Payment Action', 'Amount (Rs.)', 'Payment Status', 'Driver'].map(header => (
+                <th key={header} style={{ border: '1px solid #ddd', padding: '5px' }}>{header}</th>    
               ))}
             </tr>
           </thead>
@@ -215,37 +265,34 @@ function SpecialRequestsPage() {
                 <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center', }}>{request.wasteType}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center', width:'80px' }}>{request.quantity}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px', width: '300px' }}>{request.description}</td>
-               
+                <td style={{ border: '1px solid #ddd', padding: '6px' }}>   
+                  <button 
+                    onClick={() => handleUpdateStatus(request._id)}  
+                    disabled={request.status === 'Accepted'} 
+                    style={{ borderRadius: '10px', width: '85px', backgroundColor: (request.status === 'Accepted') ? '#ccc' : '#4CAF50', color: 'white' }} 
+                  >
+                    {request.status === 'Accepted' ? 'Accepted' : 'Accept'}
+                  </button>
+                </td>
+                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>{request.status}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>
                   <button
-                    disabled={request.paymentStatus === 'Done'}
+                    disabled={request.paymentStatus === 'Done' || request.status === 'Pending' || request.amount !== 0} // Added condition for amount !== 0
                     onClick={() => handleCalculateAmount(request._id,request.user.userId,request.requestId)} 
-                    style={{ borderRadius: '10px', width:'90px', backgroundColor: (request.status === 'Done') ? '#ccc' : '#00BFFF', color: 'white' }}>
-                      {request.paymentStatus === 'Done' ? 'Calculated' : 'Calculate'}
+                    style={{ borderRadius: '10px', width:'90px', backgroundColor: ( request . paymentStatus === 'Done' || request . status === 'Pending' || request . amount !== 0 ) ? '#ccc' : '#00BFFF', color: 'white' }}>
+                      {request.paymentStatus === 'Done' || request.status === 'Pending' || request.amount !== 0 ? 'Calculated' : 'Calculate'}
                   </button>
                 </td>
-                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>${request.amount}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>{request.amount}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center', }}>{request.paymentStatus}</td>
-                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center', }}>{request.status}</td>
-                <td style={{ border: '1px solid #ddd', padding: '6px' }}>
-                  <button 
-                    onClick={() => handleUpdateStatus(request._id)} 
-                    disabled={request.status === 'Accepted' || request.paymentStatus === 'Pending'} 
-                    style={{borderRadius:'10px', width:'85px', backgroundColor: (request.status === 'Accepted' || request.paymentStatus === 'Pending') ? '#ccc' : '#4CAF50', color: 'white'}}
-                  >
-                    {request.status === 'Accepted' || request.status === 'Assigned' ? 'Accepted' : 'Accept'}
-                  </button>
-                </td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>
                   <button 
                     onClick={() => handleAssignDriver(request)}  
-                    disabled={request.status === 'Pending' || request.collectStatus === 'Assigned'}
-                    style={{borderRadius:'10px', width:'70px', backgroundColor: (request.status === 'Pending') ? '#ccc' : '#00BFFF', color: 'white', width:'80px'}}
+                    disabled={request.status === 'Pending' || request.paymentStatus === 'Pending' || request.collectStatus !== 'Not Complete'}
+                    style={{borderRadius:'10px', width:'70px', backgroundColor: (request.status === 'Pending' || request.paymentStatus === 'Pending' || request.collectStatus !== 'Not Complete') ? '#ccc' : '#00BFFF', color: 'white', width:'80px'}}
                   >
                     {/* {request.collectStatus === 'Assigned' ? 'Assigned' : 'Assign Driver'} */}
-                    {request.collectStatus === 'Assigned' && request.assignedDriver 
-      ? request.assignedDriver.name 
-      : 'Assign Driver'}
+                    {request.collectStatus === 'Assigned' && request.assignedDriver ? request.assignedDriver.name : 'Assign Driver'}
                   </button>
                 </td>
               {/* <td style={{ border: '1px solid #ddd', padding: '6px' }}>
@@ -254,11 +301,11 @@ function SpecialRequestsPage() {
                 ) : (
                   <button 
                     onClick={() => handleAssignDriver(request)}  
-                    disabled={request.status === 'Pending'}
+                    disabled={request.paymentStatus === 'Pending' || request.collectStatus !== 'Not Complete'}
                     style={{
                       borderRadius: '10px', 
                       width: '70px', 
-                      backgroundColor: (request.status === 'Pending') ? '#ccc' : '#00BFFF', 
+                      backgroundColor: (request.paymentStatus === 'Pending' || request.collectStatus !== 'Not Complete') ? '#ccc' : '#00BFFF', 
                       color: 'white'
                     }}
                   >
@@ -266,7 +313,6 @@ function SpecialRequestsPage() {
                   </button>
                 )}
               </td> */}
-
               </tr>
             ))}
           </tbody>
@@ -277,9 +323,9 @@ function SpecialRequestsPage() {
         <table className='special-requests-table' style={{ width: '100%', margin: '0 auto', borderCollapse: 'collapse', fontSize: '14px', marginTop: '20px' }}>
           <thead>
             <tr>
-              {['Request ID', 'User ID', 'User Name', 'Waste Type', 'Quantity (kg)', 'Description', 'Amount (Rs)', 'Driver', 'Collect Status',].map(header => (
-                <th key={header} style={{ border: '1px solid #ddd', padding: '6px' }}>{header}</th>
-              ))}
+              {[ 'Request ID' , 'User ID' , 'User Name' , 'Waste Type' , 'Quantity (kg)' , 'Description' , 'Amount (Rs)' , 'Driver' , 'Collect Status' ,] . map ( header => ( 
+                < th key = { header } style = { { border: '1px solid #ddd' , padding: '6px' } } > { header } </ th >    
+              )) }
             </tr>
           </thead>
           <tbody>

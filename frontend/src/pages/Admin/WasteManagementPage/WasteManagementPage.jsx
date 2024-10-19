@@ -105,16 +105,17 @@ function WasteManagementPage() {
         <br />
 
         <table style={{ borderCollapse: 'collapse', width: '100%'}}>
-          <thead>
+          <thead style={{textAlign:'center'}}>
             <tr>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>User ID</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Name</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Location</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Organic Bin</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Paper Bin</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Plastic Bin</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Electronic Bin</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Other Bin</th>
+              <th style={{ border: '1px solid #ddd', padding: '3px' }}>User ID</th>
+              <th style={{ border: '1px solid #ddd', padding: '5px' }}>Name</th>
+              <th style={{ border: '1px solid #ddd', padding: '0px' }}>Location</th>
+              <th style={{ border: '1px solid #ddd', padding: '3px' }}>Collection Date</th>
+              <th style={{ border: '1px solid #ddd', padding: '5px' }}>Organic Bin</th>
+              <th style={{ border: '1px solid #ddd', padding: '5px' }}>Paper Bin</th>
+              <th style={{ border: '1px solid #ddd', padding: '5px' }}>Plastic Bin</th>
+              <th style={{ border: '1px solid #ddd', padding: '5px' }}>Electronic Bin</th>
+              <th style={{ border: '1px solid #ddd', padding: '5px' }}>Other Bin</th>
             </tr>
           </thead>
           <tbody>
@@ -143,13 +144,14 @@ function WasteManagementPage() {
                     transition: 'background-color 0.3s ease',
                   }}
                 >
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.userId}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{user.name}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '5px', textAlign:'center' }}>{user.userId}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '5px' }}>{user.name}</td>
                   <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                     {user.location && user.location.latitude && user.location.longitude ? (
                       <button 
                         className="map-button" 
                         onClick={() => handleNavigateToMap(user.location.latitude, user.location.longitude)}
+                        style={{width:'75px'}}
                       >
                         View on Map
                       </button>
@@ -157,11 +159,12 @@ function WasteManagementPage() {
                       'Location not available'
                     )}
                   </td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px', fontSize:'12px' }}>{binsMap.Organic.length > 0 ? binsMap.Organic.map(formatBinDetails) : 'N/A'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px', fontSize:'12px' }}>{binsMap.Paper.length > 0 ? binsMap.Paper.map(formatBinDetails) : 'N/A'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px', fontSize:'12px' }}>{binsMap.Plastic.length > 0 ? binsMap.Plastic.map(formatBinDetails) : 'N/A'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px', fontSize:'12px' }}>{binsMap.Electronic.length > 0 ? binsMap.Electronic.map(formatBinDetails) : 'N/A'}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px', fontSize:'12px' }}>{binsMap.Other.length > 0 ? binsMap.Other.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '5px', textAlign:'center' }}>{user.wasteCollectionDate}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '5px', fontSize:'12px' }}>{binsMap.Organic.length > 0 ? binsMap.Organic.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '5px', fontSize:'12px' }}>{binsMap.Paper.length > 0 ? binsMap.Paper.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '5px', fontSize:'12px' }}>{binsMap.Plastic.length > 0 ? binsMap.Plastic.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '5px', fontSize:'12px' }}>{binsMap.Electronic.length > 0 ? binsMap.Electronic.map(formatBinDetails) : 'N/A'}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '5px', fontSize:'12px' }}>{binsMap.Other.length > 0 ? binsMap.Other.map(formatBinDetails) : 'N/A'}</td>
                 </tr>
               );
             })}
