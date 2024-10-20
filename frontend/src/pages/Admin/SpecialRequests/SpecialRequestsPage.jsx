@@ -340,7 +340,9 @@ function SpecialRequestsPage() {
                 {/*<td style={{ border: '1px solid #ddd', padding: '6px' }}>{new Date(request.date).toLocaleDateString()}</td>
                 <td style={{ border: '1px solid #ddd', padding: '6px' }}>{request.time}</td>*/}
                 <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>{request.amount}</td>
-                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>{request.assignedDriver.name}</td>
+                <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center' }}>
+                  {request.assignedDriver ? request.assignedDriver.name : 'Not Assigned'}
+                </td>
                 <td style={{ border: '1px solid #ddd', padding: '6px', textAlign: 'center', }}>{request.collectStatus}</td>
               </tr>
             ))}
