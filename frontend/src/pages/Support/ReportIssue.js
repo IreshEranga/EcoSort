@@ -69,7 +69,7 @@ const ReportIssue = () => {
             {/* Navbar */}
             <NavbarComponent />
 
-            <div className='support-ticket-container'>
+            <div className='support-ticket-container' style={{marginTop:'80px'}}>
                 <h3>Report Your Issue</h3>
 
                 <form onSubmit={handleSubmit} className='support-ticket-form'>
@@ -103,7 +103,7 @@ const ReportIssue = () => {
 
         <div>
             <hr />
-        <h2 style={{paddingLeft: '40px'}}>Your Submitted Tickets</h2>
+        <h2 style={{paddingLeft: '40px', marginTop:'20px', marginBottom:'20px'}}>Your Submitted Tickets</h2>
             <table>
                 <thead>
                     <tr>
