@@ -8,7 +8,6 @@ import Footer from '../../components/Footer/Footer';
 import { toast, ToastContainer } from 'react-toastify'; // Import both toast and ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
 import { AiOutlineClose, AiOutlineDelete  } from 'react-icons/ai'; // Import close icon from react-icons
-import './WasteManagement.css';
 
 
 function WasteManagement() {
@@ -542,7 +541,7 @@ function WasteManagement() {
                         </Link>
                       </span>
                     )}<br/>               
-                    <strong>Collection Status:</strong> {request.collectStatus}
+                    <strong>Collect Status:</strong> {request.collectStatus}
                   </Card.Text>
                 </Card.Body>
               </Card>
