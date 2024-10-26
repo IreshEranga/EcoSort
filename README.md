@@ -1,6 +1,9 @@
 # ECO SORT
 
-![ECO SORT](https://github.com/user-attachments/assets/507ac5d7-a530-4347-9fbc-784d986a975f)
+
+   ![ECO SORT](https://github.com/user-attachments/assets/2e0b4c63-1dcc-4232-b761-8c8e7b290216)
+
+
 
 **ECO SORT** is an advanced waste collection system developed for urban areas. The system facilitates efficient waste management by allowing users to schedule waste collection, manage payment transactions, report issues, and make special requests. The platform helps urban communities maintain a cleaner environment by providing an organized and sustainable waste management process.
 
@@ -72,8 +75,8 @@
         </a>
     </td>
  <td align="center">
-        <a href="https://github.com/">
-            <img src="https://github.com/" width="100(px);" alt="Naduni"/>
+        <a href="https://github.com/IT22265692">
+            <img src="https://github.com/IT22265692.png" width="100(px);" alt="Naduni"/>
             <br />
             <sub><b>Sathsara Naduni</b></sub>
         </a>
